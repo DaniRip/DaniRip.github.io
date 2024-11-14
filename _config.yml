@@ -2,8 +2,7 @@ title: Danielle A. Ripsman
 logo: /assets/3800 Colour.jpg
 #description: text below image
 # show_downloads: true
-header_pages:
-  - about.md
-
 theme: jekyll-theme-minimal
 #theme: jekyll-theme-dinky
+header_pages:
+  - about.md
