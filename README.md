@@ -1,7 +1,7 @@
 
 # Operations Research Specialist
 
-#### Technical Skills: Linear and Integer Program modelling, CPLEX, Gurobi, C++, Python, MATLAB, R
+#### Technical Skills: Linear and Integer Programing, CPLEX, Gurobi, C++, Python, MATLAB, R
 
 ## Education
 - Ph.D., Management Sciences | The University of Waterloo (_Aug 2024_)								       		
