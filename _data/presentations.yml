@@ -1,4 +1,16 @@
 conference:
+  - title: "Multi-Period Home Care Scheduling Under Uncertainty"
+    authors: "D. A. Ripsman, A. Cire and A. Diamant"
+    event: "CORS Annual Meeting"
+    location: "Edmonton, AB"
+    date: "June 2025"
+
+  - title: "A Geometrical Approach to Beam Angle Optimization"
+    authors: "D. A. Ripsman, S. A. Alev, H. Mahmoudzadeh,"
+    event: "ICS Conference"
+    location: "Toronto, ON"
+    date: "March 2025"
+    
   - title: "Integrating Uncertainty Mitigation into Radiation Therapy Treatment Planning"
     authors: "D. A. Ripsman"
     event: "INFORMS Annual Meeting"
@@ -98,6 +110,11 @@ competitions:
     award: "*Selected as 3MT Finalist, represented the Management Sciences department"
 
 posters:
+  - title: "The Impact of AI Scribe on Primary Care Workload"
+    authors: "R. Chiplunkar, D. A. Ripsman and K. Ghobadi"
+    event: "Johns Hopkins Research Symposium on Engineering in Healthcare"
+    location: "Baltimore, USA"
+    date: "December 2025"
   - title: "Graphical Interface for Interactive Parameter Selection in Radiation Therapy Treatment Planning"
     authors: "D. A. Ripsman, K. Ghobadi, and D. M. Aleman"
     event: "MIE Research Symposium, University of Toronto"
