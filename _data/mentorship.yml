@@ -1,0 +1,18 @@
+- student: "Gatik Gola"
+  project: "worked on implementations for my proposed voxel sampling project"
+  year: 2023
+- student: "Karina Wilk"
+  project: "pushed forward the pipeline connecting our labs optimization problems to our local cancer centre"
+  year: 2023
+- student: "William Kwong"
+  project: "designed an interface for the seamless running of sampling protocols for fluence map optimization"
+  year: "2021-2022"
+- student: "Tiantian Li"
+  project: "looked into adapting existing, open-source radiation therapy tools to optimization software"
+  year: 2021
+- student: "Gogilan Selvarajah"
+  project: "worked on sliding window IMRT visualization"
+  year: 2019
+- student: "Jessie Yeung"
+  project: "worked on IMRT sliding window modeling"
+  year: 2018

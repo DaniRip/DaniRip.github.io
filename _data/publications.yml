@@ -1,0 +1,20 @@
+- title: "Light Pareto robust optimization for IMRT treatment planning"
+  authors: "D. A. Ripsman, F. Rahimi, H. Abouee-Mehrizi, H. Mahmoudzadeh"
+  journal: "Medical Physics"
+  volume: "50(5):2637–2648"
+  year: 2023
+  link: "http://doi.org/10.1002/mp.16298"
+
+- title: "Robust Direct Aperture Optimization for Radiation Therapy Treatment Planning"
+  authors: "D. A. Ripsman, T. G. Purdie, T. C. Y. Chan, H. Mahmoudzadeh"
+  journal: "INFORMS Journal on Computing"
+  volume: "34(4):2017–2038"
+  year: 2022
+  link: "https://doi.org/10.1287/ijoc.2022.1167"
+
+- title: "Interactive visual guidance for automated stereotactic radiosurgery treatment planning"
+  authors: "D. A. Ripsman, D. M. Aleman, K. Ghobadi"
+  journal: "Expert Systems with Applications"
+  volume: "42(21):8337–8348"
+  year: 2015
+  link: "https://doi.org/10.1016/j.eswa.2015.06.028"

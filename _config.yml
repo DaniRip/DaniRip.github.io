@@ -1,8 +1,17 @@
 title: Danielle A. Ripsman
-logo: /assets/3800 Colour.jpg
-#description: text below image
-# show_downloads: true
-theme: jekyll-theme-minimal
-#theme: jekyll-theme-dinky
-header_pages:
-  - about.md
+email: your-email@domain.com
+description: >- # this means to ignore newlines until "baseurl:"
+  Ph.D. in Management Science & Engineering. Specializing in Operations Research and Radiation Therapy treatment planning.
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site, e.g. http://example.com
+twitter_username:
+github_username:  danirip
+
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-feed
+
+exclude:
+  - Gemfile
+  - Gemfile.lock

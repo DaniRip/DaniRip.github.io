@@ -1,0 +1,20 @@
+- organization: "CORS"
+  role: "Chapter Member/Leader"
+  description: "CORS is the Canadian Operations Research Society, which has local chapters all across Canada. I have been lucky enough to have worn many hats in our local chapter over the past 7 years."
+  link: "http://swontario.cors.ca/"
+  link_text: "See our local chapter website, which I upkeep!"
+
+- organization: "Conference Centre Design"
+  role: "Designer"
+  description: "During the pandemic, Kiefer Burgess and I got to design the \"conference centre\" for the CORS 2021 conference in Gather Town, pictured below!"
+  images:
+    - src: "beacharea.png"
+      alt: "Beach Area in Gather Town"
+    - src: "maingatherroom.png"
+      alt: "Main Gather Room"
+
+- organization: "TORCH"
+  role: "Founder/Organizer"
+  description: "The Operations Research Challenge or TORCH is an Operations Research competition for high school students. After helping run the competition as an undergrad at the University of Toronto, I was tapped to start a branch at the University of Waterloo. Unfortunately, it has not run since the pandemic hit in late 2019, but we are looking to get it off the ground once again, soon!"
+  link: "https://torch.uwaterloo.ca/"
+  link_text: "The TORCH website is here."

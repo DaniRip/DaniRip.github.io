@@ -1,0 +1,105 @@
+conference:
+  - title: "Integrating Uncertainty Mitigation into Radiation Therapy Treatment Planning"
+    authors: "D. A. Ripsman"
+    event: "INFORMS Annual Meeting"
+    location: "Phoenix, AZ"
+    date: "October 2023"
+
+  - title: "A Geometric Approach To Beam Angle Selection In Radiation Therapy Treatment Planning"
+    authors: "D. A. Ripsman, S. A. Alev, H. Mahmoudzadeh"
+    event: "INFORMS Healthcare"
+    location: "Toronto, ON"
+    date: "July 2023"
+
+  - title: "A Geometric Approach To Beam Angle Selection In Radiation Therapy Treatment Planning"
+    authors: "D. A. Ripsman, S. A. Alev, H. Mahmoudzadeh"
+    event: "CORS/Optimization Days"
+    location: "HEC Montréal, QC"
+    date: "May 2023"
+
+  - title: "A Geometric Approach To Beam Angle Selection In Radiation Therapy Treatment Planning"
+    authors: "D. A. Ripsman, S. A. Alev, H. Mahmoudzadeh"
+    event: "INFORMS Annual Meeting"
+    location: "Indianapolis, IN"
+    date: "October 2022"
+
+  - title: "Structural Solution Approaches to Robust Optimization with Polyhedral Uncertainty"
+    authors: "D. A. Ripsman, H. Mahmoudzadeh"
+    event: "CORS/INFORMS International"
+    location: "Vancouver, BC"
+    date: "June 2022"
+
+  - title: "A Geometric Approach To Beam Angle Selection In Radiation Therapy Treatment Planning"
+    authors: "D. A. Ripsman, S. A. Alev, H. Mahmoudzadeh"
+    event: "INFORMS Annual Meeting"
+    location: "Anaheim, CA (Hybrid)"
+    date: "October 2021"
+
+  - title: "Closed-form Constraint Generation For Classes Of Robust Polyhedral Uncertainty"
+    authors: "D. A. Ripsman, H. Mahmoudzadeh"
+    event: "INFORMS Annual Meeting"
+    location: "Anaheim, CA (Hybrid)"
+    date: "October 2021"
+
+  - title: "Closed-form constraint generation for robust radiation therapy treatment planning"
+    authors: "D. A. Ripsman, H. Mahmoudzadeh"
+    event: "CORS Annual Meeting"
+    location: "(Virtual)"
+    date: "May 2021"
+
+  - title: "Robust Direct Aperture Optimization for Radiation Therapy Treatment Planning"
+    authors: "D. A. Ripsman, H. Mahmoudzadeh, T. C. Y. Chan, T. G. Purdie"
+    event: "INFORMS Healthcare"
+    location: "Cambridge, MA"
+    date: "July 2019"
+
+  - title: "Robust Direct Aperture Optimization for Radiation Therapy Treatment Planning"
+    authors: "D. A. Ripsman, H. Mahmoudzadeh, T. C. Y. Chan, T. G. Purdie"
+    event: "Canadian Healthcare Optimization Workshop"
+    location: "Saskatoon, SK"
+    date: "May 2019"
+
+  - title: "Robust Direct Aperture Optimization for Radiation Therapy Treatment Planning"
+    authors: "D. A. Ripsman, H. Mahmoudzadeh, T. C. Y. Chan, T. G. Purdie"
+    event: "2018 CORS Annual Conference"
+    location: "Halifax, NS, Canada"
+    date: "June 2018"
+
+  - title: "Robust Mixed Integer Optimization for Radiation Therapy Treatment Planning with Delivery Constraints"
+    authors: "D. A. Ripsman, H. Mahmoudzadeh, T. C. Y. Chan, T. G. Purdie"
+    event: "Optimization Days 2017"
+    location: "Montreal, QC, Canada"
+    date: "May 2017"
+
+  - title: "Interactive visual decision support for radiation therapy treatment planning"
+    authors: "D. A. Ripsman, K. Ghobadi and D. M. Aleman"
+    note: "(invited presentation)"
+    event: "Industrial & Systems Engineering Research Conference (ISERC)"
+    location: "Montreal, Canada"
+    date: "June 2014"
+
+  - title: "Interactive visual decision support for radiation therapy treatment planning"
+    authors: "D. A. Ripsman, K. Ghobadi and D. M. Aleman"
+    event: "Undergraduate Engineering Research Day (UnERD), University of Toronto"
+    location: "Toronto, Canada"
+    date: "August 2013"
+    award: "*Awarded second place in the Industrial Engineering Oral Presentations category"
+
+competitions:
+  - title: "CORS Health Care Operational Research SIG Student Presentation Competition"
+    event: "CORS Conference"
+    year: 2019
+    award: "*Awarded first place"
+  - title: "University of Waterloo Three Minute Thesis Competition"
+    location: "Waterloo, Canada"
+    year: 2018
+    link: "https://www.youtube.com/watch?v=iieDiuOiSVw"
+    link_text: "Watch it here!"
+    award: "*Selected as 3MT Finalist, represented the Management Sciences department"
+
+posters:
+  - title: "Graphical Interface for Interactive Parameter Selection in Radiation Therapy Treatment Planning"
+    authors: "D. A. Ripsman, K. Ghobadi, and D. M. Aleman"
+    event: "MIE Research Symposium, University of Toronto"
+    location: "Toronto, Canada"
+    date: "June 2013"
