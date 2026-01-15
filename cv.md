@@ -6,7 +6,7 @@ permalink: /cv/
 
 <p>You can download my full Curriculum Vitae below.</p>
 
-<a href="#" class="btn" onclick="alert('Please upload your CV PDF to assets/cv.pdf and update the link!'); return false;">Download CV (PDF)</a>
+<a href="assets/D_Ripsman_CV.pdf" class="btn" onclick="alert('Please upload your CV PDF to assets/cv.pdf and update the link!'); return false;">Download CV (PDF)</a>
 
 <!--
 To update the CV:
