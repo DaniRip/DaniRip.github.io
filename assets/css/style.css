@@ -32,18 +32,25 @@ body {
     background-color: var(--bg-color);
 }
 
-a {
-    color: #3498db;        /* A slightly brighter, clearer blue */
+/* Links in the main body text */
+main a {
+    color: #007685;           /* A deep, saturated teal (distinct from black text) */
+    font-weight: 600;         /* Bold enough to catch the eye */
     text-decoration: none;
-    font-weight: 600;      /* Makes the link bold */
-    transition: all 0.2s ease-in-out;
-    border-bottom: 1px solid rgba(52, 152, 219, 0.2); /* Subtle underline */
+    border-bottom: 1.5px solid rgba(0, 118, 133, 0.3); /* Subtle persistent underline */
+    transition: all 0.2s ease;
 }
 
-a:hover {
-    color: #2980b9;        /* Darkens slightly on hover */
-    text-decoration: none;
-    border-bottom: 2px solid #2980b9; /* Thickens the underline on hover */
+main a:hover {
+    color: #005a66;           /* Darkens on hover */
+    border-bottom: 1.5px solid #005a66; /* Underline becomes solid */
+    background-color: rgba(0, 118, 133, 0.05); /* Very faint highlight "glow" */
+}
+
+/* Keeps the Navigation links clean so they don't get too bulky */
+.nav a {
+    font-weight: 500;
+    border-bottom: none;
 }
 
 /* Header */
