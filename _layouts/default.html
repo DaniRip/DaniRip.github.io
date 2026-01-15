@@ -5,26 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }} | {{ site.title }}</title>
     <link rel="stylesheet" href="{{ "/assets/css/style.css" | relative_url }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ "/favicon.png" | relative_url }}">
 </head>
 <body>
 
-    <header>
-        <div class="nav-container">
-            <a href="{{ "/" | relative_url }}" class="site-title">{{ site.title }}</a>
-            <nav>
-                <ul>
-                    <li><a href="{{ "/" | relative_url }}">Home</a></li>
-                    <li><a href="{{ "/teaching/" | relative_url }}">Teaching</a></li>
-                    <li><a href="{{ "/service/" | relative_url }}">Service</a></li>
-                    <li><a href="{{ "/publications/" | relative_url }}">Publications</a></li>
-                    <li><a href="{{ "/presentations/" | relative_url }}">Presentations</a></li>
-                    <li><a href="{{ "/videos/" | relative_url }}">Videos</a></li>
-                    <li><a href="{{ "/cv/" | relative_url }}">CV</a></li>
-                </ul>
-            </nav>
+    <header class="header">
+        <div class="header-content">
+            <h1><a href="{{ "/" | relative_url }}">{{ site.title }}</a></h1>
+            <p class="subtitle">{{ site.description }}</p>
+            <div class="social-links">
+                <a href="mailto:{{ site.email }}" title="Email"><i class="fas fa-envelope"></i></a>
+                {% if site.github_username %}
+                <a href="https://github.com/{{ site.github_username }}" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
+                {% endif %}
+                <a href="https://scholar.google.com/citations?hl=en&user=29TV-goAAAAJ" title="Google Scholar" target="_blank"><i class="fas fa-graduation-cap"></i></a>
+                <!-- Add more social links here if needed -->
+            </div>
         </div>
     </header>
+
+    <nav class="nav">
+        <div class="nav-container">
+            <ul>
+                <!-- "Home" link removed as per request -->
+                <li><a href="{{ "/" | relative_url }}" class="{% if page.url == '/' %}active{% endif %}">About</a></li> <!-- Added About linking to Home -->
+                <li><a href="{{ "/teaching/" | relative_url }}" class="{% if page.url contains '/teaching/' %}active{% endif %}">Teaching</a></li>
+                <li><a href="{{ "/service/" | relative_url }}" class="{% if page.url contains '/service/' %}active{% endif %}">Service</a></li>
+                <li><a href="{{ "/publications/" | relative_url }}" class="{% if page.url contains '/publications/' %}active{% endif %}">Publications</a></li>
+                <li><a href="{{ "/presentations/" | relative_url }}" class="{% if page.url contains '/presentations/' %}active{% endif %}">Presentations</a></li>
+                <li><a href="{{ "/videos/" | relative_url }}" class="{% if page.url contains '/videos/' %}active{% endif %}">Videos</a></li>
+                <li><a href="{{ "/cv/" | relative_url }}" class="{% if page.url contains '/cv/' %}active{% endif %}">CV</a></li>
+            </ul>
+        </div>
+    </nav>
 
     <main>
         {{ content }}
