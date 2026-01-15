@@ -189,7 +189,7 @@ h2 {
 /* Updated Profile Section for larger Desktop image */
 .profile-section {
     display: grid;
-    grid-template-columns: 300px 1fr; /* Increased from 280px */
+    grid-template-columns: 420px 1fr; /* Increased from 280px */
     gap: 40px;
     align-items: start;
     margin-bottom: 40px;
@@ -198,13 +198,16 @@ h2 {
 /* Updated Profile Image with right-side crop */
 .profile-img {
     width: 100%;
-    max-width: 380px;   /* Increased width for computer */
+    max-width: 420px;   /* Increased width for computer */
     height: 350px;      /* Decreased height to make it wider vs taller */
     border-radius: 13px;
     
     /* Adding "border" on both sides */
-    padding: 8px;       /* This creates a gap between the image and the shadow */
-    background: white;  /* This acts as a frame/border */
+    /* padding: 8px;       /* This creates a gap between the image and the shadow */ */
+    /* background: white;  /* This acts as a frame/border */ */
+
+    /* Pushes the image down slightly to align with the first line of text */
+    margin-top: 10px;  
     
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     object-fit: cover;
@@ -217,7 +220,7 @@ h2 {
     color: var(--accent-color);
 }
 
-/* Cards (Farzin Style) */
+/* Cards */
 .card {
     background: var(--card-bg);
     padding: 25px;
