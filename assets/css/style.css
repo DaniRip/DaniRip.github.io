@@ -189,12 +189,17 @@ h2 {
 /* Updated Profile Image with right-side crop */
 .profile-img {
     width: 100%;
-    max-width: 300px; /* Increased from 280px */
-    height: 400px;    /* Fixed height helps with consistent cropping */
+    max-width: 380px;   /* Increased width for computer */
+    height: 350px;      /* Decreased height to make it wider vs taller */
     border-radius: 13px;
+    
+    /* Adding "border" on both sides */
+    padding: 8px;       /* This creates a gap between the image and the shadow */
+    background: white;  /* This acts as a frame/border */
+    
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     object-fit: cover;
-    object-position: 60% center; /* Adjust this % to crop more or less of the right side */
+    object-position: 60% center; 
 }
 
 .intro-text h1 {
@@ -311,8 +316,13 @@ footer {
 
     .profile-img {
         margin: 0 auto;
-        width: 280px;  /* Increased from 200px for a larger phone presence */
-        height: 320px; /* Optional: adjust height for mobile aspect ratio */
+        max-width: 300px; /* Your preferred phone width */
+        height: 400px;    /* Your preferred phone height */
+        padding: 0;       /* Removing the frame for phone to save space */
+        
+        /* Keep your crop settings */
+        object-fit: cover;
+        object-position: 60% center;
     }
 
     .intro-text {
