@@ -4,9 +4,10 @@ title: About Me
 image: /assets/profile.jpg
 ---
 
-### Current Role
-**Malone Postdoctoral Fellow** at <a href="https://www.jhu.edu" target="_blank">Johns Hopkins University</a>
+## Current Role
+<a href="https://malonecenter.jhu.edu/people/danielle-ripsman/" target="_blank">Malone Postdoctoral Fellow</a> at <a href="https://www.jhu.edu" target="_blank">Johns Hopkins University</a>
 
+## Bio
 I received my Ph.D. in Operations Research at the <a href="https://uwaterloo.ca/management-sciences/" target="_blank">Department of Management Sciences</a> in the **Faculty of Engineering** under **Dr. Houra Mahmoudzadeh**. I received my M.A.Sc. at the University of Waterloo in Management Sciences (2018) and my B.A.Sc. at the University of Toronto in Industrial Engineering (2016).
 
 My research interests lie in improving the efficiency of solvers for large-scale optimization problems. My primary application area has been radiation therapy treatment planning for cancer patients. I have even had the pleasure of spending a work term at the Grand River Regional Cancer Centre, under the supervision of Dr. Ernest Osei.
