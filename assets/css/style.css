@@ -207,7 +207,7 @@ h2 {
     /* background: white;  /* This acts as a frame/border */ */
 
     /* Pushes the image down slightly to align with the first line of text */
-    margin-top: 100px;  
+    transform: translateY(40px); /* Adjust the 40px until it lines up perfectly */
     
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     object-fit: cover;
