@@ -189,7 +189,7 @@ h2 {
 /* Updated Profile Section for larger Desktop image */
 .profile-section {
     display: grid;
-    grid-template-columns: 400px 1fr; /* Increased from 280px */
+    grid-template-columns: 390px 1fr; /* Increased from 280px */
     gap: 40px;
     align-items: start;
     margin-bottom: 40px;
@@ -198,7 +198,7 @@ h2 {
 /* Updated Profile Image with right-side crop */
 .profile-img {
     width: 100%;
-    max-width: 400px;   /* Increased width for computer */
+    max-width: 390px;   /* Increased width for computer */
     height: 350px;      /* Decreased height to make it wider vs taller */
     border-radius: 13px;
     
