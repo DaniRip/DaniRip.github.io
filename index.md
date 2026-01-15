@@ -4,8 +4,7 @@ title: About Me
 image: /assets/profile.jpg
 ---
 
-### Current Role
-### <a href="https://malonecenter.jhu.edu/people/danielle-ripsman/" target="_blank">Malone Postdoctoral Fellow</a> at <a href="https://www.jhu.edu" target="_blank">Johns Hopkins University</a>
+### Current Role:<br><a href="https://malonecenter.jhu.edu/people/danielle-ripsman/" target="_blank">Malone Postdoctoral Fellow</a> at <a href="https://www.jhu.edu" target="_blank">Johns Hopkins University</a>
 
 I work under <a href="https://systems.jhu.edu/kimia/" target="_blank">Dr. Kimia Ghobadi</a> at Hopkins and have affiliations with the <a href="https://systems.jhu.edu/" target="_blank">Center for Systems Science and Engineering (CSSE)</a>, <a href="https://hbhi.jhu.edu/" target="_blank">Hopkins Business of Health Initiative (HBHI)</a> alongside the <a href="https://malonecenter.jhu.edu/" target="_blank">Malone Center for Engineering in Healthcare</a>.
 
