@@ -1,15 +1,13 @@
+---
+layout: home
+title: About Me
+image: /assets/3800 Colour.jpg
+---
 
-# Operations Research Specialist
+**Ph.D. in Management Science & Engineering**
 
-#### Technical Skills: Linear and Integer Programing, CPLEX, Gurobi, C++, Python, MATLAB, R
+I received my Ph.D. in Operations Research at the **Department of Management Sciences** in the **Faculty of Engineering** under **Dr. Houra Mahmoudzadeh**. I received my M.A.Sc. at the University of Waterloo in Management Sciences (2018) and my B.A.Sc. at the University of Toronto in Industrial Engineering (2016).
 
-## Education
-- Ph.D., Management Sciences | The University of Waterloo (_Aug 2024_)								       		
-- M.A.Sc., Management Sciences	| The University of Waterloo (_Aug 2018_)	 			        		
-- B.A.Sc., Industrial Engineering | The University of Toronto (_June 2016_)
+My research interests lie in improving the efficiency of solvers for large-scale optimization problems. My primary application area has been radiation therapy treatment planning for cancer patients. I have even had the pleasure of spending a work term at the Grand River Regional Cancer Centre, under the supervision of Dr. Ernest Osei.
 
-## Publications
-1. D. A. Ripsman, F. Rahimi, H. Abouee-Mehrizi, H. Mahmoudzadeh. “Light Pareto robust optimization for IMRT treatment planning". Medical Physics, 50(5):2637–2648, 2023. [Link](http://doi.org/10.1002/mp.16298)
-2. D. A. Ripsman, T. G. Purdie, T. C. Y. Chan and Houra Mahmoudzadeh. “Robust Direct Aperture Optimization for Radiation Therapy Treatment Planning". INFORMS Journal on Computing, 34(4), pages 2017–2038, 2022. [Link](https://doi.org/10.1287/ijoc.2022.1167)
-3. D. A. Ripsman, D. M. Aleman and K. Ghobadi. “Interactive visual guidance for automated stereotactic radiosurgery treatment planning", Expert Systems with Applications, 42 (21), pages 8337–8348, 2015. [Link](https://doi.org/10.1016/j.eswa.2015.06.028)
-
+From a methods perspective, I enjoy approaching problems in a visual fashion, while trying to maintain the optimality of solutions through smart algorithms (rather than approximation). My main areas of focus to date have been visual decision analysis along a complex Pareto frontier, warm start generation heuristics, structural interpretation of problems, inverse optimization, and optimization under uncertainty.
