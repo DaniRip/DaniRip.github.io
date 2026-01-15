@@ -3,7 +3,7 @@ layout: home
 title: About Me
 image: /assets/profile.jpg
 ---
-# About Me
+## About Me
 
 ### Current Role: <a href="https://malonecenter.jhu.edu/people/danielle-ripsman/" target="_blank">Malone Postdoctoral Fellow</a> at <a href="https://www.jhu.edu" target="_blank">Johns Hopkins University</a>
 ---
