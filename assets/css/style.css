@@ -191,13 +191,15 @@ h2 {
     display: grid;
     grid-template-columns: 340px 1fr; /* Increased from 280px */
     gap: 40px;
-    /* align-items: start; */
-    align-items: center; /* This centers the image vertically against the text block */
+    align-items: start;
+    /* align-items: center; /* This centers the image vertically against the text block */ */
     margin-bottom: 40px;
 }
 
 /* Updated Profile Image with right-side crop */
 .profile-img {
+    position: relative; /* This is the key */
+    top: 40px;          /* This "pushes" it down from its top edge */
     width: 100%;
     max-width: 340px;   /* Increased width for computer */
     height: 280px;      /* Decreased height to make it wider vs taller */
@@ -207,8 +209,6 @@ h2 {
     /* padding: 8px;       /* This creates a gap between the image and the shadow */ */
     /* background: white;  /* This acts as a frame/border */ */
 
-    /* Pushes the image down slightly to align with the first line of text */
-    transform: translateY(40px); /* Adjust the 40px until it lines up perfectly */
     
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     object-fit: cover;
