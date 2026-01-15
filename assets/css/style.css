@@ -199,7 +199,7 @@ h2 {
 /* Updated Profile Image with right-side crop */
 .profile-img {
     position: relative; /* This is the key */
-    /* top: 20px;          /* This "pushes" it down from its top edge */ */
+    top: 5px;          /* This "pushes" it down from its top edge */
     width: 100%;
     max-width: 340px;   /* Increased width for computer */
     height: 280px;      /* Decreased height to make it wider vs taller */
