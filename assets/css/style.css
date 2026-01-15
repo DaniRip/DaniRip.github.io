@@ -180,7 +180,7 @@ h2 {
 /* Updated Profile Section for larger Desktop image */
 .profile-section {
     display: grid;
-    grid-template-columns: 320px 1fr; /* Increased from 280px */
+    grid-template-columns: 300px 1fr; /* Increased from 280px */
     gap: 40px;
     align-items: start;
     margin-bottom: 40px;
@@ -189,12 +189,12 @@ h2 {
 /* Updated Profile Image with right-side crop */
 .profile-img {
     width: 100%;
-    max-width: 320px; /* Increased from 280px */
+    max-width: 300px; /* Increased from 280px */
     height: 400px;    /* Fixed height helps with consistent cropping */
-    border-radius: 15px;
+    border-radius: 13px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     object-fit: cover;
-    object-position: 20% center; /* Adjust this % to crop more or less of the right side */
+    object-position: 60% center; /* Adjust this % to crop more or less of the right side */
 }
 
 .intro-text h1 {
