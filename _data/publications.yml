@@ -1,3 +1,10 @@
+- title: "A comparison of voxel sampling approaches for intensity-modulated radiation therapy"
+  authors: "D. A. Ripsman, S. H. Hristov, G. Gola, W. Kwong, M. Singh, E. Osei, J. Darko, H. Mahmoudzadeh"
+  journal: "Medical Physics"
+  volume: "52(12):e70179"
+  year: 2025
+  link: "https://doi.org/10.1002/mp.70179"
+
 - title: "Light Pareto robust optimization for IMRT treatment planning"
   authors: "D. A. Ripsman, F. Rahimi, H. Abouee-Mehrizi, H. Mahmoudzadeh"
   journal: "Medical Physics"
