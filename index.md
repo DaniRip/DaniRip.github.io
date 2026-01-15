@@ -1,7 +1,7 @@
 ---
 layout: home
 title: About Me
-image: /assets/3800 Colour.jpg
+image: /assets/profile.jpg
 ---
 
 **Ph.D. in Management Science & Engineering**
