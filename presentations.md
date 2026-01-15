@@ -6,7 +6,7 @@ permalink: /presentations/
 
 ## Conference Presentations
 
-<ol reversed>
+<ol>
 {% for pres in site.data.presentations.conference %}
     <li>
         <strong>{{ pres.authors }}</strong>, “{{ pres.title }}", {{ pres.event }}, {{ pres.location }}, {{ pres.date }}.
