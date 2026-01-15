@@ -199,7 +199,7 @@ h2 {
 .profile-img {
     width: 100%;
     max-width: 340px;   /* Increased width for computer */
-    height: 260px;      /* Decreased height to make it wider vs taller */
+    height: 280px;      /* Decreased height to make it wider vs taller */
     border-radius: 13px;
     
     /* Adding "border" on both sides */
