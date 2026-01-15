@@ -1,17 +1,6 @@
 title: Danielle A. Ripsman
 email: your-email@domain.com
-description: >- # this means to ignore newlines until "baseurl:"
-  Ph.D. in Management Science & Engineering. Specializing in Operations Research and Radiation Therapy treatment planning.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://danirip.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username:
-github_username:  danirip
-
-# Build settings
-markdown: kramdown
-plugins:
-  - jekyll-feed
-
-exclude:
-  - Gemfile
-  - Gemfile.lock
+description: "Ph.D. in Management Science & Engineering. <br> Specializing in Operations Research and Radiation Therapy treatment planning."
+baseurl: "" 
+url: "https://danirip.github.io"
+github_username: danirip
