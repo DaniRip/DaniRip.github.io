@@ -37,7 +37,7 @@ main a {
     color: #007685;           /* A deep, saturated teal (distinct from black text) */
     font-weight: 600;         /* Bold enough to catch the eye */
     text-decoration: none;
-    border-bottom: 1.5px solid rgba(0, 118, 133, 0.3); /* Subtle persistent underline */
+    /* border-bottom: 1.5px solid rgba(0, 118, 133, 0.3); /* Subtle persistent underline */ */
     transition: all 0.2s ease;
 }
 
