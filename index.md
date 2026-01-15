@@ -6,7 +6,7 @@ image: /assets/profile.jpg
 
 ### Current Role:<br><a href="https://malonecenter.jhu.edu/people/danielle-ripsman/" target="_blank">Malone Postdoctoral Fellow</a> at <a href="https://www.jhu.edu" target="_blank">Johns Hopkins University</a>
 
-I work under <a href="https://systems.jhu.edu/kimia/" target="_blank">Dr. Kimia Ghobadi</a> at Hopkins and have affiliations with the <a href="https://systems.jhu.edu/" target="_blank">Center for Systems Science and Engineering (CSSE)</a>, <a href="https://hbhi.jhu.edu/" target="_blank">Hopkins Business of Health Initiative (HBHI)</a> alongside the <a href="https://malonecenter.jhu.edu/" target="_blank">Malone Center for Engineering in Healthcare</a>.
+I work under <a href="https://systems.jhu.edu/kimia/" target="_blank">Dr. Kimia Ghobadi</a> with affiliations across the <a href="https://systems.jhu.edu/" target="_blank">Center for Systems Science and Engineering (CSSE)</a>, the <a href="https://hbhi.jhu.edu/" target="_blank">Hopkins Business of Health Initiative (HBHI)</a> and the <a href="https://malonecenter.jhu.edu/" target="_blank">Malone Center for Engineering in Healthcare</a>.
 
 I received my Ph.D. in Management Science at the <a href="https://uwaterloo.ca/management-sciences/" target="_blank">Department of Management Sciences and Engineering</a> under <a href="https://uwaterloo.ca/scholar/h6mahmou" target="_blank">Dr. Houra Mahmoudzadeh</a> in 2024. I previously received my M.A.Sc. in the same department, under the same supervision in 2018. My B.A.Sc. was obtained at the University of Toronto in <a href="https://www.mie.utoronto.ca/" target="_blank">Industrial Engineering</a> in 2016.
 
