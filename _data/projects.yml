@@ -1,0 +1,9 @@
+research:
+  - title: "Example Research Project"
+    description: "Brief description of the ongoing research project. This is a placeholder for your active research topics."
+    # link: "https://example.com" # Optional link
+    # image: "/assets/project-image.jpg" # Optional image
+
+fun:
+  - title: "Example Fun Project"
+    description: "Brief description of a just-for-fun project."
