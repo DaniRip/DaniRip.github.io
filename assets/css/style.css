@@ -191,7 +191,8 @@ h2 {
     display: grid;
     grid-template-columns: 340px 1fr; /* Increased from 280px */
     gap: 40px;
-    align-items: start;
+    /* align-items: start; */
+    align-items: center; /* This centers the image vertically against the text block */
     margin-bottom: 40px;
 }
 
