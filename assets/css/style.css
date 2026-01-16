@@ -186,6 +186,7 @@ h2 {
 }
 
 /* Home Profile Section */
+
 /* Updated Profile Section for larger Desktop image */
 .profile-section {
     display: grid;
@@ -219,6 +220,47 @@ h2 {
     margin-top: 0;
     font-size: 2.2rem;
     color: var(--accent-color);
+}
+
+.affiliation-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.affil-tag {
+    background: #f0f4f8;
+    color: var(--accent-color) !important;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid rgba(44, 62, 80, 0.1);
+}
+
+.research-pillars h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    color: var(--accent-color);
+}
+
+.research-pillars ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.research-pillars li {
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.research-pillars i {
+    color: #4ca1af; /* Your muted teal icon color */
 }
 
 /* Cards */
