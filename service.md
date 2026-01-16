@@ -11,6 +11,17 @@ permalink: /service/
         <span class="service-role">{{ item.role }}</span>
     </div>
     <p class="service-desc">{{ item.description }}</p>
+
+    {% if item.journals %}
+    <div class="journal-list">
+        <strong>Reviewer for:</strong>
+        <ul>
+            {% for journal in item.journals %}
+            <li>{{ journal }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
     
     {% if item.images %}
     <div class="project-gallery-icons">
