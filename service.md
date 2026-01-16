@@ -15,16 +15,13 @@ permalink: /service/
     {% endif %}
 
     {% if item.images %}
-    <div class="project-gallery">
-        {% for img in item.images %}
-        <div class="gallery-item">
-            <img src="{{ img.src | relative_url }}" 
-                 alt="{{ img.alt }}" 
-                 class="project-img"
-                 onerror="this.style.display='none'; this.parentElement.innerHTML='<small><i>Image pending: '+this.alt+'</i></small>'">
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
+<div class="project-gallery-icons">
+    {% for img in item.images %}
+    <a href="{{ img.src | relative_url }}" data-lightbox="project-{{ item.organization | slugify }}" data-title="{{ img.alt }}">
+        <img src="{{ img.src | relative_url }}" alt="{{ img.alt }}" class="thumbnail-icon">
+    </a>
+    {% endfor %}
+</div>
+{% endif %}
 </div>
 {% endfor %}
