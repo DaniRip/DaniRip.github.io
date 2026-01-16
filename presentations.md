@@ -32,21 +32,31 @@ permalink: /presentations/
 
 {% for comp in site.data.presentations.competitions %}
 <div class="card">
-    <h3>{{ comp.event }} ({{ comp.year }})</h3>
-    {% if comp.title %}<p class="comp-title">{{ comp.title }}</p>{% endif %}
-    {% if comp.authors %}<p>{{ comp.authors }}</p>{% endif %}
-    {% if comp.location %}<p>{{ comp.location }}</p>{% endif %}
-    <!-- {% if comp.link %}<p><a href="{{ comp.link }}" target="_blank">{{ comp.link_text }}</a></p>{% endif %} -->
-    {% if comp.award %}
-        <p class="comp-award">
-            <i class="fas fa-trophy"></i> {{ comp.award }}
-        </p>
-    {% endif %}
+    <div class="card-header">
+        <h3>{{ comp.event }} ({{ comp.year }})</h3>
+        {% if comp.award %}
+            <span class="award-badge-small"><i class="fas fa-trophy"></i> {{ comp.award }}</span>
+        {% endif %}
+    </div>
+
+    {% if comp.title %}<p class="comp-title">“{{ comp.title }}”</p>{% endif %}
     
+    <p class="comp-meta">
+        {% if comp.authors %}<span><i class="fas fa-users"></i> {{ comp.authors }}</span><br>{% endif %}
+        {% if comp.location %}<span><i class="fas fa-map-marker-alt"></i> {{ comp.location }}</span>{% endif %}
+    </p>
+
     {% if comp.youtube_id %}
-        <a href="https://www.youtube.com/watch?v={{ comp.youtube_id }}" class="video-btn" target="_blank">
-            <i class="fab fa-youtube"></i> Watch Presentation
-        </a>
+    <div class="video-section">
+        <p class="video-label"><i class="fab fa-youtube"></i> Featured Presentation:</p>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/{{ comp.youtube_id }}" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+            </iframe>
+        </div>
+    </div>
     {% endif %}
 </div>
 {% endfor %}
