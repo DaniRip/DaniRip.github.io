@@ -257,7 +257,7 @@ h2 {
     align-items: center; /* Centers the [Link] button vertically against the text */
     gap: 15px;
     padding: 15px;
-    border-left: 4px solid #007685; /* Your bold teal border */
+    border-left: 4px solid var(--accent-color); /* #007685;  Your bold teal border */
     margin-bottom: 12px; /* Reduced space between separate cards from 25px to 12px */
 }
 
@@ -265,7 +265,7 @@ h2 {
 .publication-title {
     font-weight: 700;
     font-size: 1.2rem;
-    color: #007685; /* Your colorful teal title */
+    color: var(--accent-color); /*#007685;  Your colorful teal title */
     margin-bottom: 4px;
 }
 
