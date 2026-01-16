@@ -39,6 +39,7 @@ permalink: /presentations/
     <div class="video-container">
     <iframe src="https://www.youtube.com/embed/{{ comp.youtube_id }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
+    {% endif %}
     {% if comp.award %}<p><strong>{{ comp.award }}</strong></p>{% endif %}
 </div>
 {% endfor %}
