@@ -16,12 +16,12 @@ permalink: /presentations/
 {% endfor %}
 </ol>
 
-### Poster Presentations
+### Poster Presentations <i class="far fa-file-image"></i>
 
 <ol>
 {% for poster in site.data.presentations.posters %}
 <li>
-    <i class="far fa-file-image"></i> <strong>“{{ poster.title }}”</strong><br>
+    <strong>“{{ poster.title }}”</strong><br>
     <small>{{ poster.authors }}</small><br>
     <span class="event-details">{{ poster.event }} — {{ poster.location }} ({{ poster.date }})</span>
 </li>
