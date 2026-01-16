@@ -28,6 +28,8 @@ permalink: /presentations/
 {% endfor %}
 </ol>
 
+### Competitions <i class="fas fa-trophy"></i>
+
 {% for comp in site.data.presentations.competitions %}
 <div class="card competition-card">
     <details>
