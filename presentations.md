@@ -20,8 +20,7 @@ permalink: /presentations/
 
 {% for comp in site.data.presentations.competitions %}
 <div class="card">
-    <h3>{{ comp.event }} ({{ comp.year }})</h3>
-    <p>{{ comp.title }}</p>
+    <h3>{{ comp.title }} ({{ comp.year }})</h3>
     {% if comp.location %}<p>{{ comp.location }}</p>{% endif %}
     {% if comp.link %}<p><a href="{{ comp.link }}" target="_blank">{{ comp.link_text }}</a></p>{% endif %}
     {% if comp.award %}<p><strong>{{ comp.award }}</strong></p>{% endif %}
