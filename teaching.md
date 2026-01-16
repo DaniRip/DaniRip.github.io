@@ -4,7 +4,7 @@ title: Teaching & Mentorship
 permalink: /teaching/
 ---
 
-### Teaching Experience
+### <i class="fas fa-chalkboard-user"></i> Teaching Experience
 
 {% for job in site.data.teaching.teaching_experience %}
 <div class="card">
@@ -14,7 +14,7 @@ permalink: /teaching/
 </div>
 {% endfor %}
 
-### Teaching Assistant Experience
+### <i class="fas fa-pen-nib"></i> Teaching Assistant Experience
 
 <ul>
 {% for job in site.data.teaching.ta_experience %}
@@ -25,7 +25,7 @@ permalink: /teaching/
 {% endfor %}
 </ul>
 
-### Distinctions
+### <i class="fas fa-award"></i> Distinctions
 
 {% for item in site.data.teaching.distinctions %}
 <div class="card">
@@ -34,7 +34,7 @@ permalink: /teaching/
 </div>
 {% endfor %}
 
-### Mentorship
+### <i class="fas fa-seedling"></i> Mentorship
 
 I was lucky enough to mentor some undergraduate students throughout my time at the University of Waterloo.
 
