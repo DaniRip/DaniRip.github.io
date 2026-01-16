@@ -29,6 +29,17 @@ permalink: /teaching/
 {% endfor %}
 </div>
 
+### Distinctions <i class="fas fa-award"></i>
+
+{% for item in site.data.teaching.distinctions %}
+<div class="award-card card">
+    <div class="card-header">
+        <h3>{{ item.title }}</h3>
+    </div>
+    <p>{{ item.description }}</p>
+</div>
+{% endfor %}
+
 ### Mentorship <i class="fas fa-seedling"></i>
 
 <p class="mentorship-intro">During my time at the University of Waterloo, I had the privilege of mentoring undergraduate researchers on various optimization and healthcare projects.</p>
