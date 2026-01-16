@@ -493,6 +493,65 @@ details[open] .toggle-chevron {
     display: inline-block; /* Required for rotation to work */
 }
 
+/* Teaching Cards */
+.teaching-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.teaching-year {
+    font-weight: 700;
+    color: var(--accent-color);
+}
+
+.role-tag {
+    display: inline-block;
+    background: #f0f7f8;
+    color: #007685;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* TA Grid - Layout 2 columns on desktop */
+.ta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.ta-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.ta-year {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* Mentorship Items */
+.mentee-item {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #ddd;
+}
+
+.mentee-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.mentee-project {
+    margin: 5px 0 0 0;
+    font-size: 0.95rem;
+    color: #555;
+}
+
 /* Buttons */
 .btn {
     display: inline-block;
