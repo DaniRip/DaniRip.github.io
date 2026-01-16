@@ -36,7 +36,7 @@ permalink: /teaching/
 
 ### Mentorship
 
-I have been lucky enough to mentor some undergraduate students throughout my time at the University of Waterloo.
+I was lucky enough to mentor some undergraduate students throughout my time at the University of Waterloo.
 
 <ul>
 {% for mentee in site.data.mentorship %}
