@@ -107,6 +107,7 @@ competitions:
   - event: "Canadian Operational Research Society (CORS) Conference Student Paper Presentation"
     title: "Superior and Light Pareto Robust Optimization"
     location: "London, ON, Canada"
+    authors: "F. Rahimi, D. A. Ripsman, H. Abouee-Mehrizi & H. Mahmoudzadeh"
     year: 2024
     award: "* Finalist in both the Health Care Operations Research (HCOR) SIG and Open categories"
   - event: "CORS Health Care Operational Research SIG Student Presentation Competition"
