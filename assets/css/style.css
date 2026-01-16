@@ -308,8 +308,8 @@ h2 {
 }
 
 .thumbnail-icon {
-    width: 80px;         /* Set the exact size of the "icon" */
-    height: 80px;        /* Keep it square */
+    width: 120px;         /* Set the exact size of the "icon" */
+    height: 120px;        /* Keep it square */
     object-fit: cover;   /* Crops the image to fit the square */
     border-radius: 8px;
     border: 2px solid #eee;
