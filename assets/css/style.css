@@ -288,14 +288,16 @@ h2 {
 .comp-title {
     font-size: 1.15rem;
     font-weight: 700;
-    margin-bottom: 5px;
-    color: var(--text-color);
+    margin-bottom: 2px;
+    color: var(--accent-color); /* This uses your Dark Slate for the Title */
 }
 
 .comp-award {
-    color: #4ca1af; /* Use your accent teal */
+    color: #007685 !important;  /* Darker teal for better visibility */
     font-style: italic;
-    font-weight: 500;
+    font-weight: 600;           /* Increased weight makes color more visible */
+    margin-top: 0;
+    display: block;             /* Ensures it sits on its own line */
 }
 
 /* Buttons */
