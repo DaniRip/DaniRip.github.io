@@ -285,6 +285,14 @@ h2 {
     height: 100%;
 }
 
+.award-callout {
+    margin-top: 15px;
+    padding-left: 15px;
+    border-left: 3px solid #f1c40f; /* A gold "medal" yellow/gold */
+    font-size: 0.95rem;
+    color: #555;
+}
+
 /* Buttons */
 .btn {
     display: inline-block;
