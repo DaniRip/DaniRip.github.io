@@ -417,6 +417,24 @@ h2 {
     color: #555;
 }
 
+/* Hide the default tiny black triangle */
+details summary::-webkit-details-marker {
+    display: none;
+}
+details summary {
+    list-style: none;
+}
+
+/* Rotate your Font-Awesome chevron when the card is open */
+details[open] .toggle-chevron {
+    transform: rotate(180deg);
+}
+
+.toggle-chevron {
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
 /* Buttons */
 .btn {
     display: inline-block;
