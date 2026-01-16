@@ -8,9 +8,9 @@
   role: "Designer"
   description: "During the pandemic, Kiefer Burgess and I got to design the \"conference centre\" for the CORS 2021 conference in Gather Town, pictured below!"
   images:
-    - src: "/assets/beacharea.png"
+    - src: "/assets/BeachArea.png"
       alt: "Beach Area in Gather Town"
-    - src: "/assets/maingatherroom.png"
+    - src: "/assets/MainGatherRoom.png"
       alt: "Main Gather Room"
 
 - organization: "TORCH"
