@@ -266,15 +266,28 @@ h2 {
     margin-bottom: 5px;
 }
 
-/* /* Video Responsive */
+/* Container for the Video Label and Frame */
+.video-section {
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.video-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #c4302b; /* YouTube Red */
+    margin-bottom: 10px;
+}
+
+/* Aspect Ratio Box to keep video from looking squashed */
 .video-container {
     position: relative;
-    padding-bottom: 56.25%; /* 16:9 */
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
     height: 0;
-    margin-bottom: 2rem;
-    background: #000;
-    border-radius: 8px;
     overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .video-container iframe {
@@ -283,31 +296,23 @@ h2 {
     left: 0;
     width: 100%;
     height: 100%;
-} */
-
-/* Styling the numbered lists to look like a CV */
-ol li {
-    margin-bottom: 15px;
-    padding-left: 10px;
-    line-height: 1.5;
 }
 
-/* The YouTube Button style */
-.video-btn {
-    display: inline-block;
-    margin-top: 10px;
-    background: #c4302b; /* YouTube Red */
-    color: white !important;
-    padding: 5px 12px;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    text-decoration: none;
-    font-weight: 600;
+/* Small Badge for the Award inside the card */
+.award-badge-small {
+    background: #fff9e6;
+    color: #b8860b;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border: 1px solid #ffeeba;
 }
 
-.video-btn:hover {
-    background: #ff0000;
-}
+.comp-meta {
+    font-size: 0.9rem;
+    color: #666;
+    line-heigh
 
 .event-details {
     color: #666;
