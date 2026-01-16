@@ -9,7 +9,7 @@ permalink: /presentations/
 <ol>
 {% for pres in site.data.presentations.conference %}
     <li>
-        <strong>{{ pres.authors }}</strong>, “{{ pres.title }}", {{ pres.event }}, {{ pres.location }}, {{ pres.date }}.
+        <strong>{{ pres.authors | replace: "D. A. Ripsman", "<u>D. A. Ripsman</u>" | replace: "D. Ripsman", "<u>D. Ripsman</u>" }}</strong>, “{{ pres.title }}", {{ pres.event }}, {{ pres.location }}, {{ pres.date }}.
         {% if pres.note %}<br/><em>{{ pres.note }}</em>{% endif %}
         {% if pres.award %}<br/><strong>{{ pres.award }}</strong>{% endif %}
     </li>
@@ -21,9 +21,9 @@ permalink: /presentations/
 <ol>
 {% for poster in site.data.presentations.posters %}
 <li>
-    <strong>“{{ poster.title }}"</strong>
-    {{ poster.authors }}
-    {{ poster.event }}, {{ poster.location }}, {{ poster.date }}.
+    <i class="far fa-file-image"></i> <strong>“{{ poster.title }}”</strong><br>
+    <small>{{ poster.authors }}</small><br>
+    <span class="event-details">{{ poster.event }} — {{ poster.location }} ({{ poster.date }})</span>
 </li>
 {% endfor %}
 </ol>
@@ -37,12 +37,16 @@ permalink: /presentations/
     {% if comp.authors %}<p>{{ comp.authors }}</p>{% endif %}
     {% if comp.location %}<p>{{ comp.location }}</p>{% endif %}
     <!-- {% if comp.link %}<p><a href="{{ comp.link }}" target="_blank">{{ comp.link_text }}</a></p>{% endif %} -->
-    {% if comp.award %}<p class="comp-award"><em>{{ comp.award }}</em></p>{% endif %}
+    {% if comp.award %}
+        <p class="comp-award">
+            <i class="fas fa-trophy"></i> {{ comp.award }}
+        </p>
+    {% endif %}
+    
     {% if comp.youtube_id %}
-    <br>Watch it here!
-    <div class="video-container">
-    <iframe src="https://www.youtube.com/embed/{{ comp.youtube_id }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div>
+        <a href="https://www.youtube.com/watch?v={{ comp.youtube_id }}" class="video-btn" target="_blank">
+            <i class="fab fa-youtube"></i> Watch Presentation
+        </a>
     {% endif %}
 </div>
 {% endfor %}
