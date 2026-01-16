@@ -38,7 +38,7 @@ permalink: /presentations/
     <!-- {% if comp.link %}<p><a href="{{ comp.link }}" target="_blank">{{ comp.link_text }}</a></p>{% endif %} -->
     {% if comp.award %}<p class="comp-award"><em>{{ comp.award }}</em></p>{% endif %}
     {% if comp.youtube_id %}
-    Watch it here!
+    <br>Watch it here!
     <div class="video-container">
     <iframe src="https://www.youtube.com/embed/{{ comp.youtube_id }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
