@@ -250,48 +250,73 @@ h2 {
 }
 
 /* Lists and Items */
-/* .publication-item {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-    margin-bottom: 15px;
-    border-left: 3px solid #ddd;
-}
-
-.publication-title {
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: var(--accent-color);
-    margin-bottom: 5px;
-} */
-
-.publication-item {
+/* Restoring the Card Look with a Flex twist */
+.publication-item.card {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    padding: 15px 0;
-    border-bottom: 1px solid #eee; /* Light divider instead of a box */
-    margin-bottom: 0;
+    align-items: center; /* Centers the [Link] button vertically against the text */
+    gap: 20px;
+    padding: 25px;
+    border-left: 5px solid #007685; /* Your bold teal border */
 }
 
-.featured-pub {
-    background-color: rgba(76, 161, 175, 0.03);
-    border-left: 4px solid #007685;
-    padding-left: 15px;
+/* Make sure the title stays that nice accent color */
+.publication-title {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #007685; /* Your colorful teal title */
+    margin-bottom: 8px;
 }
 
-.pub-main { flex: 1; }
+.pub-content {
+    flex: 1; /* This pushes the links to the far right */
+}
 
+.pub-authors {
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.pub-venue {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+/* Styling the Link as a clean "Action" button */
 .pub-links {
-    margin-left: 20px;
-    white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.pub-btn {
-    font-size: 0.85rem;
+.pub-link-btn {
+    background: #f0f7f8;
     color: #007685 !important;
-    margin-left: 10px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid rgba(0, 118, 133, 0.2);
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.pub-link-btn:hover {
+    background: #007685;
+    color: white !important;
+}
+
+/* Mobile Fix: Stack them if the screen is too narrow */
+@media (max-width: 600px) {
+    .publication-item.card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .pub-links {
+        width: 100%;
+        margin-top: 10px;
+    }
 }
 
 /* Container for the Video Label and Frame */
