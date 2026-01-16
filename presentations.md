@@ -37,7 +37,7 @@ permalink: /presentations/
                 {% if comp.award %}
                     <span class="award-badge-small"><i class="fas fa-trophy"></i> {{ comp.award }}</span>
                 {% endif %}
-                <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                <!-- <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span> -->
             </div>
         </summary>
 
