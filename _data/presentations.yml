@@ -6,10 +6,16 @@ conference:
     date: "June 2025"
 
   - title: "A Geometrical Approach to Beam Angle Optimization"
-    authors: "D. A. Ripsman, S. A. Alev, H. Mahmoudzadeh,"
+    authors: "D. A. Ripsman, S. A. Alev, H. Mahmoudzadeh"
     event: "ICS Conference"
     location: "Toronto, ON"
     date: "March 2025"
+
+  - title: "Light Pareto Robust Optimization for IMRT Treatment Planning"
+    authors: "D. A. Ripsman, F. Rahimi, H. Abouee-Mehrizi & H. Mahmoudzadeh"
+    event: "CORS Annual Meeting"
+    location: "London, ON"
+    date: "June 2024"
     
   - title: "Integrating Uncertainty Mitigation into Radiation Therapy Treatment Planning"
     authors: "D. A. Ripsman"
@@ -98,6 +104,11 @@ conference:
     award: "*Awarded second place in the Industrial Engineering Oral Presentations category"
 
 competitions:
+  - event: "Canadian Operational Research Society (CORS) Conference Student Paper Presentation"
+    title: "Superior and Light Pareto Robust Optimization"
+    location: "London, ON, Canada"
+    year: 2024
+    award: "* Finalist in both the Health Care Operations Research (HCOR) SIG and Open categories"
   - event: "CORS Health Care Operational Research SIG Student Presentation Competition"
     title: "Warm-Started Robust Direct Aperture Optimization for Cancer Treatment Planning"
     location: "Saskatoon, SK, Canada"
