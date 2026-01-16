@@ -256,7 +256,7 @@ h2 {
     justify-content: space-between;
     align-items: center; /* Centers the [Link] button vertically against the text */
     gap: 15px;
-    padding: 15px;
+    padding: 15px 20px;
     border-left: 4px solid var(--accent-color); /* #007685;  Your bold teal border */
     margin-bottom: 12px; /* Reduced space between separate cards from 25px to 12px */
 }
