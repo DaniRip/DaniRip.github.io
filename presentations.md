@@ -31,19 +31,21 @@ permalink: /presentations/
 ### Competitions <i class="fas fa-trophy"></i>
 
 {% for comp in site.data.presentations.competitions %}
-<div class="card competition-card">
+<div class="card">
     <details>
-        <summary>
+        <summary style="list-style: none; cursor: pointer;">
             <div class="card-header">
-                <h3>{{ comp.event }} ({{ comp.year }})</h3>
+                <h3>
+                    {{ comp.event }} ({{ comp.year }}) 
+                    <i class="fas fa-chevron-down toggle-chevron" style="font-size: 0.8em; margin-left: 8px; color: #4ca1af;"></i>
+                </h3>
                 {% if comp.award %}
                     <span class="award-badge-small"><i class="fas fa-trophy"></i> {{ comp.award }}</span>
                 {% endif %}
-                <!-- <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span> -->
             </div>
         </summary>
 
-        <div class="accordion-content">
+        <div style="margin-top: 15px;">
             {% if comp.title %}<p class="comp-title">“{{ comp.title }}”</p>{% endif %}
             
             <p class="comp-meta">
