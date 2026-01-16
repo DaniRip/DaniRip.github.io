@@ -312,7 +312,7 @@ h2 {
 .comp-meta {
     font-size: 0.9rem;
     color: #666;
-    line-heigh
+    line-height: 1.4;  /* Add the 't', the ': 1.4', and the ';' */
 }
 
 .event-details {
