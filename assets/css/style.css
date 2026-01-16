@@ -418,21 +418,25 @@ h2 {
 }
 
 /* Hide the default tiny black triangle */
+/* 1. Hides the default arrow on Chrome/Android/Desktop */
 details summary::-webkit-details-marker {
     display: none;
 }
+
+/* 2. Hides the default arrow on Safari (iPhone/Mac) */
 details summary {
+    display: block; /* Required for Safari to hide the marker */
     list-style: none;
 }
 
-/* Rotate your Font-Awesome chevron when the card is open */
+/* 3. The rotation - Works on all modern mobile browsers */
 details[open] .toggle-chevron {
     transform: rotate(180deg);
 }
 
 .toggle-chevron {
     transition: transform 0.3s ease;
-    display: inline-block;
+    display: inline-block; /* Required for rotation to work */
 }
 
 /* Buttons */
