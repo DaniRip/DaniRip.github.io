@@ -4,6 +4,7 @@ title: About Me
 image: /assets/profile.jpg
 ---
 
+<!-- 
 ---
 ### Current Role: <a href="https://malonecenter.jhu.edu/people/danielle-ripsman/" target="_blank">Malone Postdoctoral Fellow</a> at <a href="https://www.jhu.edu" target="_blank">Johns Hopkins University</a>
 ---
@@ -14,7 +15,7 @@ I obtained my Ph.D. (2024) and M.A.Sc. (2018) in Management Science at the <a hr
 
 My research focuses on tackling large-scale, data-driven societal problems, particularly within healthcare systems. By leveraging a toolbox of linear and mixed-integer optimization, inverse optimization, and decision diagrams, I develop efficient heuristics and algorithms designed for real-world implementation. With a background in interface design, my goal is to translate complex theoretical solutions into accessible, actionable tools for decision-makers and the community at large.
 
-Whether exploring public health systems or fundamental algorithmic mathematics, I am driven by a commitment to clear communication, illustration, and teaching.
+Whether exploring public health systems or fundamental algorithmic mathematics, I am driven by a commitment to clear communication, illustration, and teaching. -->
 
 <!-- My primary application area has historically been radiation therapy treatment planning for cancer patients.  I have had the pleasure of working at the <a href="https://www.wrhn.ca/" target="_blank">Waterloo Regional Health Network (WRHN)</a> Cancer Centre, under the supervision of <a href="https://uwaterloo.ca/physics-astronomy/contacts/ernest-osei" target="_blank">Dr. Ernest Osei</a>, where we were able to work on pipelines to integrate optimization solutions into real-world radiation therapy-planning tools. -->
 
@@ -26,3 +27,31 @@ Whether exploring public health systems or fundamental algorithmic mathematics, 
 * **Algorithm Design:** Warm start generation heuristics and structural interpretation.
 * **Optimization Theory:** Inverse optimization and optimization under uncertainty.
 -->
+
+<div class="profile-section">
+    <div class="intro-text">
+        <h2>About Me</h2>
+        <p>I am a <strong>Malone Postdoctoral Fellow</strong> at <strong>Johns Hopkins University</strong>, working under Dr. Kimia Ghobadi. My work sits at the intersection of large-scale optimization and healthcare engineering.</p>
+        
+        <p>I specialize in translating complex theoretical solutions—using tools like <strong>Mixed-Integer Optimization</strong> and <strong>Decision Diagrams</strong>—into actionable tools for decision-makers. My background in interface design allows me to bridge the gap between algorithmic mathematics and real-world implementation.</p>
+    </div>
+    
+    <div class="research-pillars card">
+        <h3>Research Focus</h3>
+        <ul>
+            <li><i class="fas fa-microscope"></i> Engineering in Healthcare</li>
+            <li><i class="fas fa-project-diagram"></i> Large-scale Optimization</li>
+            <li><i class="fas fa-chart-line"></i> Inverse Optimization</li>
+            <li><i class="fas fa-desktop"></i> Interface & Visual Design</li>
+        </ul>
+    </div>
+</div>
+
+<div class="affiliations-section">
+    <h3>Current Affiliations</h3>
+    <div class="affiliation-grid">
+        <a href="https://systems.jhu.edu/" class="affil-tag">Center for Systems Science & Engineering</a>
+        <a href="https://hbhi.jhu.edu/" class="affil-tag">Hopkins Business of Health Initiative</a>
+        <a href="https://malonecenter.jhu.edu/" class="affil-tag">Malone Center for Engineering in Healthcare</a>
+    </div>
+</div>
