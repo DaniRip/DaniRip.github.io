@@ -1,17 +1,17 @@
 - organization: "Canadian Operations Research Society (CORS)"
   role: "National Student Councillor (2024–2025)"
   description: |
-    Elected to represent the national student body, spearheading the post-pandemic reinvigoration of student chapters across Canada. Previously served in multiple leadership tiers, including <b>President of the South Western Ontario Student Chapter</b>. Led local membership growth by 200%, transitioned on-boarding processes, and managed digital presence for over seven years.
+    Elected to represent the national student body, spearheading the post-pandemic reinvigoration of student chapters across Canada. Previously served in multiple leadership tiers, including <b>President of University of Waterloo's Student Chapter</b>. Led local membership growth by 200%, transitioned on-boarding processes, and managed digital presence over seven years.
   
 - organization: "The Operations Research Challenge (TORCH)"
   role: "Founder & Competition Chair"
   description: |
-    Founded and directed the University of Waterloo branch of this tri-university high school outreach competition. Oversaw the end-to-end development of contest mathematics, automated validators, and administrative infrastructure. Previously served as a long-term Executive at the University of Toronto branch, designing curriculum to introduce OR concepts to secondary students.
+    Founded and directed the University of Waterloo branch of this tri-university high school outreach competition. Oversaw the end-to-end development of contest mathematics, automated validators, and administrative infrastructure. Previously served as a long-term Executive at the University of Toronto branch, designing curriculum to introduce OR concepts to secondary students, in a fun, single-day, collaborative format. Gave out $1000's in prize money. The final competition was called off 3 days before the 2019 event, due to the pandemic, and has remained dormant since.
 
 - organization: "Conference Service & Digital Design"
-  role: "Lead Designer / Volunteer"
+  role: "Designer / Volunteer"
   description: |
-    Collaborated on the architectural design of the virtual "Conference Centre" for CORS 2021 using Gather Town, creating an immersive digital environment for academic exchange during the pandemic. Served as a technical and session volunteer for the <b>INFORMS Computing Society (ICS)</b> conference (2024).
+    Collaborated with <a href="https://www.linkedin.com/in/kieferburgess" target="_blank">Dr. Kiefer Burgess</a> on the architectural design of the virtual "Conference Centre" for CORS 2021 using Gather Town, creating an immersive digital environment for academic exchange during the pandemic. Served as a volunteer for the <a href="https://connect.informs.org/computing/home" target="_blank">INFORMS Computing Society (ICS)</a> conference (2025).
   images:
     - src: "/assets/MainGatherRoom.png"
       alt: "Main Gather Room"
@@ -19,6 +19,6 @@
       alt: "Beach Area in Gather Town"
 
 - organization: "Management Sciences Student Association (MSSA)"
-  role: "Departmental Representative / President"
+  role: "Departmental Representative / President (2016-2017)"
   description: |
     Elected representative for the graduate student body at the University of Waterloo. Managed departmental budgets, facilitated faculty-student communication channels, and organized a series of invited speaker seminars and professional development socials.
