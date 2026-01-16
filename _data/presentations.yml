@@ -98,11 +98,13 @@ conference:
     award: "*Awarded second place in the Industrial Engineering Oral Presentations category"
 
 competitions:
-  - title: "CORS Health Care Operational Research SIG Student Presentation Competition"
+  - event: "CORS Health Care Operational Research SIG Student Presentation Competition"
+    title: "Warm-Started Robust Direct Aperture Optimization for Cancer Treatment Planning"
     location: "Saskatoon, SK, Canada"
     year: 2019
     award: "*Awarded first place"
-  - title: "University of Waterloo Three Minute Thesis Competition"
+  - event: "University of Waterloo Three Minute Thesis Competition"
+    title: "Incorporating Practical Constraints into Breast Cancer Treatment Planning"
     location: "Waterloo, ON, Canada"
     year: 2018
     youtube_id: "iieDiuOiSVw"
