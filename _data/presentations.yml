@@ -109,12 +109,12 @@ competitions:
     location: "London, ON, Canada"
     authors: "F. Rahimi, D. A. Ripsman, H. Abouee-Mehrizi & H. Mahmoudzadeh"
     year: 2024
-    award: "* Finalist in both the Health Care Operations Research (HCOR) SIG and Open categories"
+    award: "Finalist in both the Health Care Operations Research (HCOR) SIG and Open categories"
   - event: "CORS Health Care Operational Research SIG Student Presentation Competition"
     title: "Warm-Started Robust Direct Aperture Optimization for Cancer Treatment Planning"
     location: "Saskatoon, SK, Canada"
     year: 2019
-    award: "*Awarded first place"
+    award: "Awarded first place"
   - event: "University of Waterloo Three Minute Thesis Competition"
     title: "Incorporating Practical Constraints into Breast Cancer Treatment Planning"
     location: "Waterloo, ON, Canada"
@@ -122,7 +122,7 @@ competitions:
     youtube_id: "iieDiuOiSVw"
     link: "https://www.youtube.com/watch?v=iieDiuOiSVw"
     link_text: "Watch it here!"
-    award: "*Selected as 3MT Finalist, represented the Management Sciences department"
+    award: "Selected as 3MT Finalist, represented the Management Sciences department"
 
 posters:
   - title: "The Impact of AI Scribe on Primary Care Workload"
