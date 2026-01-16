@@ -28,36 +28,41 @@ permalink: /presentations/
 {% endfor %}
 </ol>
 
-### Competitions
-
 {% for comp in site.data.presentations.competitions %}
-<div class="card">
-    <div class="card-header">
-        <h3>{{ comp.event }} ({{ comp.year }})</h3>
-        {% if comp.award %}
-            <span class="award-badge-small"><i class="fas fa-trophy"></i> {{ comp.award }}</span>
-        {% endif %}
-    </div>
+<div class="card competition-card">
+    <details>
+        <summary>
+            <div class="card-header">
+                <h3>{{ comp.event }} ({{ comp.year }})</h3>
+                {% if comp.award %}
+                    <span class="award-badge-small"><i class="fas fa-trophy"></i> {{ comp.award }}</span>
+                {% endif %}
+                <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+            </div>
+        </summary>
 
-    {% if comp.title %}<p class="comp-title">“{{ comp.title }}”</p>{% endif %}
-    
-    <p class="comp-meta">
-        {% if comp.authors %}<span><i class="fas fa-users"></i> {{ comp.authors }}</span><br>{% endif %}
-        {% if comp.location %}<span><i class="fas fa-map-marker-alt"></i> {{ comp.location }}</span>{% endif %}
-    </p>
+        <div class="accordion-content">
+            {% if comp.title %}<p class="comp-title">“{{ comp.title }}”</p>{% endif %}
+            
+            <p class="comp-meta">
+                {% if comp.authors %}<span><i class="fas fa-users"></i> {{ comp.authors }}</span><br>{% endif %}
+                {% if comp.location %}<span><i class="fas fa-map-marker-alt"></i> {{ comp.location }}</span>{% endif %}
+            </p>
 
-    {% if comp.youtube_id %}
-    <div class="video-section">
-        <p class="video-label"><i class="fab fa-youtube"></i> Featured Presentation:</p>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/{{ comp.youtube_id }}" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-            </iframe>
+            {% if comp.youtube_id %}
+            <div class="video-section">
+                <p class="video-label"><i class="fab fa-youtube"></i> Featured Presentation:</p>
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/{{ comp.youtube_id }}" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+            {% endif %}
         </div>
-    </div>
-    {% endif %}
+    </details>
 </div>
 {% endfor %}
 
