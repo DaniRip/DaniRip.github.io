@@ -300,29 +300,25 @@ h2 {
     display: block;             /* Ensures it sits on its own line */
 }
 
-.project-gallery {
-    display: flex; 
-    gap: 15px; 
-    flex-wrap: wrap; 
+.project-gallery-icons {
+    display: flex;
+    gap: 10px;
     margin-top: 15px;
 }
 
-.gallery-item {
-    flex: 1; 
-    min-width: 250px; 
-    overflow: hidden; /* Clips the image if it zooms */
+.thumbnail-icon {
+    width: 80px;         /* Set the exact size of the "icon" */
+    height: 80px;        /* Keep it square */
+    object-fit: cover;   /* Crops the image to fit the square */
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 2px solid #eee;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
 }
 
-.project-img {
-    width: 100%; 
-    display: block;
-    transition: transform 0.3s ease; /* This makes the "movement" */
-}
-
-.project-img:hover {
-    transform: scale(1.05); /* Slight zoom on hover */
+.thumbnail-icon:hover {
+    transform: scale(1.1);
+    border-color: #4ca1af; /* Your accent teal */
 }
 
 /* Buttons */
