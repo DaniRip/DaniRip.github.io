@@ -417,56 +417,6 @@ h2 {
     color: #555;
 }
 
-/* Remove the default browser arrow */
-details summary::-webkit-details-marker {
-    display: none;
-}
-details summary {
-    list-style: none;
-    cursor: pointer;
-    outline: none;
-}
-
-.competition-card {
-    padding: 0; /* Let the summary handle the padding */
-    overflow: hidden;
-}
-
-.competition-card summary {
-    padding: 20px 25px;
-}
-
-/* Add a hover effect to the summary area */
-.competition-card summary:hover {
-    background-color: rgba(76, 161, 175, 0.05);
-}
-
-.accordion-content {
-    padding: 0 25px 25px 25px;
-    border-top: 1px solid #eee;
-    background-color: #fafafa;
-}
-
-/* Rotate the icon when open */
-details[open] .toggle-icon {
-    transform: rotate(180deg);
-}
-
-.toggle-icon {
-    margin-left: auto; /* Pushes the arrow to the far right */
-    color: #4ca1af;
-    transition: transform 0.3s ease;
-    font-size: 0.9rem;
-}
-
-/* Ensure the header flexbox works inside the summary */
-.competition-card .card-header {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 0;
-}
-
 /* Buttons */
 .btn {
     display: inline-block;
