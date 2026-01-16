@@ -4,7 +4,7 @@ title: Presentations
 permalink: /presentations/
 ---
 
-## Conference Presentations
+### Conference Presentations
 
 <ol>
 {% for pres in site.data.presentations.conference %}
@@ -16,7 +16,7 @@ permalink: /presentations/
 {% endfor %}
 </ol>
 
-## Competitions
+### Competitions
 
 {% for comp in site.data.presentations.competitions %}
 <div class="card">
@@ -27,12 +27,14 @@ permalink: /presentations/
 </div>
 {% endfor %}
 
-## Poster Presentations
+### Poster Presentations
 
+<ol>
 {% for poster in site.data.presentations.posters %}
-<div class="publication-item">
-    <div class="publication-title">{{ poster.title }}</div>
-    <div>{{ poster.authors }}</div>
-    <div>{{ poster.event }}, {{ poster.location }}, {{ poster.date }}.</div>
-</div>
+<li>
+    <strong>“{{ poster.title }}"</strong>
+    {{ poster.authors }}
+    {{ poster.event }}, {{ poster.location }}, {{ poster.date }}.
+</li>
 {% endfor %}
+</ol>
