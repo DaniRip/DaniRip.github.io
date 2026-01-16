@@ -34,9 +34,14 @@ permalink: /presentations/
 <div class="card">
     <h3>{{ comp.title }} ({{ comp.year }})</h3>
     {% if comp.location %}<p>{{ comp.location }}</p>{% endif %}
-    {% if comp.link %}<p><a href="{{ comp.link }}" target="_blank">{{ comp.link_text }}</a></p>{% endif %}
+    <!-- {% if comp.link %}<p><a href="{{ comp.link }}" target="_blank">{{ comp.link_text }}</a></p>{% endif %} -->
+    if {% if comp.youtube_id %}
+    <div class="video-container">
+    <iframe src="https://www.youtube.com/embed/{{ comp.youtube_id }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
     {% if comp.award %}<p><strong>{{ comp.award }}</strong></p>{% endif %}
 </div>
 {% endfor %}
+
 
 
