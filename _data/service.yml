@@ -9,9 +9,9 @@
   description: 'During the pandemic, <a href="https://www.linkedin.com/in/kieferburgess" target="_blank">Dr. Kiefer Burgess</a> and I got to design the "conference centre" for the CORS 2021 conference in Gather Town, pictured below!'
   images:
     - src: "/assets/MainGatherRoom.png"
-      alt: "Beach Area in Gather Town"
-    - src: "/assets/BeachArea.png"
       alt: "Main Gather Room"
+    - src: "/assets/BeachArea.png"
+      alt: "Beach Area in Gather Town"
 
 - organization: "TORCH"
   role: "Founder/Organizer"
