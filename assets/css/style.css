@@ -285,12 +285,17 @@ h2 {
     height: 100%;
 }
 
-.award-callout {
-    margin-top: 15px;
-    padding-left: 15px;
-    border-left: 3px solid #f1c40f; /* A gold "medal" yellow/gold */
-    font-size: 0.95rem;
-    color: #555;
+.comp-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: var(--text-color);
+}
+
+.comp-award {
+    color: #4ca1af; /* Use your accent teal */
+    font-style: italic;
+    font-weight: 500;
 }
 
 /* Buttons */
