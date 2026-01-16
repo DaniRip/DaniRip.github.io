@@ -18,15 +18,19 @@ permalink: /publications/
 {% endfor %} -->
 
 {% for pub in site.data.publications %}
-<div class="publication-item {% if pub.featured %}featured-pub{% endif %}">
-    <div class="pub-main">
+<div class="publication-item card">
+    <div class="pub-content">
         <div class="publication-title">{{ pub.title }}</div>
         <div class="pub-authors">{{ pub.authors | replace: "D. Ripsman", "<strong>D. Ripsman</strong>" }}</div>
-        <div class="pub-venue"><em>{{ pub.journal }}</em>, {{ pub.year }}.</div>
+        <div class="pub-venue"><em>{{ pub.journal }}</em>, {{ pub.volume }}, {{ pub.year }}.</div>
     </div>
+    
     <div class="pub-links">
-        {% if pub.link %}<a href="{{ pub.link }}" class="pub-btn">[DOI]</a>{% endif %}
-        {% if pub.pdf %}<a href="{{ pub.pdf }}" class="pub-btn">[PDF]</a>{% endif %}
-    </div>
+        {% if pub.link %}
+            <a href="{{ pub.link }}" target="_blank" class="pub-link-btn">
+                <i class="fas fa-external-link-alt"></i> Link
+            </a>
+        {% endif %}
+        </div>
 </div>
 {% endfor %}
