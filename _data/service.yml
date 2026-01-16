@@ -1,3 +1,14 @@
+- organization: "Scientific Peer Review"
+  role: "Technical Reviewer"
+  description: |
+    Invited reviewer for international journals and conferences in Operations Research and Healthcare Engineering. Responsible for evaluating the methodological rigor, original contribution, and technical accuracy of submitted manuscripts.
+  journals:
+    - "Medical Physics"
+    - "Operations Research Forum"
+    - "International Transactions in Operational Research"
+    - "Hawaii International Conference on System Sciences"
+    - "Computers and Operations Research"
+
 - organization: "Canadian Operations Research Society (CORS)"
   role: "National Student Councillor (2024–2025)"
   description: |
