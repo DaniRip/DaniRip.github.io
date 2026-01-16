@@ -36,11 +36,7 @@ permalink: /presentations/
     {% if comp.title %}<p><strong>{{ comp.title }}</strong></p>{% endif %}
     {% if comp.location %}<p>{{ comp.location }}</p>{% endif %}
     <!-- {% if comp.link %}<p><a href="{{ comp.link }}" target="_blank">{{ comp.link_text }}</a></p>{% endif %} -->
-    {% if comp.award %}
-    <div class="award-callout">
-        <strong>Award:</strong> {{ comp.award }}
-    </div>
-    {% endif %}
+    {% if comp.award %}<p class="comp-award"><em>{{ comp.award }}</em></p>{% endif %}
     {% if comp.youtube_id %}
     Watch it here!
     <div class="video-container">
