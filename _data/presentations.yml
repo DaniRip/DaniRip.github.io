@@ -104,7 +104,7 @@ conference:
     award: "*Awarded second place in the Industrial Engineering Oral Presentations category"
 
 competitions:
-  - event: "Canadian Operational Research Society (CORS) Conference Student Paper Presentation"
+  - event: "Canadian Operational Research Society (CORS) Conference Student Paper Competition"
     title: "Superior and Light Pareto Robust Optimization"
     location: "London, ON, Canada"
     authors: "F. Rahimi, D. A. Ripsman, H. Abouee-Mehrizi & H. Mahmoudzadeh"
