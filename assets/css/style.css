@@ -266,7 +266,7 @@ h2 {
     margin-bottom: 5px;
 }
 
-/* Video Responsive */
+/* /* Video Responsive */
 .video-container {
     position: relative;
     padding-bottom: 56.25%; /* 16:9 */
@@ -283,6 +283,35 @@ h2 {
     left: 0;
     width: 100%;
     height: 100%;
+} */
+
+/* Styling the numbered lists to look like a CV */
+ol li {
+    margin-bottom: 15px;
+    padding-left: 10px;
+    line-height: 1.5;
+}
+
+/* The YouTube Button style */
+.video-btn {
+    display: inline-block;
+    margin-top: 10px;
+    background: #c4302b; /* YouTube Red */
+    color: white !important;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.video-btn:hover {
+    background: #ff0000;
+}
+
+.event-details {
+    color: #666;
+    font-size: 0.9rem;
 }
 
 .comp-title {
