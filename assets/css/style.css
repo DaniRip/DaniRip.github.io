@@ -255,9 +255,10 @@ h2 {
     display: flex;
     justify-content: space-between;
     align-items: center; /* Centers the [Link] button vertically against the text */
-    gap: 20px;
-    padding: 25px;
-    border-left: 5px solid #007685; /* Your bold teal border */
+    gap: 15px;
+    padding: 15px;
+    border-left: 4px solid #007685; /* Your bold teal border */
+    margin-bottom: 12px; /* Reduced space between separate cards from 25px to 12px */
 }
 
 /* Make sure the title stays that nice accent color */
@@ -265,7 +266,7 @@ h2 {
     font-weight: 700;
     font-size: 1.2rem;
     color: #007685; /* Your colorful teal title */
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
 .pub-content {
@@ -274,7 +275,7 @@ h2 {
 
 .pub-authors {
     color: #333;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 
 .pub-venue {
@@ -292,7 +293,7 @@ h2 {
 .pub-link-btn {
     background: #f0f7f8;
     color: #007685 !important;
-    padding: 8px 16px;
+    padding: 6px 12px;
     border-radius: 6px;
     font-size: 0.85rem;
     font-weight: 600;
