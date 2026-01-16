@@ -55,7 +55,7 @@ permalink: /presentations/
 
             {% if comp.youtube_id %}
             <div class="video-section">
-                <p class="video-label"><i class="fab fa-youtube"></i> Featured Presentation:</p>
+                <p class="video-label"><i class="fab fa-youtube"></i> Check it out:</p>
                 <div class="video-container">
                     <iframe src="https://www.youtube.com/embed/{{ comp.youtube_id }}" 
                             frameborder="0" 
