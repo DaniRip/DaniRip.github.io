@@ -250,7 +250,7 @@ h2 {
 }
 
 /* Lists and Items */
-.publication-item {
+/* .publication-item {
     background: white;
     padding: 20px;
     border-radius: 8px;
@@ -264,6 +264,34 @@ h2 {
     font-size: 1.1rem;
     color: var(--accent-color);
     margin-bottom: 5px;
+} */
+
+.publication-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee; /* Light divider instead of a box */
+    margin-bottom: 0;
+}
+
+.featured-pub {
+    background-color: rgba(76, 161, 175, 0.03);
+    border-left: 4px solid #007685;
+    padding-left: 15px;
+}
+
+.pub-main { flex: 1; }
+
+.pub-links {
+    margin-left: 20px;
+    white-space: nowrap;
+}
+
+.pub-btn {
+    font-size: 0.85rem;
+    color: #007685 !important;
+    margin-left: 10px;
 }
 
 /* Container for the Video Label and Frame */
