@@ -562,41 +562,52 @@ details[open] .toggle-chevron {
 .ta-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 15px;
-    margin-bottom: 40px;
+    gap: 10px; /* Tighter gap */
 }
 
 .ta-item {
-    padding: 10px;
+    padding: 8px; /* Less padding to save vertical space */
     border-bottom: 1px solid #eee;
 }
 
-.ta-year {
-    color: #888;
-    font-size: 0.9rem;
+/* Mentorship Items */
+
+.mentorship-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+    gap: 30px; /* Space between the two columns */
 }
 
-/* Mentorship Items */
 .mentee-item {
-    margin-bottom: 20px;
+    margin-bottom: 0; /* Let the grid gap handle spacing */
     padding-bottom: 15px;
     border-bottom: 1px dashed #ddd;
-}
-
-.mentee-header {
-    display: flex;
-    justify-content: space-between;
-}
-
-.mentee-project {
-    margin: 5px 0 0 0;
-    font-size: 0.95rem;
-    color: #555;
+    align-self: start; /* Prevents items from stretching to match height */
 }
 
 .award-card.card {
     border-left: 5px solid #b8860b; /* A soft gold/bronze border */
     background-color: #fffdf5;     /* Very faint gold tint */
+}
+
+/* --- Mobile Specific Tweaks --- */
+@media (max-width: 768px) {
+    /* Stack mentorship back to 1 column on phones */
+    .mentorship-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    /* Make TA items even denser on phones */
+    .ta-item {
+        padding: 5px 0;
+        font-size: 0.9rem;
+    }
+    
+    .ta-year {
+        display: inline-block;
+        font-size: 0.8rem;
+    }
 }
 
 /* Buttons */
