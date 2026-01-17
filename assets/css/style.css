@@ -592,16 +592,37 @@ details[open] .toggle-chevron {
     }
 }
 
-/* TA Grid - Layout 2 columns on desktop */
+/* Fixed TA Grid - Now correctly two columns */
 .ta-grid {
     display: grid;
-    grid-template-columns: grid-template-columns: 1fr 1fr; /*repeat(auto-fill, minmax(300px, 1fr));*/
-    gap: 10px; /* Tighter gap */
+    grid-template-columns: 1fr 1fr; 
+    gap: 15px; 
+    margin-bottom: 40px;
 }
 
-.ta-item {
-    padding: 8px; /* Less padding to save vertical space */
-    border-bottom: 1px solid #eee;
+/* Minimalist Teaching style */
+.teaching-minimal {
+    border-left: 3px solid var(--accent-color);
+    padding-left: 15px;
+    margin-bottom: 20px;
+}
+
+.teaching-minimal p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.teaching-minimal small {
+    color: #666;
+    display: block;
+    margin-top: 4px;
+}
+
+/* Ensure TA Grid still stacks on mobile */
+@media (max-width: 768px) {
+    .ta-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Mentorship Items */
@@ -635,17 +656,6 @@ details[open] .toggle-chevron {
     .mentorship-container {
         grid-template-columns: 1fr;
         gap: 20px;
-    }
-
-    /* Make TA items even denser on phones */
-    .ta-item {
-        padding: 5px 0;
-        font-size: 0.9rem;
-    }
-    
-    .ta-year {
-        display: inline-block;
-        font-size: 0.8rem;
     }
 }
 
