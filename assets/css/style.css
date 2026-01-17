@@ -633,20 +633,18 @@ details[open] .toggle-chevron {
     }
 }
 
-/* Year on its own line for long ranges */
-.ta-year-block {
-    display: block;
-    font-size: 0.8rem;
-    color: #888;
-    margin-top: 2px;
-    line-height: 1;
+.ta-item {
+    padding: 10px 15px;
+    border-left: 3px solid rgba(44, 62, 80, 0.15);
+    background: rgba(44, 62, 80, 0.02);
+    margin-bottom: 5px; /* Adds a tiny gap between items in the grid */
 }
 
-/* Year inline for short single years */
 .ta-year-inline {
     font-size: 0.85rem;
     color: #888;
     margin-left: 4px;
+    white-space: normal; /* Allows long year strings to wrap to the next line naturally */
 }
 
 .ta-details {
