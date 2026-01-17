@@ -2,7 +2,7 @@
   category: "active"
   description: "Optimization of angle"
 
-- title: "Radiation Therapy Sampling and Solution Pipeline/Add-on"
+- title: "Radiation Therapy Sampling and Solution Pipeline/Add-On"
   category: "completed"
   description: "A MATLAB-based codebase that takes in MatRAD-calculated dose objects, allows for multiple sampling modalities, and then connects to a CPLEX-c++ solver for optimization."
   repo: "https://github.com/DaniRip/RT_Sampling_Pipeline"
