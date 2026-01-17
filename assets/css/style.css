@@ -803,6 +803,53 @@ details[open] .toggle-chevron {
     }
 }
 
+/* --- Gallery Stacking --- */
+.visual-stack {
+    position: relative;
+    width: 100%;
+}
+
+.media-item {
+    display: none; /* Hide everyone by default */
+    animation: fadeEffect 0.4s;
+}
+
+.media-item.active {
+    display: block; /* Only show the chosen one */
+}
+
+/* --- The 1-2-3 Buttons --- */
+.media-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.media-dot {
+    background: none;
+    border: 1px solid #ddd;
+    color: #888;
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    font-family: var(--font-main);
+}
+
+.media-dot:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+.media-dot.active {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    color: white;
+    font-weight: 600;
+}
+
 /* --- Mobile Specific Tweaks --- */
 @media (max-width: 768px) {
     /* Stack mentorship back to 1 column on phones */
