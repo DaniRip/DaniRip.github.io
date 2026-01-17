@@ -7,11 +7,22 @@ permalink: /teaching/
 ### Teaching Experience <i class="fas fa-chalkboard-user"></i>
 
 {% for job in site.data.teaching.teaching_experience %}
-<div class="teaching-minimal">
-    <p>
-        <strong>{{ job.course }}</strong> ({{ job.year }}) — <em>{{ job.role }}</em>
-        {% if job.details %}<br><small>{{ job.details }}</small>{% endif %}
-    </p>
+<div class="card teaching-featured">
+    <div class="featured-header">
+        <strong>{{ job.course }}</strong>
+        {% assign year_length = job.year | size %}
+        {% if year_length > 4 %}
+            <div class="featured-year-line">{{ job.year }}</div>
+        {% else %}
+            <span class="featured-year-inline">({{ job.year }})</span>
+        {% endif %}
+    </div>
+    
+    <div class="featured-role">{{ job.role }}</div>
+    
+    {% if job.details %}
+        <div class="featured-details">{{ job.details }}</div>
+    {% endif %}
 </div>
 {% endfor %}
 
