@@ -9,21 +9,21 @@
     - type: image
       url: "assets/images/proton-results-plot.png"
 
-- title: "Simple Map Project"
-  category: "fun"
-  description: "Mapping coordinates..."
-  gallery:
-    - type: image
-      url: "assets/images/map.jpg"
-
 - title: "Healthcare Provider Regression Analysis"
   category: "completed"
   description: "A Python-based regression analysis of healthcare provider types and gender distribution using statsmodels."
   # Note: Since there is no gallery here, this slide will show text only.
 
+- title: "IIE Arena Simulation Competition"
+  category: "fun"
+  description: "Back in 2013, Krystle Pang, Jaquelyn Monis Rodriguez and I set out to use Arena Simulaton Software to predict the impact of a new terminal rollout at Chicago's O'Hare International Airport. I believe we came in 3rd at the International competition."
+  gallery:
+    - type: video
+      url: "R1-jtm6Vwp8&t=67s"
+      
 - title: "Recycling Sorter"
   category: "fun"
-  description: "Back in 2012, when I was still in Mechanical Engineering, Yuhin Wu, Ryan Brown, Keith Tong and I spent many a late night at Skule\u2122 building ART: the automated recycling terminal. ART was an Arduino-based recycling sorter for ASME's SEC competition (and we won the local competition!)."
+  description: "Back in 2012, when I was still in Mechanical Engineering, Yuhin Wu, Ryan Brown, Keith Tong and I spent many a late night at Skule\u2122 building ART: the automated recycling terminal. ART was an Arduino-based recycling sorter for ASME's SEC competition (and we won the local competition!). We were also very young."
   gallery:
     - type: video
       id: "_BJrog8neR4"
