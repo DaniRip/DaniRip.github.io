@@ -4,6 +4,7 @@ title: About Me
 image: /assets/profile.jpg
 ---
 
+---
 ### Current Role: <a href="https://malonecenter.jhu.edu/people/danielle-ripsman/" target="_blank">Malone Postdoctoral Fellow</a> at <a href="https://www.jhu.edu" target="_blank">Johns Hopkins University</a>
 
 I work under <a href="https://systems.jhu.edu/kimia/" target="_blank">Dr. Kimia Ghobadi</a>, researching at the intersection of **large-scale optimization** and **healthcare engineering**.
