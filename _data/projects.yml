@@ -23,10 +23,16 @@
 
 - title: "Recycling Sorter"
   category: "fun"
-  description: "Back in 2012, when I was still in Mechanical Engineering, Yuhin Wu, Ryan Brown, Keith Tong and I spent many a late night at Skule\u2122 building an Arduino-based recycling sorter for ASME's SEC competition (and we won the local competition!)."
+  description: "Back in 2012, when I was still in Mechanical Engineering, Yuhin Wu, Ryan Brown, Keith Tong and I spent many a late night at Skule\u2122 building ART: the automated recycling terminal. ART was an Arduino-based recycling sorter for ASME's SEC competition (and we won the local competition!)."
   gallery:
     - type: video
+      id: "_BJrog8neR4"
+    - type: video
       id: "6V8QCOc4pq0"
+    - type: video
+      id: "ygZ0bpC1_3M"
+    - type: video
+      id: "a-2TSVZvXGs"
 
 - title: "Combined Imaging Modalities"
   category: "future"
