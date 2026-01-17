@@ -761,6 +761,17 @@ details[open] .toggle-chevron {
     margin-top: 20px;
 }
 
+/* --- Full Width Layout (No Image) --- */
+.slide-content.no-media-layout {
+    grid-template-columns: 1fr; /* Switch from 2 columns to 1 */
+    text-align: left;
+}
+
+.slide-content.no-media-layout .slide-text {
+    max-width: 800px; /* Prevents text from stretching ridiculously wide */
+    margin: 0 auto;   /* Centers the text block in the middle of the slide */
+}
+
 /* Images & Videos */
 .slide-visual img {
     width: 100%;
