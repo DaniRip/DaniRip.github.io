@@ -15,7 +15,7 @@ I obtained my Ph.D. (2024) and M.A.Sc. (2018) in Management Science at the <a hr
 
 My research focuses on tackling **large-scale**, **data-driven**, **societal problems**, particularly within **healthcare systems**. By leveraging a toolbox of **linear** and **mixed-integer optimization**, **inverse optimization**, and **decision diagrams**, I develop efficient heuristics and algorithms designed for **real-world** implementation. With a background in **interface design**, my goal is to translate complex theoretical solutions into accessible, actionable tools for decision-makers and the community at large.
 
-Whether exploring public health systems or fundamental algorithmic mathematics, I am driven by a commitment to clear communication, illustration, and teaching. 
+<!-- Whether exploring public health systems or fundamental algorithmic mathematics, I am driven by a commitment to clear communication, illustration, and teaching.  -->
 
 <!-- My primary application area has historically been radiation therapy treatment planning for cancer patients.  I have had the pleasure of working at the <a href="https://www.wrhn.ca/" target="_blank">Waterloo Regional Health Network (WRHN)</a> Cancer Centre, under the supervision of <a href="https://uwaterloo.ca/physics-astronomy/contacts/ernest-osei" target="_blank">Dr. Ernest Osei</a>, where we were able to work on pipelines to integrate optimization solutions into real-world radiation therapy-planning tools. -->
 
