@@ -7,22 +7,11 @@ permalink: /teaching/
 ### Teaching Experience <i class="fas fa-chalkboard-user"></i>
 
 {% for job in site.data.teaching.teaching_experience %}
-<div class="card teaching-featured">
-    <div class="featured-header">
-        <strong>{{ job.course }}</strong>
-        {% assign year_length = job.year | size %}
-        {% if year_length > 4 %}
-            <div class="featured-year-line">{{ job.year }}</div>
-        {% else %}
-            <span class="featured-year-inline">({{ job.year }})</span>
-        {% endif %}
-    </div>
-    
-    <div class="featured-role">{{ job.role }}</div>
-    
-    {% if job.details %}
-        <div class="featured-details">{{ job.details }}</div>
-    {% endif %}
+<div class="teaching-minimal">
+    <p>
+        <strong>{{ job.course }}</strong> ({{ job.year }}) — <em>{{ job.role }}</em>
+        {% if job.details %}<br><small>{{ job.details }}</small>{% endif %}
+    </p>
 </div>
 {% endfor %}
 
@@ -32,8 +21,19 @@ permalink: /teaching/
 {% for job in site.data.teaching.ta_experience %}
     <div class="ta-item">
         <strong>{{ job.course }}</strong> 
-        <span class="ta-year">({{ job.years | default: job.year }})</span>
-        {% if job.details %}<br><small>{{ job.details }}</small>{% endif %}
+        
+        {% assign year_string = job.years | default: job.year %}
+        {% assign year_size = year_string | size %}
+        
+        {% if year_size >= 9 %}
+            <div class="ta-year-block">{{ year_string }}</div>
+        {% else %}
+            <span class="ta-year-inline">({{ year_string }})</span>
+        {% endif %}
+
+        {% if job.details %}
+            <div class="ta-details">{{ job.details }}</div>
+        {% endif %}
     </div>
 {% endfor %}
 </div>
