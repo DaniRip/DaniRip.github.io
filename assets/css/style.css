@@ -535,39 +535,32 @@ details[open] .toggle-chevron {
     display: inline-block; /* Required for rotation to work */
 }
 
-/* Teaching Cards */
-/* Tighter Teaching Cards */
-.compact-teaching {
-    padding: 15px 20px !important; /* Reduced from default card padding */
-    margin-bottom: 15px !important;
+/* Tightened Featured Card */
+.teaching-featured {
+    padding: 15px 20px !important;
+    margin-bottom: 30px;
+    border-left: 5px solid var(--accent-color);
 }
 
-.teaching-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start; /* Aligns year to the top of the first line */
-    gap: 15px;
-}
-
-.teaching-title-group h3 {
-    margin: 0;
-    font-size: 1.15rem;
+.featured-header {
+    font-size: 1.2rem;
+    color: var(--accent-color);
+    font-weight: 700;
+    margin-bottom: 2px;
     line-height: 1.2;
 }
 
-.role-tag-inline {
-    display: inline-block;
-    color: #4ca1af;
+.featured-role {
     font-weight: 600;
-    font-size: 0.85rem;
+    color: #4ca1af;
     text-transform: uppercase;
-    margin: 4px 0 0 0;
+    font-size: 0.85rem;
     letter-spacing: 0.5px;
+    margin-bottom: 8px;
 }
 
-.details-text-small {
+.featured-details {
     font-size: 0.95rem;
-    margin-top: 10px;
     color: #555;
     line-height: 1.4;
 }
@@ -592,11 +585,11 @@ details[open] .toggle-chevron {
     }
 }
 
-/* Fixed TA Grid - Now correctly two columns */
+/* Fix for TA Grid (Corrected Typo) */
 .ta-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr; 
-    gap: 15px; 
+    grid-template-columns: 1fr 1fr; /* Removed the double 'grid-template-columns:' */
+    gap: 15px;
     margin-bottom: 40px;
 }
 
