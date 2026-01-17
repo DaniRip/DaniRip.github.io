@@ -1,12 +1,14 @@
 - title: "Geometric Beam Angle Optimization"
   category: "active"
-  description: "Optimization of spot weights..."
+  description: "Optimization of angle"
 
-- title: "Healthcare Provider Regression Analysis"
+- title: "Radiation Therapy Sampling and Solution Pipeline/Add-on"
   category: "completed"
-  description: "A Python-based regression analysis of healthcare provider types and gender distribution using statsmodels."
-  # Note: Since there is no gallery here, this slide will show text only.
-
+  description: "A MATLAB-based codebase that takes in MatRAD-calculated dose objects, allows for multiple sampling modalities, and then connects to a CPLEX-c++ solver for optimization."
+  repo: "https://github.com/DaniRip/RT_Sampling_Pipeline"
+  gallery:
+    - type: video
+      url: ""
 
 - title: "Simple PLINKO Game"
   category: "fun"
