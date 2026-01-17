@@ -555,13 +555,13 @@ details[open] .toggle-chevron {
     border-radius: 4px;
     font-size: 0.85rem;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
 }
 
 /* TA Grid - Layout 2 columns on desktop */
 .ta-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: grid-template-columns: 1fr 1fr; /*repeat(auto-fill, minmax(300px, 1fr));*/
     gap: 10px; /* Tighter gap */
 }
 
