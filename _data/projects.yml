@@ -25,7 +25,9 @@
 - title: "Recycling Sorter"
   category: "fun"
   description: "Back in 2012, when I was still in Mechanical Engineering, Yuhin Wu, Ryan Brown, Keith Tong and I spent many a late night at Skule\u2122 building an Arduino-based recycling sorter for ASME's SEC competition (and we won the local competition!)."
-  video_id: "6V8QCOc4pq0"
+  gallery:
+    - type: video
+      id: "6V8QCOc4pq0"
 
 - title: "Combined Imaging Modalities"
   category: "future"
