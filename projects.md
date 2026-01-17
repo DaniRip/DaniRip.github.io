@@ -29,59 +29,38 @@ permalink: /projects/
                     
                     <h2 class="slide-title">{{ project.title }}</h2>
                     
-                    <div class="slide-content">
+                    {% assign has_media = false %}
+                    {% if project.gallery or project.video_id or project.image %}
+                    {% assign has_media = true %}
+                    {% endif %}
+                    
+                    <div class="slide-content {% unless has_media %}no-media-layout{% endunless %}">
                         
+                        {% if has_media %}
                         <div class="slide-visual">
                             {% assign project_uid = cat | append: "-" | append: forloop.index %}
                             
                             <div id="display-{{ project_uid }}" class="visual-stack">
-                                {% if project.gallery %}
-                                    {% for item in project.gallery %}
-                                        <div class="media-item {% if forloop.first %}active{% endif %}" data-index="{{ forloop.index0 }}">
-                                            {% if item.type == 'video' %}
-                                                <div class="video-container">
-                                                    <iframe src="https://www.youtube.com/embed/{{ item.id }}" frameborder="0" allowfullscreen></iframe>
-                                                </div>
-                                            {% else %}
-                                                <img src="{{ item.url | relative_url }}" alt="Project Visual" class="slide-img">
-                                            {% endif %}
-                                        </div>
-                                    {% endfor %}
-                                
-                                {% elsif project.video_id %}
-                                    <div class="media-item active">
-                                        <div class="video-container">
-                                            <iframe src="https://www.youtube.com/embed/{{ project.video_id }}" frameborder="0" allowfullscreen></iframe>
-                                        </div>
-                                    </div>
-                                {% elsif project.image %}
-                                    <div class="media-item active">
-                                        <img src="{{ project.image | relative_url }}" alt="Project Visual" class="slide-img">
-                                    </div>
-                                {% endif %}
-                            </div>
-
+                                </div>
+                    
                             {% if project.gallery.size > 1 %}
                             <div class="media-controls">
-                                {% for item in project.gallery %}
-                                    <button class="media-dot {% if forloop.first %}active{% endif %}" 
-                                            onclick="switchMedia('{{ project_uid }}', {{ forloop.index0 }})">
-                                        {{ forloop.index }}
-                                    </button>
-                                {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    
+                        <div class="slide-text">
+                            <p>{{ project.description }}</p>
+                            
+                            {% if project.repo %}
+                            <div class="project-links">
+                                <a href="{{ project.repo }}" target="_blank" class="repo-btn">
+                                    <i class="fab fa-github"></i> View Code
+                                </a>
                             </div>
                             {% endif %}
                         </div>
-                        <div class="slide-text">
-                        <p>{{ project.description }}</p>
-                        
-                        {% if project.repo %}
-                        <div class="project-links">
-                            <a href="{{ project.repo }}" target="_blank" class="repo-btn">
-                                <i class="fab fa-github"></i> View Code
-                            </a>
-                        </div>
-                        {% endif %}
                     </div>
                     </div>
 
