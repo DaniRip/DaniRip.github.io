@@ -44,12 +44,14 @@ permalink: /teaching/
 
 <p class="mentorship-intro">During my time at the University of Waterloo, I had the privilege of mentoring undergraduate researchers on various optimization and healthcare projects.</p>
 
-{% for mentee in site.data.mentorship %}
-<div class="mentee-item">
-    <div class="mentee-header">
-        <strong>{{ mentee.student }}</strong>
-        <span class="mentee-year">{{ mentee.year }}</span>
+<div class="mentorship-container">
+    {% for mentee in site.data.mentorship %}
+    <div class="mentee-item">
+        <div class="mentee-header">
+            <strong>{{ mentee.student }}</strong>
+            <span class="mentee-year">{{ mentee.year }}</span>
+        </div>
+        <p class="mentee-project"><em>Project:</em> {{ mentee.project }}</p>
     </div>
-    <p class="mentee-project"><em>Project:</em> {{ mentee.project }}</p>
+    {% endfor %}
 </div>
-{% endfor %}
