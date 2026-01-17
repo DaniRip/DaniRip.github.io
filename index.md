@@ -29,7 +29,7 @@ Whether exploring public health systems or fundamental algorithmic mathematics, 
 * **Optimization Theory:** Inverse optimization and optimization under uncertainty.
 -->
 
-<div class="research-pillars card">
+<!-- <div class="research-pillars card">
     <h3>Research Focus</h3>
     <ul>
         <li><i class="fas fa-microscope"></i> Engineering in Healthcare</li>
@@ -37,6 +37,6 @@ Whether exploring public health systems or fundamental algorithmic mathematics, 
         <li><i class="fas fa-chart-line"></i> Inverse Optimization</li>
         <li><i class="fas fa-desktop"></i> Interface & Visual Design</li>
     </ul>
-</div>
+</div> -->
 
 
