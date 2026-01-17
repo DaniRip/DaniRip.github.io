@@ -12,7 +12,7 @@
 
 - title: "Simple PLINKO Game"
   category: "fun"
-  description: "Inspired by the price is right, I used this simple, visual R program to simulate one or multiple games of PLINKO for students."
+  description: "Inspired by the price is right, I used this simple, visual R program to simulate one or multiple games of PLINKO for statistics students at the University of Waterloo."
   repo: "https://github.com/DaniRip/Simple_Plinko"
   gallery:
     - type: image
@@ -20,6 +20,13 @@
     - type: image
       url: "https://github.com/DaniRip/Simple_Plinko/blob/master/Screen%20Shot%202019-09-23%20at%2011.48.53%20PM.png?raw=true"
 
+- title: "SuperSlider"
+  category: "fun"
+  description: "A flexible MATLAB-based slider creation tool, that allows for multiple slides along a single axis. This was built out for an in-house interface project, but has been downloaded by over 1000 people and put into use in some cool industries that I will not disclose!"
+  repo: "https://www.mathworks.com/matlabcentral/fileexchange/43285-superslider"
+  gallery:
+    - type: image
+      url: "https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/43285/versions/3/screenshot.jpg"
 
 - title: "IIE Arena Simulation Competition"
   category: "fun"
