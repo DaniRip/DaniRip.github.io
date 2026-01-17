@@ -580,7 +580,7 @@ details[open] .toggle-chevron {
     display: grid;
     grid-template-columns: 1fr 1fr; /* Removed the double 'grid-template-columns:' */
     gap: 10px;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 /* Minimalist Teaching style */
