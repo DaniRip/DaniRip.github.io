@@ -22,7 +22,7 @@ permalink: /teaching/
     <div class="ta-item">
         <strong>{{ job.course }}</strong>
 
-        <span class="ta-year-inline">({{ year_string }})</span>
+        <span class="ta-year-inline">({{  job.years }})</span>
 
         {% if job.details %}
             <div class="ta-details">{{ job.details }}</div>
