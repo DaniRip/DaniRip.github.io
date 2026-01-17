@@ -535,10 +535,25 @@ details[open] .toggle-chevron {
     display: inline-block; /* Required for rotation to work */
 }
 
-/* Tightened Featured Card */
+/* Styling for the multi-year range line */
+.featured-year-line {
+    font-size: 0.95rem;
+    color: #666;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+/* Styling for the single year inline */
+.featured-year-inline {
+    font-size: 1.1rem;
+    color: #888;
+    font-weight: 400;
+    margin-left: 5px;
+}
+
+/* Ensure the featured card stays tight */
 .teaching-featured {
     padding: 15px 20px !important;
-    margin-bottom: 30px;
     border-left: 5px solid var(--accent-color);
 }
 
