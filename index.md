@@ -7,7 +7,7 @@ image: /assets/profile.jpg
 ---
 <!-- ### Current Role:
 ### <a href="https://malonecenter.jhu.edu/people/danielle-ripsman/" target="_blank">Malone Postdoctoral Fellow</a> at <a href="https://www.jhu.edu" target="_blank">Johns Hopkins University</a> -->
-<div style="font-size: 1.6rem; font-weight: 700; margin: 0; padding: 0;">
+<div style="font-size: 1.4rem; font-weight: 700; margin: 0; padding: 0;">
   <a href="https://malonecenter.jhu.edu/people/danielle-ripsman/" target="_blank">Malone Postdoctoral Fellow</a> at <a href="https://www.jhu.edu" target="_blank">Johns Hopkins University</a>
 </div>
 ---
