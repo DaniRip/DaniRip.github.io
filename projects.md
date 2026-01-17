@@ -11,55 +11,46 @@ permalink: /projects/
     <button class="tab-btn" onclick="openCategory('future')">Future Ambitions</button>
 </div>
 
-<div class="projects-display-area">
-    {% assign categories = "active,completed,fun,future" | split: "," %}
+<div class="slide-visual">
+    {% assign project_uid = cat | append: "-" | append: forloop.index %}
     
-    {% for cat in categories %}
-    <div id="{{ cat }}" class="category-container" style="display: {% if cat == 'active' %}block{% else %}none{% endif %};">
+    <div id="display-{{ project_uid }}" class="visual-stack">
+        {% if project.gallery %}
+            {% for item in project.gallery %}
+                <div class="media-item {% if forloop.first %}active{% endif %}" data-index="{{ forloop.index0 }}">
+                    {% if item.type == 'video' %}
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/{{ item.id }}" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    {% else %}
+                        <img src="{{ item.url | relative_url }}" alt="Project Visual" class="slide-img">
+                    {% endif %}
+                </div>
+            {% endfor %}
         
-        <button class="nav-arrow left" onclick="changeSlide(-1, '{{ cat }}')"><i class="fas fa-chevron-left"></i></button>
-        <button class="nav-arrow right" onclick="changeSlide(1, '{{ cat }}')"><i class="fas fa-chevron-right"></i></button>
-
-        <div class="slides-wrapper">
-            {% assign cat_projects = site.data.projects | where: "category", cat %}
-            
-            {% if cat_projects.size > 0 %}
-                {% for project in cat_projects %}
-                <div class="project-slide fade {% if forloop.first %}visible{% endif %}">
-                    
-                    <h2 class="slide-title">{{ project.title }}</h2>
-                    
-                    <div class="slide-content">
-                        {% if project.image or project.video_id %}
-                        <div class="slide-visual">
-                            {% if project.video_id %}
-                            <div class="video-container">
-                                <iframe src="https://www.youtube.com/embed/{{ project.video_id }}" frameborder="0" allowfullscreen></iframe>
-                            </div>
-                            {% elsif project.image %}
-                            <img src="{{ project.image | relative_url }}" alt="{{ project.title }}" class="slide-img">
-                            {% endif %}
-                        </div>
-                        {% endif %}
-
-                        <div class="slide-text">
-                            <p>{{ project.description }}</p>
-                        </div>
-                    </div>
-
+        {% elsif project.video_id %}
+            <div class="media-item active">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/{{ project.video_id }}" frameborder="0" allowfullscreen></iframe>
                 </div>
-                {% endfor %}
-            {% else %}
-                <div class="project-slide visible">
-                    <div class="slide-text" style="text-align:center;">
-                        <h3>No projects added yet.</h3>
-                        <p>Check back soon!</p>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
+            </div>
+        {% elsif project.image %}
+            <div class="media-item active">
+                <img src="{{ project.image | relative_url }}" alt="Project Visual" class="slide-img">
+            </div>
+        {% endif %}
     </div>
-    {% endfor %}
+
+    {% if project.gallery.size > 1 %}
+    <div class="media-controls">
+        {% for item in project.gallery %}
+            <button class="media-dot {% if forloop.first %}active{% endif %}" 
+                    onclick="switchMedia('{{ project_uid }}', {{ forloop.index0 }})">
+                {{ forloop.index }}
+            </button>
+        {% endfor %}
+    </div>
+    {% endif %}
 </div>
 
 <script>
@@ -107,5 +98,31 @@ permalink: /projects/
 
         // Show new slide
         slides[slideIndices[category]].classList.add("visible");
+    }
+
+    // 3. Media Switcher Logic (The 1-2-3 buttons)
+    function switchMedia(projectUid, mediaIndex) {
+        // 1. Find the specific project's display container
+        var container = document.getElementById("display-" + projectUid);
+        var items = container.getElementsByClassName("media-item");
+        
+        // 2. Hide all items in this specific project
+        for (var i = 0; i < items.length; i++) {
+            items[i].classList.remove("active");
+        }
+        
+        // 3. Show the requested item
+        items[mediaIndex].classList.add("active");
+
+        // 4. Update the buttons (to make the clicked number bold)
+        // We find the parent slide, then find the controls container inside it
+        var controls = container.nextElementSibling; // The .media-controls div
+        if (controls && controls.classList.contains("media-controls")) {
+            var buttons = controls.getElementsByClassName("media-dot");
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove("active");
+            }
+            buttons[mediaIndex].classList.add("active");
+        }
     }
 </script>
