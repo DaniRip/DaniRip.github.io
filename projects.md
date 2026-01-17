@@ -31,7 +31,7 @@ permalink: /projects/
                     
                     {% assign has_media = false %}
                     {% if project.gallery or project.video_id or project.image %}
-                    {% assign has_media = true %}
+                        {% assign has_media = true %}
                     {% endif %}
                     
                     <div class="slide-content {% unless has_media %}no-media-layout{% endunless %}">
@@ -41,101 +41,14 @@ permalink: /projects/
                             {% assign project_uid = cat | append: "-" | append: forloop.index %}
                             
                             <div id="display-{{ project_uid }}" class="visual-stack">
-                                </div>
-                    
-                            {% if project.gallery.size > 1 %}
-                            <div class="media-controls">
-                                </div>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-                    
-                        <div class="slide-text">
-                            <p>{{ project.description }}</p>
-                            
-                            {% if project.repo %}
-                            <div class="project-links">
-                                <a href="{{ project.repo }}" target="_blank" class="repo-btn">
-                                    <i class="fab fa-github"></i> View Code
-                                </a>
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                    </div>
-
-                </div>
-                {% endfor %}
-            {% else %}
-                <div class="project-slide visible">
-                    <div class="slide-text" style="text-align:center; padding-top: 50px;">
-                        <h3>No projects added yet.</h3>
-                        <p>Check back soon!</p>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-    {% endfor %}
-</div>
-
-<script>
-    // 1. Tab Switching Logic
-    function openCategory(categoryName) {
-        var containers = document.getElementsByClassName("category-container");
-        for (var i = 0; i < containers.length; i++) {
-            containers[i].style.display = "none";
-        }
-        
-        var tabs = document.getElementsByClassName("tab-btn");
-        for (var i = 0; i < tabs.length; i++) {
-            tabs[i].className = tabs[i].className.replace(" active", "");
-        }
-
-        document.getElementById(categoryName).style.display = "block";
-        event.currentTarget.className += " active";
-    }
-
-    // 2. Slide Switching Logic
-    var slideIndices = {
-        'active': 0,
-        'completed': 0,
-        'fun': 0,
-        'future': 0
-    };
-
-    function changeSlide(n, category) {
-        var container = document.getElementById(category);
-        var slides = container.getElementsByClassName("project-slide");
-        
-        slides[slideIndices[category]].classList.remove("visible");
-
-        slideIndices[category] += n;
-
-        if (slideIndices[category] >= slides.length) { slideIndices[category] = 0; }
-        if (slideIndices[category] < 0) { slideIndices[category] = slides.length - 1; }
-
-        slides[slideIndices[category]].classList.add("visible");
-    }
-
-    // 3. Media Switcher Logic (The 1-2-3 buttons)
-    function switchMedia(projectUid, mediaIndex) {
-        var container = document.getElementById("display-" + projectUid);
-        var items = container.getElementsByClassName("media-item");
-        
-        for (var i = 0; i < items.length; i++) {
-            items[i].classList.remove("active");
-        }
-        
-        items[mediaIndex].classList.add("active");
-
-        var controls = container.nextElementSibling;
-        if (controls && controls.classList.contains("media-controls")) {
-            var buttons = controls.getElementsByClassName("media-dot");
-            for (var i = 0; i < buttons.length; i++) {
-                buttons[i].classList.remove("active");
-            }
-            buttons[mediaIndex].classList.add("active");
-        }
-    }
-</script>
+                                {% if project.gallery %}
+                                    {% for item in project.gallery %}
+                                        <div class="media-item {% if forloop.first %}active{% endif %}" data-index="{{ forloop.index0 }}">
+                                            {% if item.type == 'video' %}
+                                                <div class="video-container">
+                                                    <iframe src="https://www.youtube.com/embed/{{ item.id }}" frameborder="0" allowfullscreen></iframe>
+                                                </div>
+                                            {% else %}
+                                                <img src="{{ item.url | relative_url }}" alt="Project Visual" class="slide-img">
+                                            {% endif %}
+                                        </div>
