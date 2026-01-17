@@ -654,6 +654,155 @@ details[open] .toggle-chevron {
     background-color: #fffdf5;     /* Very faint gold tint */
 }
 
+/* --- Project Tabs (The Binder Look) --- */
+.project-tabs {
+    display: flex;
+    justify-content: center;
+    border-bottom: 2px solid var(--accent-color);
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.tab-btn {
+    background-color: #f1f1f1;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 12px 20px;
+    transition: 0.3s;
+    font-size: 1rem;
+    font-family: var(--font-main);
+    color: #555;
+    border-radius: 8px 8px 0 0; /* Rounded top corners like a file tab */
+    margin-bottom: 0; /* Sits right on the line */
+}
+
+.tab-btn:hover {
+    background-color: #ddd;
+    color: var(--accent-color);
+}
+
+.tab-btn.active {
+    background-color: var(--accent-color);
+    color: white;
+    font-weight: 600;
+}
+
+/* --- The Carousel Area --- */
+.projects-display-area {
+    position: relative;
+    min-height: 400px; /* Ensures the arrows sit nicely even if content is short */
+    background: #fff;
+    padding: 20px;
+    border-radius: 0 0 12px 12px;
+}
+
+.category-container {
+    position: relative;
+    width: 100%;
+}
+
+/* --- The Navigation Arrows --- */
+.nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(44, 62, 80, 0.1);
+    color: var(--accent-color);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    z-index: 10;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-arrow:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+.nav-arrow.left { left: 0; }
+.nav-arrow.right { right: 0; }
+
+/* --- The Slide Content --- */
+.slides-wrapper {
+    padding: 0 50px; /* Make room for arrows on left/right */
+}
+
+.project-slide {
+    display: none; /* Hidden by default */
+    animation: fadeEffect 0.5s; /* Smooth fade in */
+}
+
+.project-slide.visible {
+    display: block; /* Only the active slide shows */
+}
+
+.slide-title {
+    text-align: center;
+    color: var(--accent-color);
+    margin-top: 0;
+    border-bottom: none; /* Override default H2 line */
+    font-size: 1.8rem;
+}
+
+.slide-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Split visual and text */
+    gap: 30px;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Images & Videos */
+.slide-visual img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.slide-text {
+    font-size: 1.05rem;
+    color: #444;
+    line-height: 1.7;
+}
+
+/* --- Animation --- */
+@keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+/* --- Mobile Stack --- */
+@media (max-width: 768px) {
+    .slide-content {
+        grid-template-columns: 1fr; /* Stack vertically on phones */
+    }
+    
+    .nav-arrow {
+        width: 30px; 
+        height: 30px;
+        font-size: 1rem;
+    }
+    
+    .slides-wrapper {
+        padding: 0 35px;
+    }
+    
+    .tab-btn {
+        flex: 1 1 40%; /* Make tabs grow to fill rows on mobile */
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+}
+
 /* --- Mobile Specific Tweaks --- */
 @media (max-width: 768px) {
     /* Stack mentorship back to 1 column on phones */
