@@ -8,7 +8,7 @@ permalink: /projects/
     <button class="tab-btn active" onclick="openCategory('active')">Active Research</button>
     <button class="tab-btn" onclick="openCategory('completed')">Completed</button>
     <button class="tab-btn" onclick="openCategory('fun')">Old / Just for Fun</button>
-    <button class="tab-btn" onclick="openCategory('future')">Future Research</button>
+    <button class="tab-btn" onclick="openCategory('future')">Future Ambitions</button>
 </div>
 
 <div class="projects-display-area">
