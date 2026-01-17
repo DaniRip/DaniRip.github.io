@@ -5,14 +5,14 @@ teaching_experience:
     details: "2 TAs, 112 Students, 7-10PM Weekly Classes + Weekly Tutorial."
 
 ta_experience:
+  - course: "MSCI 251: Probability and Statistics for Engineers 1"
+    years: "2019, 2020*, 2021, 2022*, 2023"
   - course: "MSCI 734: Applied Optimization"
     year: 2023
   - course: "MSCI 703: Applied Optimization"
     year: 2022
   - course: "MSCI 435: Advanced Optimization Techniques"
     year: 2022
-  - course: "MSCI 251: Probability and Statistics for Engineers 1"
-    years: "2019, 2020*, 2021, 2022*, 2023"
   - course: "MSCI 401 & 402: Capstone Design Project"
     year: 2019
   - course: "MSCI 436: Decision Support Systems"
