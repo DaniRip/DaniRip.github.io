@@ -20,7 +20,6 @@
 - title: "Healthcare Provider Regression Analysis"
   category: "completed"
   description: "A Python-based regression analysis of healthcare provider types and gender distribution using statsmodels."
-  image: ""
 
 - title: "Recycling Sorter"
   category: "fun"
@@ -32,4 +31,3 @@
 - title: "Combined Imaging Modalities"
   category: "future"
   description: "I am passionate about imaging and feel like people are much more transparent than we think. With the current advent of AI and advanced OR techniques, I hope to push for less invasive, more informative imaging protocols in the future. Please contact me if you would like to get started on this type of project!"
-  image: ""
