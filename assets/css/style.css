@@ -626,13 +626,6 @@ details[open] .toggle-chevron {
     margin-top: 4px;
 }
 
-/* Ensure TA Grid still stacks on mobile */
-@media (max-width: 768px) {
-    .ta-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
 .ta-item {
     padding: 10px 15px;      /* Added 15px on the left/right for breathing room */
     border-left: 3px solid rgba(44, 62, 80, 0.15); /* A softer version of your Slate */
@@ -654,11 +647,11 @@ details[open] .toggle-chevron {
     white-space: normal; /* Allows long year strings to wrap to the next line naturally */
 }
 
-.ta-details {
-    font-size: 0.85rem;
-    color: #666;
-    margin-top: 4px;
-    line-height: 1.3;
+/* Ensure TA Grid still stacks on mobile */
+@media (max-width: 768px) {
+    .ta-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Mentorship Items */
