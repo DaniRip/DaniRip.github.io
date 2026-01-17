@@ -14,12 +14,24 @@
   description: "A Python-based regression analysis of healthcare provider types and gender distribution using statsmodels."
   # Note: Since there is no gallery here, this slide will show text only.
 
+
+- title: "Simple PLINKO Game"
+  category: "fun"
+  description: "Inspired by the price is right, I used this simple, visual R program to simulate one or multiple games of PLINKO for students."
+  repo: "https://github.com/DaniRip/Simple_Plinko"
+  gallery:
+    - type: image
+      url: "https://github.com/DaniRip/Simple_Plinko/blob/master/Screen%20Shot%202019-09-23%20at%2011.47.36%20PM.png?raw=true"
+    - type: image
+      url: "https://github.com/DaniRip/Simple_Plinko/blob/master/Screen%20Shot%202019-09-23%20at%2011.48.53%20PM.png?raw=true"
+
+
 - title: "IIE Arena Simulation Competition"
   category: "fun"
   description: "Back in 2013, Krystle Pang, Jaquelyn Monis Rodriguez and I set out to use Arena Simulaton Software to predict the impact of a new terminal rollout at Chicago's O'Hare International Airport. I believe we came in 3rd at the International competition."
   gallery:
     - type: video
-      url: "R1-jtm6Vwp8&t=67s"
+      url: "R1-jtm6Vwp8&t"
       
 - title: "Recycling Sorter"
   category: "fun"
@@ -34,6 +46,6 @@
     - type: video
       id: "a-2TSVZvXGs"
 
-- title: "Combined Imaging Modalities"
+- title: "Novel Mixed-Modality Imaging Techniques"
   category: "future"
-  description: "I am passionate about imaging and feel like people are much more transparent than we think. With the current advent of AI and advanced OR techniques, I hope to push for less invasive, more informative imaging protocols in the future. Please contact me if you would like to get started on this type of project!"
+  description: "With the current advent of AI and advanced OR techniques, I believe humanity is about to become a lot more transparent. I believe in a future with less invasive, more informative imaging protocols. Please reach out if you would like to collaborate or to know more!"
