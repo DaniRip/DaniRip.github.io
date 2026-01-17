@@ -1,4 +1,4 @@
-- title: "Robust Proton Therapy Optimization"
+y- title: "Robust Proton Therapy Optimization"
   category: "active"
   description: "Investigating the mechanical result of tuning spot weights using polyhedral uncertainty sets."
   image: "assets/images/proton-therapy.png" # Optional
@@ -9,10 +9,10 @@
   description: "A Python-based regression analysis of healthcare provider types and gender distribution using statsmodels."
   image: ""
 
-- title: "US Location Mapping"
+- title: "Recycling Sorter"
   category: "fun"
-  description: "A quick Python script to generate a map of the US and pinpoint specific coordinate locations for visualization."
-  image: "assets/images/us-map.jpg"
+  description: "Back in 2012, when I was still in Mechanical Engineering, Yuhin Wu, Ryan Brown, Keith Tong and I spent many a late night at Skule\u2122 building an Arduino-based recycling sorter for ASME's SEC competition (and we won the local competition!)."
+  video_id: "6V8QCOc4pq0"
 
 - title: "Large-Scale Network Flows"
   category: "future"
