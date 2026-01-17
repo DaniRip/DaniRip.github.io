@@ -603,7 +603,7 @@ details[open] .toggle-chevron {
 
 .ta-item {
     padding: 10px 15px;      /* Added 15px on the left/right for breathing room */
-    border-left: 3px solid rgba(44, 62, 80, 0.15); /* A softer version of your Slate */
+    border-left: 2px solid rgba(44, 62, 80, 0.1); /* A softer version of your Slate */
     background: rgba(44, 62, 80, 0.02); /* Extremely faint tint to "box" it in */
     border-bottom: none;     /* Removed the old bottom line for a cleaner look */
     transition: border-color 0.3s ease;
