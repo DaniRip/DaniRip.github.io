@@ -601,10 +601,28 @@ details[open] .toggle-chevron {
 }
 
 /* Fix for TA Grid (Corrected Typo) */
+/* For long date ranges: Takes up the full line below the title */
+.ta-year-block {
+    display: block; 
+    width: 100%;
+    font-size: 0.85rem;
+    color: #888;
+    margin-top: 2px; /* Small gap between title and year line */
+}
+
+/* For short years: Sits right next to the title */
+.ta-year-inline {
+    display: inline;
+    font-size: 0.85rem;
+    color: #888;
+    margin-left: 6px;
+}
+
+/* Clean up the grid container */
 .ta-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Removed the double 'grid-template-columns:' */
-    gap: 15px;
+    grid-template-columns: 1fr 1fr; /* Keep the 2-column layout for the grid cards */
+    gap: 20px;
     margin-bottom: 40px;
 }
 
