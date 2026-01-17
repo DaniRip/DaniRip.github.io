@@ -850,6 +850,33 @@ details[open] .toggle-chevron {
     font-weight: 600;
 }
 
+/* --- Project Links --- */
+.project-links {
+    margin-top: 15px;
+}
+
+.repo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
+    background-color: white;
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    text-decoration: none; /* Removes the underline */
+}
+
+.repo-btn:hover {
+    background-color: var(--accent-color);
+    color: white !important; /* Forces white text on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
 /* --- Mobile Specific Tweaks --- */
 @media (max-width: 768px) {
     /* Stack mentorship back to 1 column on phones */
