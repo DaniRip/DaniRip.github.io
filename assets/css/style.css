@@ -633,6 +633,29 @@ details[open] .toggle-chevron {
     }
 }
 
+/* Year on its own line for long ranges */
+.ta-year-block {
+    display: block;
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 2px;
+    line-height: 1;
+}
+
+/* Year inline for short single years */
+.ta-year-inline {
+    font-size: 0.85rem;
+    color: #888;
+    margin-left: 4px;
+}
+
+.ta-details {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 4px;
+    line-height: 1.3;
+}
+
 /* Mentorship Items */
 
 .mentorship-container {
