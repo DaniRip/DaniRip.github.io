@@ -20,7 +20,7 @@ permalink: /teaching/
 <div class="ta-grid">
 {% for job in site.data.teaching.ta_experience %}
     <div class="ta-item">
-        <strong>{{ job.course }}</strong> 
+        {{ job.course }}
         
         {% assign year_string = job.years | default: job.year %}
         {% assign year_size = year_string | size %}
