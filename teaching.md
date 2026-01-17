@@ -22,14 +22,16 @@ permalink: /teaching/
     <div class="ta-item">
         <strong>{{ job.course }}</strong>
         
-        {% assign year_string = job.years | default: job.year %}
+        <!-- {% assign year_string = job.years | default: job.year %}
         {% assign year_size = year_string | size %}
         
         {% if year_size > 9 %}
             <div class="ta-year-block">({{ year_string }})</div>
         {% else %}
             <span class="ta-year-inline">({{ year_string }})</span>
-        {% endif %}
+        {% endif %} -->
+
+        <span class="ta-year-inline">({{ year_string }})</span>
 
         {% if job.details %}
             <div class="ta-details">{{ job.details }}</div>
