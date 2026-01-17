@@ -5,21 +5,21 @@
     - type: image
       url: "assets/images/proton-1.jpg"
     - type: video
-      id: "dQw4w9WgXcQ"  # YouTube ID
+      id: "dQw4w9WgXcQ"
     - type: image
       url: "assets/images/proton-results-plot.png"
 
 - title: "Simple Map Project"
   category: "fun"
   description: "Mapping coordinates..."
-  # You can still use the single format if you're lazy, or convert it to a 1-item gallery:
   gallery:
     - type: image
       url: "assets/images/map.jpg"
-  
+
 - title: "Healthcare Provider Regression Analysis"
   category: "completed"
   description: "A Python-based regression analysis of healthcare provider types and gender distribution using statsmodels."
+  # Note: Since there is no gallery here, this slide will show text only.
 
 - title: "Recycling Sorter"
   category: "fun"
