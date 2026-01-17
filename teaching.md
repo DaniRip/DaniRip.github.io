@@ -21,8 +21,8 @@ permalink: /teaching/
 {% for job in site.data.teaching.ta_experience %}
     <div class="ta-item">
         <strong>{{ job.course }}</strong>
-
-        <span class="ta-year-inline">({{  job.years }})</span>
+        
+        <span class="ta-year-inline">({{ job.years | default: job.year }})</span>
 
         {% if job.details %}
             <div class="ta-details">{{ job.details }}</div>
