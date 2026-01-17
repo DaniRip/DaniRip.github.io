@@ -1,9 +1,20 @@
-research:
-  - title: "Example Research Project"
-    description: "Brief description of the ongoing research project. This is a placeholder for your active research topics."
-    # link: "https://example.com" # Optional link
-    # image: "/assets/project-image.jpg" # Optional image
+- title: "Robust Proton Therapy Optimization"
+  category: "active"
+  description: "Investigating the mechanical result of tuning spot weights using polyhedral uncertainty sets."
+  image: "assets/images/proton-therapy.png" # Optional
+  video_id: "" # Optional (YouTube ID like 'dQw4w9WgXcQ')
+  
+- title: "Healthcare Provider Regression Analysis"
+  category: "completed"
+  description: "A Python-based regression analysis of healthcare provider types and gender distribution using statsmodels."
+  image: ""
 
-fun:
-  - title: "Example Fun Project"
-    description: "Brief description of a just-for-fun project."
+- title: "US Location Mapping"
+  category: "fun"
+  description: "A quick Python script to generate a map of the US and pinpoint specific coordinate locations for visualization."
+  image: "assets/images/us-map.jpg"
+
+- title: "Large-Scale Network Flows"
+  category: "future"
+  description: "Planning to explore implementation of robust counterparts for communication networks."
+  image: ""
