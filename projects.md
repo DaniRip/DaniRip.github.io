@@ -73,8 +73,16 @@ permalink: /projects/
                             {% endif %}
                         </div>
                         <div class="slide-text">
-                            <p>{{ project.description }}</p>
+                        <p>{{ project.description }}</p>
+                        
+                        {% if project.repo %}
+                        <div class="project-links">
+                            <a href="{{ project.repo }}" target="_blank" class="repo-btn">
+                                <i class="fab fa-github"></i> View Code
+                            </a>
                         </div>
+                        {% endif %}
+                    </div>
                     </div>
 
                 </div>
