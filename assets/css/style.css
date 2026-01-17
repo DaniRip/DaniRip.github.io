@@ -612,7 +612,7 @@ details[open] .toggle-chevron {
 .ta-item strong {
     color: #444;      /* Lightened from the default near-black (#333) */
     font-weight: 600; /* Medium-bold instead of the "heavy" default bold */
-    font-size: 1rem;  /* Keeps it legible but not oversized */
+    font-size: 0.95rem;  /* Keeps it legible but not oversized */
 }
 
 .ta-year-inline {
