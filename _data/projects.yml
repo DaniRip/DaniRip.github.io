@@ -8,7 +8,7 @@
   repo: "https://github.com/DaniRip/RT_Sampling_Pipeline"
   gallery:
     - type: video
-      url: ""
+      id: ""
 
 - title: "Simple PLINKO Game"
   category: "fun"
@@ -33,7 +33,7 @@
   description: "Back in 2013, Krystle Pang, Jaquelyn Monis Rodriguez and I set out to use Arena Simulaton Software to predict the impact of a new terminal rollout at Chicago's O'Hare International Airport. I believe we came in 3rd at the International competition."
   gallery:
     - type: video
-      url: "R1-jtm6Vwp8"
+      id: "R1-jtm6Vwp8"
       
 - title: "Recycling Sorter"
   category: "fun"
