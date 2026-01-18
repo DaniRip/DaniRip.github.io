@@ -7,7 +7,7 @@ image: /assets/profile.jpg
 <div style="font-size: 1.4rem; font-weight: 700; margin: 0 0 0px 0; padding: 0 0 0px 0">
   <a href="https://malonecenter.jhu.edu/people/danielle-ripsman/" target="_blank">Malone Postdoctoral Fellow</a> at <a href="https://www.jhu.edu" target="_blank">Johns Hopkins University</a>
 </div>
-<div style="font-size: 0.85rem; font-weight: 700; margin: 0 0 20px 0; padding: 0 0 10px 0; border-bottom: 2px solid #eee; width: 100%;">
+<div style="text-align: center; font-size: 0.85rem; font-weight: 700; margin: 0 0 20px 0; padding: 0 0 10px 0; border-bottom: 2px solid #eee; width: 100%;">
 <!--<strong>Affiliations:</strong>-->
 <a href="https://systems.jhu.edu/" target="_blank">Center for Systems Science and Engineering (CSSE)</a> &#8226; <a href="https://hbhi.jhu.edu/" target="_blank">Hopkins Business of Health Initiative (HBHI)</a> &#8226; <a href="https://malonecenter.jhu.edu/" target="_blank">Malone Center for Engineering in Healthcare (MCEH)</a>
 </div>
