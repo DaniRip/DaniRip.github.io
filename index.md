@@ -14,9 +14,9 @@ I obtained my Ph.D. (2024) and M.A.Sc. (2018) in Management Science at the <a hr
 I enjoy tackling **large-scale**, **data-driven**, **societal problems**, particularly within **healthcare systems**. By leveraging a toolbox of **linear** and **mixed-integer optimization**, **inverse optimization**, and **decision diagrams**, I develop efficient heuristics and algorithms designed for **real-world** implementation. With a background in **interface design**, my goal is to translate complex theoretical solutions into accessible, actionable tools for decision-makers and the community at large.
 
 **Affiliations:**<br>
-&#8226; <a href="https://malonecenter.jhu.edu/" target="_blank">Malone Center for Engineering in Healthcare (MCEH)</a>
+&#8226; <a href="https://malonecenter.jhu.edu/" target="_blank">Malone Center for Engineering in Healthcare (MCEH)</a><br>
 &#8226; <a href="https://systems.jhu.edu/" target="_blank">Center for Systems Science and Engineering (CSSE)</a> <br>
-&#8226; <a href="https://hbhi.jhu.edu/" target="_blank">Hopkins Business of Health Initiative (HBHI)</a> <br>
+&#8226; <a href="https://hbhi.jhu.edu/" target="_blank">Hopkins Business of Health Initiative (HBHI)</a> 
 
 <!-- Whether exploring public health systems or fundamental algorithmic mathematics, I am driven by a commitment to clear communication, illustration, and teaching.  -->
 
