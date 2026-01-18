@@ -9,8 +9,8 @@ image: /assets/profile.jpg
 </div>
 <div style="font-size: 0.85rem; font-weight: 700; margin: 0 0 0px 0; padding: 0 0 0px 0;">
 <!--<strong>Affiliations:</strong>-->
-&#8226; <a href="https://systems.jhu.edu/" target="_blank">Center for Systems Science and Engineering (CSSE)</a> 
-&#8226; <a href="https://hbhi.jhu.edu/" target="_blank">Hopkins Business of Health Initiative (HBHI)</a> 
+&#8226; <a href="https://systems.jhu.edu/" target="_blank">Center for Systems Science and Engineering (CSSE)</a> <br>
+&#8226; <a href="https://hbhi.jhu.edu/" target="_blank">Hopkins Business of Health Initiative (HBHI)</a> <br>
 &#8226; <a href="https://malonecenter.jhu.edu/" target="_blank">Malone Center for Engineering in Healthcare (MCEH)</a>
 </div>
 
