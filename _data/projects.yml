@@ -22,7 +22,7 @@
 
 - title: "SuperSlider"
   category: "fun"
-  description: "A flexible MATLAB-based slider creation tool, that allows for multiple slides along a single axis. This was built out for an in-house interface project, but has been downloaded by over 1000 people and put into use in some cool industries that I will not disclose!"
+  description: "A flexible MATLAB-based slider creation tool, that allows for multiple slides along a single axis. This was built out for an in-house interface project, but has been downloaded by over 1000 people and put into use in some cool industries! <br> If you want your users to control a multi-point range, give it a download and let me know what you're working on!"
   repo: "https://www.mathworks.com/matlabcentral/fileexchange/43285-superslider"
   gallery:
     - type: image
