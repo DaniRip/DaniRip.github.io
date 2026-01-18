@@ -704,6 +704,7 @@ details[open] .toggle-chevron {
 }
 
 /* --- The Navigation Arrows --- */
+/* --- The Arrow Base --- */
 .nav-arrow {
     position: absolute;
     top: 50%;
@@ -717,7 +718,10 @@ details[open] .toggle-chevron {
     cursor: pointer;
     font-size: 1.2rem;
     z-index: 10;
-    transition: all 0.2s ease;
+    
+    /* 1. Only animate specific things, NEVER 'all' or 'pointer-events' */
+    transition: background-color 0.2s, color 0.2s, opacity 0.2s; 
+    
     display: flex;
     align-items: center;
     justify-content: center;
@@ -728,16 +732,19 @@ details[open] .toggle-chevron {
     color: white;
 }
 
-/* --- Disabled Arrow State --- */
-.nav-arrow.disabled {
-    opacity: 0.2;         /* Make it very faint */
-    cursor: default;      /* Cursor doesn't become a pointer */
-    pointer-events: none; /* Physically prevents clicking */
-    background: transparent;
-}
-
 .nav-arrow.left { left: 0; }
 .nav-arrow.right { right: 0; }
+
+/* --- The Robust Disabled State --- */
+.nav-arrow.disabled,
+.nav-arrow.disabled:hover { /* 2. This overrides the sticky mobile hover */
+    opacity: 0.5 !important;
+    background: #f0f0f0 !important; /* A solid light grey, never transparent */
+    color: #ccc !important;
+    cursor: default;
+    pointer-events: none; /* Physically prevents clicking */
+    box-shadow: none;
+}
 
 /* --- The Slide Content --- */
 .slides-wrapper {
