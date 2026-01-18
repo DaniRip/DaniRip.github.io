@@ -121,6 +121,9 @@ permalink: /projects/
 
         document.getElementById(categoryName).style.display = "block";
         event.currentTarget.className += " active";
+        
+        // Refresh arrow states when tab opens
+        updateArrows(categoryName);
     }
 
     // 2. Slide Switching Logic
@@ -134,15 +137,56 @@ permalink: /projects/
     function changeSlide(n, category) {
         var container = document.getElementById(category);
         var slides = container.getElementsByClassName("project-slide");
+        var newIndex = slideIndices[category] + n;
         
+        // STOP if trying to go out of bounds
+        if (newIndex < 0 || newIndex >= slides.length) {
+            return; 
+        }
+
+        // Hide old slide
         slides[slideIndices[category]].classList.remove("visible");
 
-        slideIndices[category] += n;
+        // Update index
+        slideIndices[category] = newIndex;
 
-        if (slideIndices[category] >= slides.length) { slideIndices[category] = 0; }
-        if (slideIndices[category] < 0) { slideIndices[category] = slides.length - 1; }
-
+        // Show new slide
         slides[slideIndices[category]].classList.add("visible");
+        
+        // Update the arrow colors
+        updateArrows(category);
+    }
+
+    // New Helper: Checks if arrows should be greyed out
+    function updateArrows(category) {
+        var container = document.getElementById(category);
+        var slides = container.getElementsByClassName("project-slide");
+        var currentIndex = slideIndices[category];
+        var totalSlides = slides.length;
+
+        var leftBtn = container.querySelector('.nav-arrow.left');
+        var rightBtn = container.querySelector('.nav-arrow.right');
+
+        // Reset both to active first
+        leftBtn.classList.remove('disabled');
+        rightBtn.classList.remove('disabled');
+
+        // If no slides or only 1 slide, disable both
+        if (totalSlides <= 1) {
+            leftBtn.classList.add('disabled');
+            rightBtn.classList.add('disabled');
+            return;
+        }
+
+        // Disable Left if at start
+        if (currentIndex === 0) {
+            leftBtn.classList.add('disabled');
+        }
+
+        // Disable Right if at end
+        if (currentIndex === totalSlides - 1) {
+            rightBtn.classList.add('disabled');
+        }
     }
 
     // 3. Media Switcher Logic (The 1-2-3 buttons)
@@ -165,4 +209,13 @@ permalink: /projects/
             buttons[mediaIndex].classList.add("active");
         }
     }
+
+    // 4. Initialize Arrows on Page Load
+    // This runs automatically to grey out the "Left" arrows immediately
+    document.addEventListener("DOMContentLoaded", function() {
+        var cats = ['active', 'completed', 'fun', 'future'];
+        cats.forEach(function(cat) {
+            updateArrows(cat);
+        });
+    });
 </script>
