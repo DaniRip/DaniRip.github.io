@@ -4,7 +4,7 @@ title: About Me
 image: /assets/profile.jpg
 ---
 
-<div style="font-size: 1.4rem; font-weight: 700; margin: 0 0 20px 0; padding: 0 0 10px 0">
+<div style="font-size: 1.4rem; font-weight: 700; margin: 0 0 0px 0; padding: 0 0 10px 0">
   <a href="https://malonecenter.jhu.edu/people/danielle-ripsman/" target="_blank">Malone Postdoctoral Fellow</a> at <a href="https://www.jhu.edu" target="_blank">Johns Hopkins University</a>
 </div>
 <div style="font-size: 0.95rem; font-weight: 700; margin: 0 0 20px 0; padding: 0 0 10px 0; border-bottom: 2px solid #eee; width: 100%;">
@@ -12,7 +12,6 @@ image: /assets/profile.jpg
 </div>
 
 I work under <a href="https://systems.jhu.edu/kimia/" target="_blank">Dr. Kimia Ghobadi</a>, researching at the intersection of **large-scale optimization** and **healthcare engineering**. 
-
 I obtained my Ph.D. (2024) and M.A.Sc. (2018) in Management Science at the <a href="https://uwaterloo.ca/management-sciences/" target="_blank">Department of Management Sciences and Engineering</a> under <a href="https://uwaterloo.ca/scholar/h6mahmou" target="_blank">Dr. Houra Mahmoudzadeh</a>. My B.A.Sc. (2016) was earned at the <a href="https://www.utoronto.ca/" target="_blank">University of Toronto</a> in <a href="https://www.mie.utoronto.ca/" target="_blank">Industrial Engineering</a>, where I was introduced to research in <a href="https://morlab.mie.utoronto.ca/" target="_blank">morLAB</a>. I was previously a Postdoctoral Fellow at the <a href="https://www.rotman.utoronto.ca/" target="_blank">Rotman School of Management</a> at the <a href="https://www.utoronto.ca/" target="_blank">University of Toronto</a>, under <a href="https://discover.research.utoronto.ca/16076-andre-augusto-cire" target="_blank">Dr. Andre Cire</a> and <a href="https://schulich.yorku.ca/faculty/adam-diamant/" target="_blank">Dr. Adam Diamant</a>.
 
 My research focuses on tackling **large-scale**, **data-driven**, **societal problems**, particularly within **healthcare systems**. By leveraging a toolbox of **linear** and **mixed-integer optimization**, **inverse optimization**, and **decision diagrams**, I develop efficient heuristics and algorithms designed for **real-world** implementation. With a background in **interface design**, my goal is to translate complex theoretical solutions into accessible, actionable tools for decision-makers and the community at large.
