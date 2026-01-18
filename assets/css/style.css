@@ -728,6 +728,14 @@ details[open] .toggle-chevron {
     color: white;
 }
 
+/* --- Disabled Arrow State --- */
+.nav-arrow.disabled {
+    opacity: 0.2;         /* Make it very faint */
+    cursor: default;      /* Cursor doesn't become a pointer */
+    pointer-events: none; /* Physically prevents clicking */
+    background: transparent;
+}
+
 .nav-arrow.left { left: 0; }
 .nav-arrow.right { right: 0; }
 
