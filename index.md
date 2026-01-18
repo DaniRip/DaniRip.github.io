@@ -8,7 +8,7 @@ image: /assets/profile.jpg
   <a href="https://malonecenter.jhu.edu/people/danielle-ripsman/" target="_blank">Malone Postdoctoral Fellow</a> at <a href="https://www.jhu.edu" target="_blank">Johns Hopkins University</a>
 
 <div style="font-size: 0.95rem; font-weight: 700; margin: 0 0 20px 0; padding: 0 0 10px 0; border-bottom: 2px solid #eee; width: 100%;">
-**Affiliations:** <a href="https://systems.jhu.edu/" target="_blank">Center for Systems Science and Engineering (CSSE)</a> &#8226; <a href="https://hbhi.jhu.edu/" target="_blank">Hopkins Business of Health Initiative (HBHI)</a> &#8226; <a href="https://malonecenter.jhu.edu/" target="_blank">Malone Center for Engineering in Healthcare (MCEH)</a>. 
+**Affiliations:** <a href="https://systems.jhu.edu/" target="_blank">Center for Systems Science and Engineering (CSSE)</a> &#8226; <a href="https://hbhi.jhu.edu/" target="_blank">Hopkins Business of Health Initiative (HBHI)</a> &#8226; <a href="https://malonecenter.jhu.edu/" target="_blank">Malone Center for Engineering in Healthcare (MCEH)</a>
 </div>
 
 I work under <a href="https://systems.jhu.edu/kimia/" target="_blank">Dr. Kimia Ghobadi</a>, researching at the intersection of **large-scale optimization** and **healthcare engineering**. 
