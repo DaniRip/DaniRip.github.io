@@ -1,6 +1,12 @@
 title: Danielle A. Ripsman
 email: dripsma1 [at] jh.edu
-description: "Ph.D. in Management Science & Engineering <br> Operations Research | Healthcare Applications | Analytics & Optimization"
+
+# 1. This new field is ONLY for the visual header on your site
+header_subtitle: "Ph.D. in Management Science & Engineering <br> Operations Research | Healthcare Applications | Analytics & Optimization"
+
+# 2. This field is ONLY for Google (No HTML tags allowed here!)
+description: "Portfolio of Danielle A. Ripsman, Ph.D. in Management Science & Engineering. Researcher in Operations Research, Healthcare Applications, Analytics, and Optimization."
+
 baseurl: "" 
 url: "https://danirip.github.io"
 github_username: danirip
