@@ -1,8 +1,14 @@
+- title: "Incorporating Robustness into Radiation Therapy Treatment Planning"
+  category: "active"
+  description: "When planning radiation therapy plans, or optimizing in general, the greediness of the underlying algorithms can have negative impacts on plan selection. In this multi-year body of work, we investigate the interplay between very large models and uncertainty, studying which kinds of approaches are best to mitigate uncertainty in various scenarios."
+      - type: image
+        url: "/assets/3D_RotatingPros.gif"  
+
 - title: "Geometric Beam Angle Optimization"
   category: "active"
   description: "When clinicians plan radiation therapy treatment plans, in step-and-shoot radiation therapy, the beam angles must be chosen before any calculation can be made. These are often selected to be equidistant, due to the difficulty in determining the best angles *a-priori*. The literature has employed heuristic approaches that have been shown to work better. However, what if there were more knowledge-based approaches to doing so?"
       - type: image
-        url: "/assets/3D_RotatingPros.gif"
+        url: "/assets/3D_RotatingPros.gif"      
 
 - title: "Radiation Therapy Sampling and Solution Pipeline/Add-On"
   category: "completed"
