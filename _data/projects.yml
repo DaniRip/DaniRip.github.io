@@ -15,7 +15,7 @@
   description: "This paper took a preliminary looked at how to handle blackbox multi-objective problems, with the specific usecase of stereotactic radiosurgery planning.<br>Conceptually, the interface took the idea of mult-objective tradeoffs and used this as an engine for delivering plan alternatives to the end user. The interface facilitated in depth trade-off analysis between a set of plans that were prerun, for greater flexibility and an intuitive understanding of the decision space."
   gallery:
     - type: image
-    - url: "/assets/actionshot1.pdf"
+    - url: "/assets/Gui11.png"
 
 - title: "Simple PLINKO Game"
   category: "fun"
