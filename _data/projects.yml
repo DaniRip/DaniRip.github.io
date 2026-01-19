@@ -20,7 +20,7 @@
     - type: image
       url: "https://github.com/DaniRip/Simple_Plinko/blob/master/Screen%20Shot%202019-09-23%20at%2011.48.53%20PM.png?raw=true"
     - type: video
-      id: "me4SV_tuMSE?t=281"
+      id: "me4SV_tuMSE?start=281"
 
 - title: "SuperSlider"
   category: "fun"
