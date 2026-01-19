@@ -11,6 +11,12 @@
       - type: image
         url: "/assets/AIScribe.png"  
 
+- title: "The Homecare Provider Allocation Problem"
+  category: "active"
+  description: "Dispatching home care workers to patients is a natural problem for operations research, in that it is difficult, multistage and data-intensive. In this project, we look for ways to make this very large project tractible and adjustable for non-expert users that will be using the end-systems."
+      - type: image
+        url: "/assets/CoCMypall_hcp_routes_iter10n2_t0.png"         
+
 - title: "Incorporating Robustness into Radiation Therapy Treatment Planning"
   category: "active"
   description: "When planning radiation therapy plans, or optimizing in general, the greediness of the underlying algorithms can have negative impacts on plan selection. In this multi-year body of work, we investigate the interplay between very large models and uncertainty, studying which kinds of approaches are best to mitigate uncertainty in various scenarios."
