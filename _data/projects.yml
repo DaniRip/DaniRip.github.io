@@ -18,7 +18,7 @@
 
 - title: "Geometric Beam Angle Optimization"
   category: "active"
-  description: "When clinicians plan radiation therapy treatment plans, in step-and-shoot radiation therapy, the beam angles must be chosen before any calculation can be made. These are often selected to be equidistant, due to the difficulty in determining the best angles *a-priori*. The literature has employed heuristic approaches that have been shown to work better. However, what if there were more knowledge-based approaches to doing so?"
+  description: "When clinicians plan radiation therapy treatment plans for step-and-shoot radiation therapy, the beam angles must be chosen before any calculation can be made. These angles are often selected to be equidistant, due to the difficulty in determining the best angles *a-priori*. The literature has employed heuristic approaches that have been shown to work better than this naive equidistant approach. However, what if there were more knowledge-based approaches to doing so?"
   gallery:
       - type: image
         url: "/assets/3D_RotatingPros.gif"      
