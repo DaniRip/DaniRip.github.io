@@ -1,3 +1,9 @@
+
+
+- title: "The Impact of AI Scribes on Primary Care Practitioners"
+  category: "active"
+  description: "AI scribe technology has been rapidly deployed in practitioners offices in the past year or two, but the studies in terms of efficacy and where it is and isn't helpful are just catching up. We are working on one of these studies!"
+
 - title: "Incorporating Robustness into Radiation Therapy Treatment Planning"
   category: "active"
   description: "When planning radiation therapy plans, or optimizing in general, the greediness of the underlying algorithms can have negative impacts on plan selection. In this multi-year body of work, we investigate the interplay between very large models and uncertainty, studying which kinds of approaches are best to mitigate uncertainty in various scenarios."
