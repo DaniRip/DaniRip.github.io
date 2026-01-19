@@ -7,8 +7,8 @@
   description: "A MATLAB-based codebase that takes in matRad-calculated dose objects, allows for multiple sampling modalities, and then connects to a CPLEX-c++ solver for optimization."
   repo: "https://github.com/DaniRip/RT_Sampling_Pipeline"
   gallery:
-    - type: video
-      id: ""
+    - type: image
+      id: "https://github.com/DaniRip/RT_Sampling_Pipeline/blob/master/sampleOutputs/GUIloaded2.png"
 
 - title: "Simple PLINKO Game"
   category: "fun"
