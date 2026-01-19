@@ -50,6 +50,10 @@
     - type: video
       id: "a-2TSVZvXGs"
 
+- title: "XAI and Improved LLM Efficiency"
+  category: "future"
+  description: "AI and OR go hand-in-hand, because effectively, they are governed by the same mathematical principals. In my current work, I look at how to make OR look more like AI, in terms of inverse model generation and finding the boundaries of model separation. Taken from the reverse perspective, this could be the path to explainability and efficient-model-collapse."
+
 - title: "Novel Mixed-Modality Imaging Techniques"
   category: "future"
   description: "With the current advent of AI and advanced OR techniques, I believe humanity is about to become a lot more transparent. I am interested in studying less invasive, more informative imaging protocols that we have the technology for now, not decades from now. Please reach out if you would like to collaborate or to know more!"
