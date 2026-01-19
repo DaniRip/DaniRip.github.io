@@ -1,6 +1,8 @@
 - title: "Geometric Beam Angle Optimization"
   category: "active"
-  description: "Optimization of angle"
+  description: "When clinicians plan radiation therapy treatment plans, in step-and-shoot radiation therapy, the beam angles must be chosen before any calculation can be made. These are often selected to be equidistant, due to the difficulty in determining the best angles *a-priori*. The literature has employed heuristic approaches that have been shown to work better. However, what if there were more knowledge-based approaches to doing so?"
+      - type: image
+        url: "/assets/3D_RotatingPros.gif"
 
 - title: "Radiation Therapy Sampling and Solution Pipeline/Add-On"
   category: "completed"
@@ -15,7 +17,7 @@
   description: "This paper took a preliminary looked at how to handle blackbox multi-objective problems, with the specific usecase of stereotactic radiosurgery planning.<br>Conceptually, the interface took the idea of mult-objective tradeoffs and used this as an engine for delivering plan alternatives to the end user. The interface facilitated in depth trade-off analysis between a set of plans that were prerun, for greater flexibility and an intuitive understanding of the decision space."
   gallery:
     - type: image
-    - url: "/assets/Gui11.png"
+      url: "/assets/Gui11.png"
 
 - title: "Simple PLINKO Game"
   category: "fun"
