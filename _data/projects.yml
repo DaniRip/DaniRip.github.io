@@ -8,12 +8,14 @@
 - title: "The Impact of AI Scribes on Primary Care Practitioners"
   category: "active"
   description: "AI scribe technology has been rapidly deployed in practitioners offices in the past year or two, but the studies in terms of efficacy and where it is and isn't helpful are just catching up. We are working on one of these studies!"
+  gallery:    
       - type: image
         url: "/assets/AIScribe.png"  
 
 - title: "The Homecare Provider Allocation Problem"
   category: "active"
   description: "Dispatching home care workers to patients is a natural problem for operations research, in that it is difficult, multistage and data-intensive. In this project, we look for ways to make this very large project tractible and adjustable for non-expert users that will be using the end-systems."
+  gallery:
       - type: image
         url: "/assets/CoCMypall_hcp_routes_iter10n2_t0.png"         
 
