@@ -8,7 +8,7 @@
   repo: "https://github.com/DaniRip/RT_Sampling_Pipeline"
   gallery:
     - type: image
-      url: "https://github.com/DaniRip/RT_Sampling_Pipeline/blob/master/sampleOutputs/GUIloaded2.png"
+      url: "https://github.com/DaniRip/RT_Sampling_Pipeline/blob/master/sampleOutputs/GUIloaded2.png?raw=true"
 
 - title: "morDiRECT: An interface for comparing tradeoffs in radiation therapy treatment planning"
   category: "completed" 
