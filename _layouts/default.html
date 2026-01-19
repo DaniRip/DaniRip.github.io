@@ -15,7 +15,7 @@
     <header class="header">
         <div class="header-content">
             <h1><a href="{{ "/" | relative_url }}">{{ site.title }}</a></h1>
-            <p class="subtitle">{{ site.description }}</p>
+            <p class="subtitle">{{ site.header_subtitle | default: site.description }}</p>
             <div class="social-links">
                 <a href="mailto:{{ site.email }}" title="Email"><i class="fas fa-envelope"></i></a>
                 {% if site.github_username %}
