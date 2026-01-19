@@ -1,4 +1,9 @@
-
+- title: "Generative Inverse Optimization"
+  category: "active"
+  description: "Generative AI has swept the nation, in many ways leaving traditional optimization behind. However, it ironically borrows heavily from the optimization toolbox.<br>In this project, we look to generate models from large datasets, in a similar fashion to AI. Unlike AI, however, we will be working with datasets that form optimization problems and learning those instead.<br>Through this project, we hope to learn more about the overlap between modern-day AI and OR, and how the two fields can continue to build eachother up over time."
+  gallery:
+      - type: image
+        url: "/assets/GenerativeInverse.png"  
 
 - title: "The Impact of AI Scribes on Primary Care Practitioners"
   category: "active"
