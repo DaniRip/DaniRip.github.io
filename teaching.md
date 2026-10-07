@@ -15,23 +15,6 @@ permalink: /teaching/
 </div>
 {% endfor %}
 
-### Teaching Materials <i class="fas fa-book-open"></i>
-
-<div class="card teaching-material">
-    <a href="{{ "/talks/walking-the-corners/" | relative_url }}" target="_blank">
-        <img src="{{ "/assets/walking-the-corners.jpg" | relative_url }}" alt="Title slide of Walking the Corners" loading="lazy">
-    </a>
-    <div>
-        <h3>Walking the Corners: The Simplex Method, Duality, and the Art of Choosing a Pivot</h3>
-        <p>An interactive, undergraduate-level lecture made for the Optimal Lab at Johns Hopkins (2026). Starting from a small bakery problem, it builds the geometry of linear programming, derives the dual as a game of bounding the profit, works through the simplex tableau, lifts the problem into 3D, and races four pivot rules against each other, including on the Klee–Minty cube. It closes with a research question: can a policy learn to pick pivots?</p>
-        <div class="material-links">
-            <a href="{{ "/talks/walking-the-corners/" | relative_url }}" target="_blank" class="pub-link-btn"><i class="fas fa-play"></i> Open the slides</a>
-            <a href="{{ "/talks/walking-the-corners/walking-the-corners.pdf" | relative_url }}" target="_blank" class="pub-link-btn"><i class="far fa-file-pdf"></i> PDF version</a>
-        </div>
-        <small>Step through with the arrow keys or a clicker; press <strong>f</strong> for fullscreen.</small>
-    </div>
-</div>
-
 ### Teaching Assistant Experience <i class="fas fa-pen-nib"></i>
 
 <div class="ta-grid">
@@ -58,6 +41,23 @@ permalink: /teaching/
     <p>{{ item.description }}</p>
 </div>
 {% endfor %}
+
+### Teaching Materials <i class="fas fa-book-open"></i>
+
+<div class="card teaching-material">
+    <a href="{{ "/talks/walking-the-corners/" | relative_url }}" target="_blank">
+        <img src="{{ "/assets/walking-the-corners.jpg" | relative_url }}" alt="Title slide of Walking the Corners" loading="lazy">
+    </a>
+    <div>
+        <h3>Walking the Corners: The Simplex Method, Duality, and the Art of Choosing a Pivot</h3>
+        <p>An interactive, undergraduate-level lecture made for the Optimal Lab at Johns Hopkins (2026). Starting from a small bakery problem, it builds the geometry of linear programming, derives the dual as a game of bounding the profit, works through the simplex tableau, lifts the problem into 3D, and races four pivot rules against each other, including on the Klee–Minty cube. It closes with a research question: can a policy learn to pick pivots?</p>
+        <div class="material-links">
+            <a href="{{ "/talks/walking-the-corners/" | relative_url }}" target="_blank" class="pub-link-btn"><i class="fas fa-play"></i> Open the slides</a>
+            <a href="{{ "/talks/walking-the-corners/walking-the-corners.pdf" | relative_url }}" target="_blank" class="pub-link-btn"><i class="far fa-file-pdf"></i> PDF version</a>
+        </div>
+        <small>Step through with the arrow keys or a clicker; press <strong>f</strong> for fullscreen.</small>
+    </div>
+</div>
 
 ### Mentorship <i class="fas fa-seedling"></i>
 
