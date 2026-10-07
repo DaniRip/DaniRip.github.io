@@ -57,7 +57,7 @@
 
 - title: "morDiRECT: An interface for comparing tradeoffs in radiation therapy treatment planning"
   category: "completed" 
-  description: "This paper took a preliminary look at how to handle black-box multi-objective problems, with the specific use case of stereotactic radiosurgery planning.<br>Conceptually, the interface took the idea of multi-objective trade-offs and used this as an engine for delivering plan alternatives to the end user. The interface facilitated in-depth trade-off analysis between a set of plans that were prerun, for greater flexibility and an intuitive understanding of the decision space."
+  description: "This paper took a preliminary look at how to handle black-box multi-objective problems, with the specific use case of stereotactic radiosurgery planning.<br>Conceptually, the interface took the idea of multi-objective trade-offs and used this as an engine for delivering plan alternatives to the end user. The interface facilitated in-depth trade-off analysis between a set of plans that were prerun, for greater flexibility and an intuitive understanding of the decision space.<br>Published in <a href='https://doi.org/10.1016/j.eswa.2015.06.028' target='_blank'>Expert Systems with Applications</a> (2015), with D. M. Aleman and K. Ghobadi."
   gallery:
     - type: image
       url: "/assets/Gui11.png"
