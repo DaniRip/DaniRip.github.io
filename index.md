@@ -18,6 +18,7 @@ I enjoy tackling **large-scale**, **data-driven**, **societal problems**, partic
 &#8226; <a href="https://hbhi.jhu.edu/" target="_blank">Hopkins Business of Health Initiative (HBHI)</a> 
 
 **Selected Honors:**<br>
+&#8226; Malone Postdoctoral Fellowship, Johns Hopkins University, 2025–present<br>
 &#8226; NSERC Canada Graduate Scholarship – Doctoral (CGS-D), 2019–2022<br>
 &#8226; Engineering Excellence PhD Fellowship, University of Waterloo, 2018–2022<br>
 &#8226; Sandford Fleming Foundation TA Award, 2020 and 2022
