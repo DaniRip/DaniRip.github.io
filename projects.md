@@ -8,7 +8,7 @@ permalink: /projects/
     <button class="tab-btn active" onclick="openCategory('active')">Active Research</button>
     <button class="tab-btn" onclick="openCategory('completed')">Completed</button>
     <button class="tab-btn" onclick="openCategory('fun')">Old / Just for Fun</button>
-    <button class="tab-btn" onclick="openCategory('future')">Future Ambitions</button>
+    <button class="tab-btn" onclick="openCategory('future')">Research Agenda</button>
 </div>
 
 <div class="projects-display-area">
@@ -217,5 +217,14 @@ permalink: /projects/
         cats.forEach(function(cat) {
             updateArrows(cat);
         });
+
+        // Open the tab named in the URL, e.g. /projects/#future
+        var fromHash = location.hash.slice(1);
+        var tabs = document.getElementsByClassName("tab-btn");
+        for (var i = 0; i < tabs.length; i++) {
+            if (fromHash && tabs[i].getAttribute("onclick").indexOf("'" + fromHash + "'") !== -1) {
+                tabs[i].click();
+            }
+        }
     });
 </script>

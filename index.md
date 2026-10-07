@@ -12,6 +12,8 @@ My research is at the intersection of **large-scale optimization** and **healthc
 
 I enjoy tackling **large-scale**, **data-driven**, **societal problems**, particularly within **healthcare systems**. By leveraging a toolbox of **linear** and **mixed-integer optimization**, **inverse optimization**, and **decision diagrams**, I develop efficient heuristics and algorithms designed for **real-world** implementation. With a background in **interface design**, my goal is to translate complex theoretical solutions into accessible, actionable tools for decision-makers and the community at large.
 
+**Research agenda:** how can optimization learn from, and work alongside, the experts who run healthcare? <a href="{{ "/projects/#future" | relative_url }}">Read where my research is headed</a>.
+
 **Affiliations:**<br>
 &#8226; <a href="https://malonecenter.jhu.edu/" target="_blank">Malone Center for Engineering in Healthcare (MCEH)</a><br>
 &#8226; <a href="https://systems.jhu.edu/" target="_blank">Center for Systems Science and Engineering (CSSE)</a> <br>

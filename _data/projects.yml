@@ -5,6 +5,13 @@
       - type: image
         url: "/assets/GenerativeInverse.png"  
 
+- title: "Learning to Pivot (SimplexRL)"
+  category: "active"
+  description: "The simplex method's speed depends on which pivot it takes at each step, and classical rules choose by fixed local formulas. In this project, led by Felix Parker with Emmett Springer and Kimia Ghobadi, we model pivot selection as a sequential decision problem, use exact search to find the shortest routes, and train policies to follow them.<br>An early learned policy already ties steepest edge on a 40 x 40 test problem. See the pivot timeline in action in my <a href='/talks/walking-the-corners/' target='_blank'>Walking the Corners</a> lecture."
+  gallery:
+      - type: image
+        url: "/assets/SimplexRL_timeline.jpg"
+
 - title: "The Impact of AI Scribes on Primary Care Practitioners"
   category: "active"
   description: "AI scribe technology has been rapidly deployed in practitioners' offices in the past year or two, but the studies in terms of efficacy and where it is and isn't helpful are just catching up. We are working on one of these studies!"
@@ -90,9 +97,17 @@
     - type: video
       id: "a-2TSVZvXGs"
 
-- title: "XAI and Improved LLM Efficiency"
+- title: "Learning Clinical Models from Archives"
   category: "future"
-  description: "AI and OR go hand-in-hand, because effectively, they are governed by the same mathematical principles. In my current work, I look at how to make OR look more like AI, in terms of inverse model generation and finding the boundaries of model separation. Taken from the reverse perspective, this could be the path towards explainability and efficient model-collapse."
+  description: "Hospitals hold years of treatment plans, schedules and menus, many with expert ratings attached. I will scale generative inverse optimization to these archives, starting with the open OpenKBP radiation therapy dataset, so that the model behind expert decisions can be learned, read and corrected by clinicians, and I will establish when a learned model can be trusted for a new patient.<br>AI and OR are governed by the same mathematical principles, so the reverse direction matters too: the same tools could make learned AI systems explainable, and help them run more efficiently."
+
+- title: "Solvers that Learn from Search"
+  category: "future"
+  description: "Large healthcare models are solved again and again, while classical solvers follow the same fixed rules every time. Search can find far shorter paths than any fixed rule, and learned policies can follow them. I will extend learned pivots and warm starts to the mixed-integer and decomposition methods that healthcare models depend on, measure the gains in run time as well as iterations, and release them in open-source solvers such as HiGHS, so clinics without commercial licenses benefit too."
+
+- title: "Operations for AI-Augmented Care"
+  category: "future"
+  description: "AI tools promise to give clinicians time back, but our study of an ambient AI scribe shows that adoption is slow and uneven across clinicians and practices. I will build capacity, scheduling and staffing models that plan for that uneven adoption, using robust optimization that holds up while the time a tool frees is still unknown."
 
 - title: "Novel Mixed-Modality Imaging Techniques"
   category: "future"
