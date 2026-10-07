@@ -127,7 +127,8 @@ class TableauView {
   }
   // o: {enter: col, leave: row (-1: none), ratios, negs, annotate, flash: bool, hide: [cols], mark: [cols],
   //      ratioCol: keep the ratio column even when empty (ratioHead: its header),
-  //      side: {head, rows: [tex per row], z: tex} an extra column after the values (e.g. each row as an equation)}
+  //      side: {head, rows: [tex per row], z: tex} an extra column after the values (e.g. each row as an equation),
+  //      tint: [cols] shade those columns' body cells (e.g. the slack block, which is B^-1)}
   set(tb, o = {}) {
     const S = this.S, hide = new Set(o.hide || []), cols = S.cols.filter((j) => !hide.has(j));
     const nx = S.n - 3, prodCols = cols.filter((j) => j < nx).length;
@@ -146,7 +147,7 @@ class TableauView {
       h += `<tr class="${leave ? "leave" : ""}" style="--rc:${rc}"><td class="rlab"><span data-tex="\\textcolor{${S.color[bj].slice(1)}}{${S.tex[bj]}}"></span></td>`;
       for (const j of cols) {
         const piv = leave && j === o.enter;
-        h += cell(tb.T[i][j], `${this.colCls(j, basic, o)}${piv ? " pivot" : ""}`, `${i},${j}`);
+        h += cell(tb.T[i][j], `${this.colCls(j, basic, o)}${piv ? " pivot" : ""}${(o.tint || []).includes(j) ? " tint" : ""}`, `${i},${j}`);
       }
       h += cell(tb.rhs[i], "rhs", `${i},r`);
       if (ratio) {

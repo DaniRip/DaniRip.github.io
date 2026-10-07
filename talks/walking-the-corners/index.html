@@ -139,8 +139,12 @@
   #tableau .rule { margin-top: 16px; }
   .pvwalk .say b { color: var(--ink); }
   .pvwalk .say { font-size: 26px; min-height: 120px; margin-top: 22px; }
-  #cookies table.t td, #cookies table.t th { padding: 8px 16px; }
+  #cookies table.t { margin-top: 50px; }  /* rows line up with the tableau under its caption */
+  #cookies table.t td, #cookies table.t th { padding: 6.5px 16px; }
   #cookies .eqs { font-size: 30px; margin-top: 22px; display: flex; flex-direction: column; gap: 10px; }
+  #cookies .ck-note { margin-top: 26px; font-size: 30px; }
+  #cookies .ck-note p { font-size: 22px; line-height: 1.45; margin: 8px 0 0; }
+  #cookies #ck-say { margin: 0 0 12px; min-height: 0; }
   #cookies .say, #cookiepivot .say { font-size: 25px; margin-top: 20px; min-height: 110px; }
   #lift .col p { font-size: 27px; }
   #sweep3d .col p { font-size: 27px; }
@@ -158,6 +162,39 @@
   #close .take { font-size: 28px; line-height: 1.45; display: flex; flex-direction: column; gap: 16px; counter-reset: t; }
   #close .take > div { padding-left: 52px; position: relative; }
   #close > .cols { height: 540px; }
+  #inside .sub { margin-bottom: 14px; }
+  #inside .in-prog { font-weight: 400; font-size: 0.68em; color: var(--muted); margin-left: 12px; }
+  #inside .in-sub { display: flex; justify-content: space-between; align-items: baseline; }
+  #inside .in-team { font-size: 20px; color: var(--faint); }
+  #in-stage { position: relative; width: 1456px; height: 300px; margin-top: 6px; }
+  #in-svg { position: absolute; left: 0; top: 0; overflow: visible; }
+  #in-stage .in-var, #in-stage .in-con, #in-stage .in-tok, #in-stage .in-tag, #in-stage .in-strip, #in-stage .in-lab { position: absolute; }
+  #in-stage .in-var { width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; border: 2px solid var(--c); background: var(--panel); display: grid; place-items: center; font-size: 22px; }
+  #in-stage .in-con { width: 92px; height: 42px; margin: -21px 0 0 -46px; border-radius: 10px; border: 2px solid var(--c); background: color-mix(in srgb, var(--c) 20%, var(--panel)); display: grid; place-items: center; font-size: 20px; }
+  #in-stage .in-tag { font-size: 18px; color: var(--muted); transform: translateY(-50%); white-space: nowrap; transition: opacity 300ms ease; }
+  #in-stage .in-strip { display: flex; gap: 2px; transform: translateY(-50%); transition: opacity 300ms ease; }
+  #in-stage .in-strip span { width: 13px; height: 18px; border-radius: 3px; transition: background-color 380ms ease; }
+  #in-stage .in-strip.fly { transition: left 850ms ease, top 850ms ease, opacity 300ms ease; }
+  #in-stage .in-tok { border: 1px solid #2f3542; background: var(--panel); border-radius: 12px; transition: opacity 400ms ease; }
+  #in-stage .in-tok .tl { position: absolute; left: 14px; top: 10px; font-size: 22px; }
+  #in-stage .in-tok .ft { position: absolute; left: 14px; bottom: 9px; font-size: 16px; color: var(--muted); white-space: nowrap; }
+  #in-stage .in-tok .ft b { color: var(--obj); font-weight: 600; }
+  #in-stage .in-lab { font-size: 18px; white-space: nowrap; transition: opacity 400ms ease; }
+  #in-stage .in-track { position: absolute; height: 24px; border-radius: 6px; background: #1a1e27; transition: opacity 400ms ease; }
+  #in-stage .in-fill { height: 100%; border-radius: 6px; background: var(--faint); width: 0; transition: width 700ms ease; }
+  #in-stage .in-fill.pick { background: var(--obj); }
+  #inside .in-caps { display: flex; gap: 60px; margin-top: 10px; }
+  #inside .in-cap h4 { margin: 0 0 4px; font-size: 22px; font-weight: 600; }
+  #inside .in-cap h4 span { font-size: 17px; font-weight: 400; color: var(--faint); margin-left: 8px; }
+  #inside .in-cap p { font-size: 20px; line-height: 1.4; margin: 0 0 2px; color: var(--muted); }
+  #inside .in-cap p b { color: var(--ink); }
+  #inside .in-train { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: stretch; margin-top: 10px; font-size: 20px; line-height: 1.35; }
+  #inside .in-train > div { flex: 1 1 0; background: var(--panel); border: 1px solid #262b37; border-radius: 12px; padding: 10px 16px; color: var(--muted); }
+  #inside .in-train > div b { color: var(--ink); }
+  #inside .in-train > div { flex: 0 0 auto; }
+  #inside .in-train > div:last-child { flex: 1 1 0; }
+  #inside .in-train > .in-tl { flex: 0 0 100%; background: none; border: none; padding: 0; color: var(--ink); font-weight: 600; font-size: 22px; }
+  #inside .in-pay { margin-top: 10px; font-size: 22px; padding: 10px 18px; }
   #close .close-right { display: flex; flex-direction: column; align-items: center; justify-content: space-between; margin-top: -80px; height: 720px; }
   #close .qr { display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none; }
   #close .qr img { width: 176px; height: 176px; border-radius: 8px; display: block; }
@@ -296,9 +333,10 @@
   #pairs .pr-bul > li { font-size: 23px; margin-bottom: 12px; }
   #pairs #pairs-plot svg { cursor: pointer; }
   #whyroute .wr-cards { margin-top: 30px; }
-  #whyroute .card h3 { margin: 6px 0 10px; }
+  #whyroute .card { padding: 34px 30px 38px; }
+  #whyroute .card h3 { margin: 0 0 6px; font-size: 32px; }
   #whyroute .card p { font-size: 22px; line-height: 1.45; margin: 0; }
-  #whyroute .wr-big { font-size: 24px; color: var(--obj); font-weight: 600; letter-spacing: 0.02em; }
+  #whyroute .wr-big { margin-bottom: 12px; font-size: 24px; color: var(--obj); font-weight: 600; letter-spacing: 0.02em; }
   #whyroute .wr-next { margin-top: 28px; font-size: 26px; }
 </style>
 </head>
@@ -895,19 +933,19 @@
   <p class="sub">Not for our bakery. But real problems are bigger, often integer, and rarely start at a convenient corner.</p>
   <div class="cards wr-cards">
     <div class="card" data-step="1">
-      <div class="wr-big">thousands to millions</div>
       <h3>Bigger problems</h3>
-      <p>Real LPs (airline crews, power grids, supply chains) have thousands to millions of variables and constraints. Every pivot is a solve with \(B\), and the number of pivots grows with the problem.</p>
+      <div class="wr-big">thousands to millions</div>
+      <p>Real LPs (airline crews, power grids, supply chains) have thousands to millions of variables and constraints. Each pivot scales with the increased problem size.</p>
     </div>
     <div class="card" data-step="2">
-      <div class="wr-big">an LP at every node</div>
       <h3>Integer problems</h3>
-      <p>Whole-number decisions (appointment slots, how many trucks) are solved by branch and bound: thousands of LPs per problem, each restarted from its parent's basis. A few extra pivots per LP add up fast.</p>
+      <div class="wr-big">an LP at every node</div>
+      <p>Whole-number decisions (appointment slots, how many trucks) are solved by branch and bound, i.e., many LPs per problem, meaning a few extra pivots per LP add up fast.</p>
     </div>
     <div class="card" data-step="3">
-      <div class="wr-big">no easy first corner</div>
       <h3>Harder starts</h3>
-      <p>Here \(x = 0\) is a feasible corner. With "at least" or "exactly" constraints (bake at least 20 batches, staff exactly 8 hours) the origin is infeasible: simplex first needs a whole phase just to find a feasible corner.</p>
+      <div class="wr-big">no easy first corner</div>
+      <p>In our bakery, zero product is feasible. "At least" or "exactly" constraints (bake at least 20 batches, staff exactly 8 hours) would require simplex to run an additional phase to <b><i>find</i></b> a feasible start.</p>
     </div>
   </div>
   <div class="callout wr-next" data-step="4">Even <b>one more dimension</b> on this toy problem changes the landscape. Next: a third product.</div>
@@ -930,13 +968,17 @@
         <div>value of a batch \(= 1\cdot\FL{0} + 1\cdot\OV{2.5} + 1\cdot\LB{1.5} = 4\)</div>
         <div>reduced cost \(d_3 = 4 - \OB{5} = -1\)</div>
       </div>
+      <div class="ck-note" data-step="3">
+        <div>\(B^{-1}a_3 = B^{-1}(1,\ 1,\ 1)^\top = (0,\ 0.5,\ 0.5)^\top\)</div>
+        <p class="muted">Cookies' column in the tableau. \(B^{-1}\) is the highlighted slack block, so this is its row sums: per batch, cake drops 0.5, spare flour drops 0.5, bread stays put.</p>
+      </div>
     </div>
     <div class="col">
-      <div id="ck-view" class="smtab"></div>
       <div class="say" id="ck-say"></div>
+      <div id="ck-view" class="smtab"></div>
     </div>
   </div>
-  <aside class="notes">Pricing out a new column with the current duals: the resources a batch of cookies uses are worth 4 at today's prices, but it earns 5. Negative reduced cost = undervalued = not optimal any more. In the tableau this is just a new column whose bottom entry is −1.</aside>
+  <aside class="notes">Pricing out a new column with the current duals: the resources a batch of cookies uses are worth 4 at today's prices, but it earns 5. Negative reduced cost = undervalued = not optimal any more. Next click: the column it gets in the tableau is B⁻¹a₃. B⁻¹ is already in the tableau (the s₁ s₂ s₃ block, highlighted), and a₃ = (1, 1, 1), so B⁻¹a₃ is its row sums: (0, 0.5, 0.5). Meaning: per batch of cookies, keeping oven and labor used up, bread stays at 2, cake drops to 4.5, spare flour drops to 0.5 (check: 3·2 + 2·4.5 = 15, 2 + 2·4.5 = 11). Same thing as the direction u = B⁻¹a_q on slide 21. Last click: the tableau gets that new column, whose bottom entry is −1.</aside>
 </section>
 
 <section class="slide" id="lift" data-part="5 · The third dimension">
@@ -1068,23 +1110,9 @@
 
 <!-- ============================ PART 7: BEYOND WHAT WE CAN DRAW ============================ -->
 
-<section class="slide" id="question" data-part="7 · Beyond what we can draw">
-  <h2>Our question: can a policy <i>learn</i> to pick pivots?</h2>
-  <p class="sub">Pivots needed on an LP with 40 products and 40 resources (its timeline is coming up)</p>
-  <div class="cols" style="gap: 60px;">
-    <div class="col" style="flex: 1.15 1 0;"><div class="bars" id="q-bars"></div></div>
-    <div class="col q">
-      <div data-step="1">A short route <b>exists</b>: 6 pivots. A* proves it, but only by searching far more than a solver can afford.</div>
-      <div data-step="2">Every rule is a <b>fixed guess</b> about which edge to take. The best one here needs 9; Bland needs 37.</div>
-      <div data-step="3" class="callout"><b>SimplexRL</b>: learn the guess. A neural policy looks at the current tableau, picks the entering variable, and is rewarded for reaching the optimum in fewer pivots.</div>
-    </div>
-  </div>
-  <aside class="notes">Opens Part 7: the research question first, then the timelines that show these routes (the 40 × 40 LP is the third timeline). Bar values are read from the viewer data (talk/viewer/talk_data.js). The dashed bar is a placeholder: to show a learned policy, add its route to the dataset (see the viewer README: a route with kind "rl") and re-run talk/tools/sync_viewer.py, or just put the number in.</aside>
-</section>
-
 <section class="slide" id="tl-bakery" data-part="7 · Beyond what we can draw">
-  <h2>The same race, as a pivot timeline</h2>
-  <p class="sub">Our research viewer draws routes without drawing the polyhedron, so it works for any LP</p>
+  <h2>For our research, we can depict rules as a pivot timeline</h2>
+  <p class="sub">All previous routes without the polyhedron (meaning it can generalize for much larger LPs)</p>
   <div class="cols">
     <div class="col guide" style="flex: 0 0 380px;">
       <div><b>Columns</b> are pivots: start → … → optimum.</div>
@@ -1096,19 +1124,62 @@
   </div>
   <aside class="notes">This is the real research tool (SimplexRL-py/web), copied into talk/viewer by talk/tools/sync_viewer.py. Click a node to see its basis (the side panels are hidden here; open talk/viewer/index.html directly for the full app). Arrow keys still drive the slides when the viewer has focus.</aside>
 </section>
-
 <section class="slide" id="tl-km" data-part="7 · Beyond what we can draw">
   <h2>Klee–Minty, as a timeline</h2>
   <p class="sub">Dantzig's thread snakes through 7 columns; steepest edge and A* jump straight to the optimum</p>
   <div class="frame" style="height: 640px;"><iframe data-src="viewer/index.html?embed=1&amp;p=klee_minty_3d" title="pivot timeline: Klee-Minty"></iframe></div>
   <aside class="notes">Optional (✂). Bland and Devex take 5 here.</aside>
 </section>
+<section class="slide" id="question" data-part="7 · Beyond what we can draw">
+  <h2>Our question: can a policy <i>learn</i> to pick pivots?</h2>
+  <p class="sub">Pivots needed on an LP with 40 products and 40 resources</p>
+  <div class="cols" style="gap: 60px;">
+    <div class="col" style="flex: 1.15 1 0;"><div class="bars" id="q-bars"></div></div>
+    <div class="col q">
+      <div data-step="1">A short route <b>exists</b>: 6 pivots. A* proves it, but only by searching far more than a solver can afford.</div>
+      <div data-step="2">Every rule is a <b>fixed guess</b> about which edge to take. The best one here needs 9; Bland needs 37.</div>
+      <div data-step="3" class="callout"><b>SimplexRL</b>: learn the guess. A neural policy looks at the current tableau, picks the entering variable, and is rewarded for reaching the optimum in fewer pivots.</div>
+    </div>
+  </div>
+  <aside class="notes">Comes after the bakery and Klee–Minty timelines and before the 40 × 40 one, which shows these routes. Bar values are read from the viewer data (talk/viewer/talk_data.js). The last bar is a real learned policy: the IQL checkpoint iql--sfa--2026-06-16-a (offline RL on the solver-feature-attention model), run greedily from the same all-slack start: 13 pivots, tying steepest edge and beating Dantzig (16). Caveats: an early model, not the transformer-GNN on the next slides, and this standard-form LP is unlike the LPs it was trained on (out of distribution). On a 50 × 50 LP from the same demo set it takes 11, fewer than every rule (A*: 7). More learned routes: run talk/tools/server_rollout/rollout_for_talk.py on the server, drop the routes_*.json it writes into that folder, and re-run talk/tools/sync_viewer.py (the bar picks them up).</aside>
+</section>
+
+
 
 <section class="slide" id="tl-big" data-part="7 · Beyond what we can draw">
   <h2>40 products, 40 resources: no picture, same timeline</h2>
   <p class="sub">An 80-dimensional polyhedron we can't draw, but every route is still visible</p>
   <div class="frame" style="height: 640px;"><iframe data-src="viewer/index.html?embed=1&amp;p=traj_40x40" title="pivot timeline: 40 by 40 LP"></iframe></div>
-  <aside class="notes">A random dense 40×40 LP from the viewer's demo set. A*'s route (6 pivots, certified shortest) jumps to the optimum; Bland's purple thread wanders for 37 pivots. Untick methods in the bar to declutter.</aside>
+  <aside class="notes">A random dense 40×40 LP from the viewer's demo set. A*'s route (6 pivots, certified shortest) jumps to the optimum; Bland's purple thread wanders for 37 pivots. The red thread is the learned IQL policy from the research-question slide (13 pivots). Untick methods in the bar to declutter.</aside>
+</section>
+
+<section class="slide" id="inside" data-part="7 · Beyond what we can draw">
+  <h2>Inside SimplexRL: a network that learns to pivot <i class="in-prog">in progress</i></h2>
+  <p class="sub in-sub"><span>Our current model, walked through on the bakery</span><span class="in-team">Felix Parker, Emmett Springer, Danielle Ripsman, Kimia Ghobadi</span></p>
+  <div id="in-stage"><svg id="in-svg" width="1456" height="300"></svg></div>
+  <div class="in-caps">
+    <div class="in-cap" style="width: 560px;">
+      <h4>1 · Read the LP <span>once per problem</span></h4>
+      <p>Variables and constraints become nodes; each nonzero of \(A\) is an edge (thicker = bigger coefficient).</p>
+      <p data-step="1">A <b>graph neural network</b> passes messages along the edges; each coloured strip is a node's vector (embedding).</p>
+    </div>
+    <div class="in-cap" style="width: 470px;" data-step="2">
+      <h4>2 · Compare the candidates <span>every pivot</span></h4>
+      <p>Each candidate (negative reduced cost) adds the solver's numbers; a <b>transformer</b> compares candidates with each other and with the current basis.</p>
+    </div>
+    <div class="in-cap" style="width: 306px;" data-step="3">
+      <h4>3 · Pick</h4>
+      <p>The solver pivots on the top score. Dantzig takes bread: 3&nbsp;pivots. Cake first: 2.</p>
+    </div>
+  </div>
+  <div class="in-train" data-step="4">
+    <div class="in-tl">How it learns</div>
+    <div><b>Imitate</b> a classic rule, or A*</div>
+    <div><b>Reinforcement learning</b>: −1 per pivot</div>
+    <div><b>Search as a teacher</b> (like AlphaZero): in training, try pivots ahead in the solver and teach the network the best one</div>
+  </div>
+  <div class="callout in-pay" data-step="5"><b>The early learned <i>offline</i> policy (IQL) already ties steepest edge on the 40 × 40 LP.</b></div>
+  <aside class="notes">The default SimplexRL architecture ("transformer-gnn"), shown on the bakery in standard form (x₁, x₂, s₁, s₂, s₃). (1) The LP becomes a bipartite graph: structural and slack variable nodes, constraint nodes, an edge per nonzero A_ij carrying the coefficient (slacks link to their own row with a 1). Node features: objective coefficient and bounds for variables, row bounds for constraints. Four rounds of graph attention (GATv2) pass messages along the edges, then a transformer (8 to 10 layers) refines the variable vectors; this runs once per LP and is cached. (2) Every pivot, solver state is added to those vectors: reduced cost, dual infeasibility, the Devex/steepest-edge weight, which bound a variable sits at, basis status, the current basic values. Candidates are the variables with negative reduced cost (here x₁, d = −9, flagged as Dantzig's pick, and x₂, d = −8); row tokens carry the vector of each row's basic variable (here s₁, s₂, s₃). Transformers run over the candidates, over the rows, then over both together. (3) A policy head scores each candidate; a masked softmax turns scores into probabilities; the solver performs the pivot (our environment wraps HiGHS, but the method is not tied to it). The bars here are illustrative, not model output: the point is that a learned rule may prefer cake, the 2-pivot route, over Dantzig's bread. Training: behaviour cloning from Dantzig, Devex, steepest edge or A* routes; then RL (PPO, GRPO, DAPO) with reward −1 per pivot (phase 2 only, since the agent only controls phase 2); A*-supervised training regresses the number of pivots left on A*'s shortest route; SGSPI is search policy iteration: a best-first search over the exact solver, guided by the network, produces better targets that are distilled back into the network (expert iteration, like AlphaZero). Training LPs come from our generator SyntheticLPs.jl (50 to 2,000 variables). No results on the slide yet: that's the open "?" bar from the research-question slide.</aside>
 </section>
 
 <section class="slide" id="close" data-part="">

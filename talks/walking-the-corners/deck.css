@@ -191,6 +191,7 @@ table.tab td.flash { animation: flash 900ms ease-out; }
 
 /* ---------- 3D scenes, small tableaux ---------- */
 .plot .lab.tick3 { color: var(--muted); font-size: 17px; }
+table.tab td.tint { background: rgba(255, 255, 255, 0.13); }
 table.tab .mark { box-shadow: inset 2px 0 0 var(--obj), inset -2px 0 0 var(--obj); }
 .smtab table.tab { font-size: 23px; }
 .smtab table.tab th, .smtab table.tab td { min-width: 60px; padding: 7px 11px; }

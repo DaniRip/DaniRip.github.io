@@ -17,19 +17,19 @@ const ring3 = (s, id, p, on) => s.dot(id, p, { r: 19, fill: "none", stroke: C.ob
 
 // ------------------------------------------------------------------ cookies: price the new column
 Deck.register("cookies", {
-  steps: 3,
+  steps: 4,
   init(el) {
     this.view = new TableauView(el.querySelector("#ck-view"), BakeryStd3);
     this.say = el.querySelector("#ck-say");
   },
   render(k, animate) {
     const tb = BakeryStd3.tableau([0, 1, 3]);  // the 2D optimum (2, 5) with cookies at 0
-    if (k < 3) {
-      this.view.set(tb, { hide: [2], annotate: true });
-      this.say.innerHTML = "At (2, 5) every bottom-row entry is ≥ 0: <b>optimal for bread and cake</b>. The slack columns hold the shadow prices <span class='c-flour'>0</span>, <span class='c-oven'>2.5</span>, <span class='c-labor'>1.5</span>.";
+    if (k < 4) {
+      this.view.set(tb, { hide: [2], annotate: true, tint: k === 3 ? [3, 4, 5] : [] });  // k = 3: B^-1 is the slack block
+      this.say.innerHTML = "<b>optimal tableau for bread and cake</b>";
     } else {
       this.view.set(tb, { negs: true, mark: [2], annotate: true, flash: animate });
-      this.say.innerHTML = "Cookies are just a <b>new column</b>. Its bottom entry is d₃ = −1, so the dual no longer covers everything: <b>(2, 5) is not optimal any more.</b> To make cookies we need a third axis.";
+      this.say.innerHTML = "<b><span class='c-obj'>sub-</span>optimal tableau for bread<span class='c-obj'>,</span> cake and <span class='c-obj'>cookies</span></b>";
     }
   },
 });
