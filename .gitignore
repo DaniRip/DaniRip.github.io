@@ -1,0 +1,9 @@
+# Local preview output and caches (bundle exec jekyll serve)
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+
+# Bundler (anchored so the talk's own vendor/ folder is still tracked)
+.bundle/
+/vendor/
