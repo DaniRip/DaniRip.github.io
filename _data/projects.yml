@@ -17,7 +17,8 @@
   description: "AI scribe technology has been rapidly deployed in practitioners' offices in the past year or two, but the studies in terms of efficacy and where it is and isn't helpful are just catching up. We are working on one of these studies!"
   gallery:    
       - type: image
-        url: "/assets/AIScribe.png"  
+        url: "/assets/AIScribe.png"
+        width: "60%"   # tall image: shown smaller than the column
 
 - title: "The Homecare Provider Allocation Problem"
   category: "active"

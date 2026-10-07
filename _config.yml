@@ -20,6 +20,10 @@ plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
 
+# No theme: the site has its own layouts and stylesheet. GitHub Pages otherwise adds
+# the default Primer theme, whose style.css can overwrite assets/css/style.css.
+theme: null
+
 social:
   name: Danielle A. Ripsman
   links:

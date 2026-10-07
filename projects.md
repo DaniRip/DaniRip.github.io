@@ -49,7 +49,7 @@ permalink: /projects/
                                                     <iframe src="https://www.youtube.com/embed/{{ item.id }}" frameborder="0" loading="lazy" allowfullscreen></iframe>
                                                 </div>
                                             {% else %}
-                                                <img src="{{ item.url | relative_url }}" alt="Project Visual" class="slide-img">
+                                                <img src="{{ item.url | relative_url }}" alt="Project Visual" class="slide-img"{% if item.width %} style="width: {{ item.width }}; display: block; margin: 0 auto;"{% endif %}>
                                             {% endif %}
                                         </div>
                                     {% endfor %}
