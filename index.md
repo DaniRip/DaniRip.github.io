@@ -20,9 +20,7 @@ I enjoy tackling **large-scale**, **data-driven**, **societal problems**, partic
 **Selected Honors:**<br>
 &#8226; NSERC Canada Graduate Scholarship – Doctoral (CGS-D), 2019–2022<br>
 &#8226; Engineering Excellence PhD Fellowship, University of Waterloo, 2018–2022<br>
-&#8226; Sandford Fleming Foundation TA Award, 2020 and 2022<br>
-&#8226; First Place, CORS Health Care Operational Research SIG Student Presentation Competition, 2019<br>
-<small>Full list in my <a href="{{ "/cv/" | relative_url }}">CV</a>.</small>
+&#8226; Sandford Fleming Foundation TA Award, 2020 and 2022
 
 <!-- Whether exploring public health systems or fundamental algorithmic mathematics, I am driven by a commitment to clear communication, illustration, and teaching.  -->
 
