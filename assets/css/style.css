@@ -721,6 +721,37 @@ details[open] .toggle-chevron {
     font-weight: 600;
 }
 
+/* --- Carousel / list toggle --- */
+.view-toggle {
+    text-align: right;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.view-toggle a {
+    font-weight: 600;
+}
+
+/* List view: every project in the open tab, stacked, no arrows */
+.projects-display-area.list-view .project-slide {
+    display: block;
+}
+
+.projects-display-area.list-view .project-slide + .project-slide {
+    border-top: 1px solid #eee;
+    margin-top: 40px;
+    padding-top: 40px;
+}
+
+.projects-display-area.list-view .nav-arrow {
+    display: none;
+}
+
+.projects-display-area.list-view .slides-wrapper {
+    padding: 0;
+}
+
 /* --- The Carousel Area --- */
 .projects-display-area {
     position: relative;

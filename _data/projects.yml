@@ -40,20 +40,20 @@
       - type: image
         url: "/assets/3D_RotatingPros.webp"      
 
+- title: "Radiation Therapy Sampling and Solution Pipeline/Add-On"
+  category: "completed"
+  description: "A MATLAB-based codebase that takes in matRad-calculated dose objects, allows for multiple sampling modalities, and then connects to a CPLEX-c++ solver for optimization.<br>We used it to compare eight voxel sampling approaches on clinical cases, published in <a href='https://doi.org/10.1002/mp.70179' target='_blank'>Medical Physics</a> (2025)."
+  repo: "https://github.com/DaniRip/RT_Sampling_Pipeline"
+  gallery:
+    - type: image
+      url: "https://github.com/DaniRip/RT_Sampling_Pipeline/blob/master/sampleOutputs/GUIloaded2.png?raw=true"
+
 - title: "Robust Direct Aperture Optimization"
   category: "completed"
   description: "Radiation therapy plans are usually built in stages: doses first, then the aperture shapes the machine delivers, which can cost plan quality. Robust direct aperture optimization does both at once and protects the plan against breathing motion, in a single mixed-integer model that includes the machine's deliverability rules. To make it solvable, I designed a candidate plan generation heuristic that quickly produces clinically viable plans and warm-starts the full model.<br>Published in the <a href='https://doi.org/10.1287/ijoc.2022.1167' target='_blank'>INFORMS Journal on Computing</a> (2022), with T. G. Purdie, T. C. Y. Chan and H. Mahmoudzadeh."
   gallery:
     - type: image
       url: "/assets/RDAO_apertures.png"
-
-- title: "Radiation Therapy Sampling and Solution Pipeline/Add-On"
-  category: "completed"
-  description: "A MATLAB-based codebase that takes in matRad-calculated dose objects, allows for multiple sampling modalities, and then connects to a CPLEX-c++ solver for optimization."
-  repo: "https://github.com/DaniRip/RT_Sampling_Pipeline"
-  gallery:
-    - type: image
-      url: "https://github.com/DaniRip/RT_Sampling_Pipeline/blob/master/sampleOutputs/GUIloaded2.png?raw=true"
 
 - title: "morDiRECT: An interface for comparing tradeoffs in radiation therapy treatment planning"
   category: "completed" 

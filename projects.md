@@ -4,6 +4,8 @@ title: Projects
 permalink: /projects/
 ---
 
+<div class="view-toggle">View as: <a href="#" id="view-toggle" onclick="toggleView(event)">List</a></div>
+
 <div class="project-tabs">
     <button class="tab-btn active" onclick="openCategory('active')">Active Research</button>
     <button class="tab-btn" onclick="openCategory('completed')">Completed</button>
@@ -210,13 +212,28 @@ permalink: /projects/
         }
     }
 
-    // 4. Initialize Arrows on Page Load
+    // 4. Carousel / list toggle (remembered in this browser)
+    function setView(list) {
+        document.querySelector(".projects-display-area").classList.toggle("list-view", list);
+        document.getElementById("view-toggle").textContent = list ? "Carousel" : "List";
+        try { localStorage.setItem("projectsView", list ? "list" : "carousel"); } catch (e) {}
+    }
+
+    function toggleView(e) {
+        e.preventDefault();
+        setView(!document.querySelector(".projects-display-area").classList.contains("list-view"));
+    }
+
+    // 5. Initialize Arrows on Page Load
     // This runs automatically to grey out the "Left" arrows immediately
     document.addEventListener("DOMContentLoaded", function() {
         var cats = ['active', 'completed', 'fun', 'future'];
         cats.forEach(function(cat) {
             updateArrows(cat);
         });
+
+        // Reopen in the view this visitor last chose
+        try { if (localStorage.getItem("projectsView") === "list") { setView(true); } } catch (e) {}
 
         // Open the tab named in the URL, e.g. /projects/#future
         var fromHash = location.hash.slice(1);
