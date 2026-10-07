@@ -798,7 +798,7 @@ details[open] .toggle-chevron {
     padding: 0;
 }
 
-/* --- Carousel dots: one per project; the one shown is a short teal pill --- */
+/* --- Carousel dots: one per project; the one shown is filled dark blue --- */
 .carousel-dots {
     display: flex;
     justify-content: center;
@@ -812,10 +812,10 @@ details[open] .toggle-chevron {
     height: 7px;
     padding: 0;
     border: none;
-    border-radius: 4px;
+    border-radius: 50%;
     background: #d8dde2;
     cursor: pointer;
-    transition: background-color 0.2s, width 0.2s;
+    transition: background-color 0.2s;
 }
 
 .carousel-dot:hover {
@@ -823,8 +823,7 @@ details[open] .toggle-chevron {
 }
 
 .carousel-dot.active {
-    width: 18px;
-    background: var(--primary-gradient-end);
+    background: var(--accent-color);
 }
 
 .projects-display-area.list-view .carousel-dots {
