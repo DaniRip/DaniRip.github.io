@@ -11,10 +11,34 @@
     <link rel="apple-touch-icon" href="{{ "/assets/apple-touch-icon.png" | relative_url }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox-plus-jquery.min.js" defer></script>
+    <script>
+        // Page transitions (see style.css). Only the homepage banner <-> slim bar change
+        // is animated, and only from the top of the page; every other page change is
+        // the browser's normal switch (the header is identical, so nothing to animate).
+        window.addEventListener("pageswap", function () {
+            try { sessionStorage.setItem("vtScrolled", window.scrollY > 40 ? "1" : ""); } catch (err) {}
+        });
+        window.addEventListener("pagereveal", function (e) {
+            if (!e.viewTransition) return;
+            e.viewTransition.ready.catch(function () {}); // a skipped transition is fine; don't log it
+            var scrolled = false;
+            try { scrolled = sessionStorage.getItem("vtScrolled") === "1"; } catch (err) {}
+            var from = window.navigation && navigation.activation && navigation.activation.from;
+            var fromHome = from && new URL(from.url).pathname === "/";
+            var toHome = location.pathname === "/";
+            if (from && !scrolled && fromHome && !toHome) {
+                e.viewTransition.types.add("collapse");   // banner -> slim bar
+            } else if (from && !scrolled && !fromHome && toHome) {
+                e.viewTransition.types.add("expand");     // slim bar -> banner
+            } else {
+                e.viewTransition.skipTransition();
+            }
+        });
+    </script>
 </head>
 <body>
 
-    <header class="header">
+    <header class="header{% unless page.url == "/" %} header-compact{% endunless %}">
         <div class="header-content">
             <h1><a href="{{ "/" | relative_url }}">{{ site.title }}</a></h1>
             <p class="subtitle">{{ site.header_subtitle | default: site.description }}</p>

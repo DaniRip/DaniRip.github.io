@@ -83,7 +83,8 @@ main a:hover {
 
 .header h1 {
     font-size: 3rem;
-    margin: 0 0 10px 0;
+    width: fit-content;  /* hug the text, so page transitions move just the name */
+    margin: 0 auto 10px auto;
     font-weight: 700;
     color: white;
     font-family: var(--font-main);
@@ -105,7 +106,51 @@ main a:hover {
     display: flex;
     justify-content: center;
     gap: 20px;
-    margin-top: 25px;
+    width: fit-content;  /* hug the icons, so page transitions move just the icons */
+    margin: 25px auto 0 auto;
+}
+
+/* Inner pages: a slim version of the same header (name left, icons right, no
+   subtitle), so content starts near the top; the homepage keeps the full banner */
+.header.header-compact {
+    padding: 26px 0;
+    text-align: left;
+}
+
+.header-compact .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.header.header-compact h1 {
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.header-compact .subtitle {
+    display: none;
+}
+
+.header-compact .social-links {
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .header.header-compact {
+        padding: 18px 0;
+        text-align: center;
+    }
+
+    .header-compact .header-content {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .header.header-compact h1 {
+        font-size: 1.5rem;
+    }
 }
 
 .social-links a {
@@ -1088,5 +1133,137 @@ footer {
 
     .header h1 {
         font-size: 2.2rem;
+    }
+}
+
+/* --- Page-to-page transitions (banner <-> compact bar) ---
+   Browsers that support cross-page view transitions (Chrome, Edge, Safari) animate
+   the header between pages; others just load the page as before.
+   - The bar, name and icons each move and scale as ONE image (never two cross-fading
+     copies). The larger, banner-sized snapshot is used, so they stay crisp.
+   - Nothing gets overtaken: on the way to the bar, the name, icons and subtitle clear
+     out first and the bar shrinks after; on the way back, the bar grows first.
+   - The old page stays underneath while the new page fades in on top.
+   - Other page changes (inner page to inner page, or from a scrolled-down page) are
+     not animated; the script in _layouts/default.html skips them. */
+@view-transition {
+    navigation: auto;
+}
+
+.header { view-transition-name: site-header; }
+.header h1 { view-transition-name: site-name; }
+.header .subtitle { view-transition-name: site-subtitle; }
+.header .social-links { view-transition-name: site-icons; }
+.nav { view-transition-name: site-nav; }
+
+/* Reserve the scrollbar's space on every page, so short pages (no scrollbar) and
+   long ones are the same width and the header doesn't shift between them */
+html {
+    scrollbar-gutter: stable;
+}
+
+@keyframes vt-fade-in { from { opacity: 0; } }
+@keyframes vt-fade-out { to { opacity: 0; } }
+
+/* The bar's background fades from the old gradient to the new one as it resizes,
+   so it already matches the real bar when the transition ends */
+::view-transition-old(site-header), ::view-transition-new(site-header) {
+    width: 100%;
+    height: 100%;
+}
+
+/* The name and icons: one image each, stretched to the piece's box as it moves */
+::view-transition-old(site-name), ::view-transition-new(site-name),
+::view-transition-old(site-icons), ::view-transition-new(site-icons) {
+    animation: none;
+    mix-blend-mode: normal;
+    width: 100%;
+    height: 100%;
+}
+
+/* By default show the new page's version (the banner, when going home)... */
+::view-transition-old(site-name),
+::view-transition-old(site-icons) {
+    opacity: 0;
+}
+
+/* ...and when collapsing, the old banner's version instead */
+html:active-view-transition-type(collapse)::view-transition-old(site-name),
+html:active-view-transition-type(collapse)::view-transition-old(site-icons) {
+    opacity: 1;
+}
+
+html:active-view-transition-type(collapse)::view-transition-new(site-name),
+html:active-view-transition-type(collapse)::view-transition-new(site-icons) {
+    opacity: 0;
+}
+
+::view-transition-group(*) {
+    animation-duration: 0.25s;
+    animation-timing-function: ease-in-out;
+}
+
+/* The old page stays fully visible underneath while the new one fades in on top, so
+   there's never a blank moment */
+::view-transition-old(root) { animation: none; }
+
+/* Banner -> bar: the name and icons move up first (subtitle and old page fade),
+   then the bar shrinks with the nav, then the new page fades in */
+html:active-view-transition-type(collapse)::view-transition-group(site-name),
+html:active-view-transition-type(collapse)::view-transition-group(site-icons) {
+    animation-duration: 0.35s;
+    animation-delay: 0s;
+    animation-fill-mode: both;
+}
+
+html:active-view-transition-type(collapse)::view-transition-old(site-subtitle) {
+    animation: vt-fade-out 0.2s ease both;
+}
+
+html:active-view-transition-type(collapse)::view-transition-group(site-header),
+html:active-view-transition-type(collapse)::view-transition-old(site-header),
+html:active-view-transition-type(collapse)::view-transition-new(site-header),
+html:active-view-transition-type(collapse)::view-transition-group(site-nav) {
+    animation-duration: 0.3s;
+    animation-delay: 0.3s;
+    animation-fill-mode: both;
+}
+
+html:active-view-transition-type(collapse)::view-transition-new(root) {
+    animation: vt-fade-in 0.2s ease 0.45s both;
+}
+
+/* Bar -> banner: the old page fades and the bar grows with the nav first, then the
+   name and icons move out, then the subtitle and the homepage fade in */
+html:active-view-transition-type(expand)::view-transition-group(site-header),
+html:active-view-transition-type(expand)::view-transition-old(site-header),
+html:active-view-transition-type(expand)::view-transition-new(site-header),
+html:active-view-transition-type(expand)::view-transition-group(site-nav) {
+    animation-duration: 0.3s;
+    animation-delay: 0s;
+    animation-fill-mode: both;
+}
+
+html:active-view-transition-type(expand)::view-transition-group(site-name),
+html:active-view-transition-type(expand)::view-transition-group(site-icons) {
+    animation-duration: 0.35s;
+    animation-delay: 0.25s;
+    animation-fill-mode: both;
+}
+
+html:active-view-transition-type(expand)::view-transition-new(site-subtitle) {
+    animation: vt-fade-in 0.2s ease 0.4s both;
+}
+
+html:active-view-transition-type(expand)::view-transition-new(root) {
+    animation: vt-fade-in 0.2s ease 0.3s both;
+}
+
+/* No animation for visitors who ask their system for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
     }
 }
