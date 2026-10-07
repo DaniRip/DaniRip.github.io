@@ -2,12 +2,12 @@ teaching_experience:
   - course: "MSCI 331: Introduction to Optimization"
     year: 2023
     role: "Instructor"
-    details: "2 TAs, 112 Students, 7-10PM Weekly Classes + Weekly Tutorial."
+    details: "Sole instructor (options section): 112 upper-year undergraduates, 2 TAs, 7-10PM weekly classes + weekly tutorial. Student course perceptions: 4.29/5 average across the four instructor characteristics."
 
 ta_experience:
   - course: "MSCI 251: Probability and Statistics for Engineers 1"
     years: "2019, 2020*, 2021, 2022*, 2023"
-  - course: "MSCI 734: Applied Optimization"
+  - course: "MSCI 734: Network Models"
     year: 2023
   - course: "MSCI 703: Applied Optimization"
     year: 2022
@@ -15,6 +15,8 @@ ta_experience:
     year: 2022
   - course: "MSCI 401 & 402: Capstone Design Project"
     year: 2019
+  - course: "Work Report Marking"
+    year: 2018
   - course: "MSCI 436: Decision Support Systems"
     year: 2017
   - course: "MSCI 331: Introduction to Optimization"

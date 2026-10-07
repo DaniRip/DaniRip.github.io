@@ -30,22 +30,22 @@
   year: 2015
   link: "https://doi.org/10.1016/j.eswa.2015.06.028"
 
-- title: "Reducing conservatism in Pareto robust optimization with application to radiation therapy"
+- title: "Superior light Pareto robust optimization with application to radiation therapy"
   status: "under_review"
   authors: "F. Rahimi, D. A. Ripsman, H. Abouee-Mehrizi, H. Mahmoudzadeh"
-  note: "Under revision at <em>Manufacturing & Service Operations Management</em>."
+  note: "<em>Manufacturing & Service Operations Management</em>. Resubmitted following a major revision; under review."
 
 - title: "A decision diagram approach to multi-period home care scheduling under uncertainty"
   status: "working"
   authors: "D. A. Ripsman, A. Cire, A. Diamant"
-  note: "To be submitted to <em>INFORMS Journal on Computing</em>."
-
-- title: "Closed-form constraint generation for classes of robust polyhedral uncertainty"
-  status: "working"
-  authors: "D. A. Ripsman, H. Mahmoudzadeh"
-  note: "To be submitted to <em>Optimization Letters</em>."
+  note: "Manuscript in preparation."
 
 - title: "A geometric approach to beam angle selection in radiation therapy treatment planning"
   status: "working"
   authors: "D. A. Ripsman, S. A. Alev, H. Mahmoudzadeh"
-  note: "To be submitted to the <em>European Journal of Operational Research</em>."
+  note: "Manuscript in preparation."
+
+- title: "Closed-form constraint generation for classes of robust polyhedral uncertainty"
+  status: "working"
+  authors: "D. A. Ripsman, H. Mahmoudzadeh"
+  note: "Manuscript in preparation."
