@@ -59,6 +59,7 @@ permalink: /presentations/
                 <div class="video-container">
                     <iframe src="https://www.youtube.com/embed/{{ comp.youtube_id }}" 
                             frameborder="0" 
+                            loading="lazy"
                             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
                             allowfullscreen>
                     </iframe>

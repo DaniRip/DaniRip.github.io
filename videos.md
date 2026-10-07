@@ -2,6 +2,7 @@
 layout: page
 title: Videos
 permalink: /videos/
+sitemap: false # hidden from the nav until the videos are ready
 ---
 
 <p>Videos explaining topics of interest and subtopics in radiation therapy.</p>

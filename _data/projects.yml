@@ -1,20 +1,20 @@
 - title: "Generative Inverse Optimization"
   category: "active"
-  description: "Generative AI has swept the nation, in many ways leaving traditional optimization behind. However, it ironically borrows heavily from the optimization toolbox.<br>In this project, we look to generate models from large datasets, in a similar fashion to AI. Unlike AI, however, we will be working with datasets that form optimization problems and learning those instead.<br>Through this project, we hope to learn more about the overlap between modern-day AI and OR, and how the two fields can continue to build eachother up over time."
+  description: "Generative AI has swept the nation, in many ways leaving traditional optimization behind. However, it ironically borrows heavily from the optimization toolbox.<br>In this project, we look to generate models from large datasets, in a similar fashion to AI. Unlike AI, however, we will be working with datasets that form optimization problems and learning those instead.<br>Through this project, we hope to learn more about the overlap between modern-day AI and OR, and how the two fields can continue to build each other up over time."
   gallery:
       - type: image
         url: "/assets/GenerativeInverse.png"  
 
 - title: "The Impact of AI Scribes on Primary Care Practitioners"
   category: "active"
-  description: "AI scribe technology has been rapidly deployed in practitioners offices in the past year or two, but the studies in terms of efficacy and where it is and isn't helpful are just catching up. We are working on one of these studies!"
+  description: "AI scribe technology has been rapidly deployed in practitioners' offices in the past year or two, but the studies in terms of efficacy and where it is and isn't helpful are just catching up. We are working on one of these studies!"
   gallery:    
       - type: image
         url: "/assets/AIScribe.png"  
 
 - title: "The Homecare Provider Allocation Problem"
   category: "active"
-  description: "Dispatching home care workers to patients is a natural problem for operations research, in that it is difficult, multistage and data-intensive. In this project, we look for ways to make this very large project tractible and adjustable for non-expert users that will be using the end-systems."
+  description: "Dispatching home care workers to patients is a natural problem for operations research, in that it is difficult, multistage and data-intensive. In this project, we look for ways to make this very large problem tractable and adjustable for non-expert users that will be using the end-systems."
   gallery:
       - type: image
         url: "/assets/CoCMypall_hcp_routes_iter10n2_t0.png"         
@@ -28,10 +28,10 @@
 
 - title: "Geometric Beam Angle Optimization"
   category: "active"
-  description: "When clinicians plan radiation therapy treatment plans for step-and-shoot radiation therapy, the beam angles must be chosen before any calculation can be made. These angles are often selected to be equidistant, due to the difficulty in determining the best angles *a-priori*. The literature has employed heuristic approaches that have been shown to work better than this naive equidistant approach. However, what if there were more knowledge-based approaches to doing so?"
+  description: "When clinicians plan radiation therapy treatment plans for step-and-shoot radiation therapy, the beam angles must be chosen before any calculation can be made. These angles are often selected to be equidistant, due to the difficulty in determining the best angles <em>a priori</em>. The literature has employed heuristic approaches that have been shown to work better than this naive equidistant approach. However, what if there were more knowledge-based approaches to doing so?"
   gallery:
       - type: image
-        url: "/assets/3D_RotatingPros.gif"      
+        url: "/assets/3D_RotatingPros.webp"      
 
 - title: "Radiation Therapy Sampling and Solution Pipeline/Add-On"
   category: "completed"
@@ -43,14 +43,14 @@
 
 - title: "morDiRECT: An interface for comparing tradeoffs in radiation therapy treatment planning"
   category: "completed" 
-  description: "This paper took a preliminary looked at how to handle blackbox multi-objective problems, with the specific usecase of stereotactic radiosurgery planning.<br>Conceptually, the interface took the idea of mult-objective tradeoffs and used this as an engine for delivering plan alternatives to the end user. The interface facilitated in depth trade-off analysis between a set of plans that were prerun, for greater flexibility and an intuitive understanding of the decision space."
+  description: "This paper took a preliminary look at how to handle black-box multi-objective problems, with the specific use case of stereotactic radiosurgery planning.<br>Conceptually, the interface took the idea of multi-objective trade-offs and used this as an engine for delivering plan alternatives to the end user. The interface facilitated in-depth trade-off analysis between a set of plans that were prerun, for greater flexibility and an intuitive understanding of the decision space."
   gallery:
     - type: image
       url: "/assets/Gui11.png"
 
 - title: "Simple PLINKO Game"
   category: "fun"
-  description: "Inspired by the Price is Right minigame, I used this simple, visual R program to simulate one or multiple games of PLINKO for statistics students at the University of Waterloo.<br>Since Markov chains are slightly out of scope of the course, we focus on the binomial distribution and the similarities and differences that come from that. Note, this application allows for non-standard board generations, which makes this teaching process easier. Message me to connect if you would like a copy of the labs!"
+  description: "Inspired by the <em>Price Is Right</em> minigame, I used this simple, visual R program to simulate one or multiple games of PLINKO for statistics students at the University of Waterloo.<br>Since Markov chains are slightly out of scope of the course, we focus on the binomial distribution and the similarities and differences that come from that. Note, this application allows for non-standard board generations, which makes this teaching process easier. Message me to connect if you would like a copy of the labs!"
   repo: "https://github.com/DaniRip/Simple_Plinko"
   gallery:
     - type: image
@@ -64,7 +64,7 @@
 
 - title: "SuperSlider"
   category: "fun"
-  description: "A flexible MATLAB-based slider creation tool, that allows for multiple slides along a single axis. This was built out for an in-house interface project, but has been downloaded by over 1000 people and put into use in some cool industries! <br> If you want your users to control a multi-point range, give it a download and let me know what you're working on!"
+  description: "A flexible MATLAB-based slider creation tool that allows for multiple slides along a single axis. This was built out for an in-house interface project, but has been downloaded by over 1000 people and put into use in some cool industries! <br> If you want your users to control a multi-point range, give it a download and let me know what you're working on!"
   repo: "https://www.mathworks.com/matlabcentral/fileexchange/43285-superslider"
   gallery:
     - type: image
@@ -72,7 +72,7 @@
 
 - title: "IIE Arena Simulation Competition"
   category: "fun"
-  description: "Back in 2013, Krystle Pang, Jaquelyn Monis Rodriguez and I set out to use Arena Simulaton Software to predict the impact of a new terminal rollout at Chicago's O'Hare International Airport. I believe we came in 3rd at the International competition."
+  description: "Back in 2013, Krystle Pang, Jaquelyn Monis Rodriguez and I set out to use Arena Simulation Software to predict the impact of a new terminal rollout at Chicago's O'Hare International Airport. I believe we came in 3rd at the International competition."
   gallery:
     - type: video
       id: "R1-jtm6Vwp8"
@@ -92,7 +92,7 @@
 
 - title: "XAI and Improved LLM Efficiency"
   category: "future"
-  description: "AI and OR go hand-in-hand, because effectively, they are governed by the same mathematical principals. In my current work, I look at how to make OR look more like AI, in terms of inverse model generation and finding the boundaries of model separation. Taken from the reverse perspective, this could be the path towards explainability and efficient model-collapse."
+  description: "AI and OR go hand-in-hand, because effectively, they are governed by the same mathematical principles. In my current work, I look at how to make OR look more like AI, in terms of inverse model generation and finding the boundaries of model separation. Taken from the reverse perspective, this could be the path towards explainability and efficient model-collapse."
 
 - title: "Novel Mixed-Modality Imaging Techniques"
   category: "future"

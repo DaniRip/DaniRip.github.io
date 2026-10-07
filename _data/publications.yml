@@ -1,4 +1,5 @@
 - title: "A comparison of voxel sampling approaches for intensity-modulated radiation therapy"
+  status: "published"
   authors: "D. A. Ripsman, S. H. Hristov, G. Gola, W. Kwong, M. Singh, E. Osei, J. Darko, H. Mahmoudzadeh"
   journal: "Medical Physics"
   volume: "52(12):e70179"
@@ -6,6 +7,7 @@
   link: "https://doi.org/10.1002/mp.70179"
 
 - title: "Light Pareto robust optimization for IMRT treatment planning"
+  status: "published"
   authors: "D. A. Ripsman, F. Rahimi, H. Abouee-Mehrizi, H. Mahmoudzadeh"
   journal: "Medical Physics"
   volume: "50(5):2637–2648"
@@ -13,6 +15,7 @@
   link: "http://doi.org/10.1002/mp.16298"
 
 - title: "Robust direct aperture optimization for radiation therapy treatment planning"
+  status: "published"
   authors: "D. A. Ripsman, T. G. Purdie, T. C. Y. Chan, H. Mahmoudzadeh"
   journal: "INFORMS Journal on Computing"
   volume: "34(4):2017–2038"
@@ -20,8 +23,29 @@
   link: "https://doi.org/10.1287/ijoc.2022.1167"
 
 - title: "Interactive visual guidance for automated stereotactic radiosurgery treatment planning"
+  status: "published"
   authors: "D. A. Ripsman, D. M. Aleman, K. Ghobadi"
   journal: "Expert Systems with Applications"
   volume: "42(21):8337–8348"
   year: 2015
   link: "https://doi.org/10.1016/j.eswa.2015.06.028"
+
+- title: "Reducing conservatism in Pareto robust optimization with application to radiation therapy"
+  status: "under_review"
+  authors: "F. Rahimi, D. A. Ripsman, H. Abouee-Mehrizi, H. Mahmoudzadeh"
+  note: "Under revision at <em>Manufacturing & Service Operations Management</em>."
+
+- title: "A decision diagram approach to multi-period home care scheduling under uncertainty"
+  status: "working"
+  authors: "D. A. Ripsman, A. Cire, A. Diamant"
+  note: "To be submitted to <em>INFORMS Journal on Computing</em>."
+
+- title: "Closed-form constraint generation for classes of robust polyhedral uncertainty"
+  status: "working"
+  authors: "D. A. Ripsman, H. Mahmoudzadeh"
+  note: "To be submitted to <em>Optimization Letters</em>."
+
+- title: "A geometric approach to beam angle selection in radiation therapy treatment planning"
+  status: "working"
+  authors: "D. A. Ripsman, S. A. Alev, H. Mahmoudzadeh"
+  note: "To be submitted to the <em>European Journal of Operational Research</em>."

@@ -1,0 +1,1164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Walking the Corners</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<script src="vendor/katex/katex.min.js"></script>
+<script src="vendor/katex/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="deck.css">
+<style>
+  /* slide-specific layout */
+  #title .wrap { display: flex; align-items: center; gap: 40px; height: 100%; }
+  #title h1 { font-size: 84px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 18px; }
+  #title .sub { font-size: 30px; margin-bottom: 40px; }
+  #title .credits { font-size: 25px; line-height: 1.6; margin: 0; }
+  #hook .shape { margin-top: 30px; font-size: 30px; display: flex; align-items: center; gap: 28px; justify-content: center; }
+  #walk .cols, #region .cols, #sweep .cols, #parallel .cols, #slack .cols { align-items: center; }
+  #walk ol { padding-left: 1.1em; margin: 0; }
+  #walk li { margin-bottom: 16px; }
+  #bakery table.t { margin-top: 8px; }
+  #bakery .form { margin-top: 18px; }
+  #bakery .form .row.why { display: block; font-size: 22px; color: var(--muted); line-height: 1.45; padding-left: 72px; max-width: 700px; }  /* same as the "(why?)" note */
+  #region .list { display: flex; flex-direction: column; gap: 16px; font-size: 30px; margin-top: 16px; }
+  #region .list > div { opacity: 0.35; transition: opacity 300ms ease; }
+  #region .list > div.lit { opacity: 1; }
+  #region .list .icpt { font-size: 21px; color: var(--muted); margin-left: 28px; white-space: nowrap; }
+  #region .list > div:has(.icpt) > span:first-child { display: inline-block; min-width: 240px; }  /* intercepts line up */
+  .zread { font-size: 64px; margin: 10px 0 20px; }
+  #whymix .cols { align-items: center; gap: 48px; }
+  #whymix .wm-left p { font-size: 23px; line-height: 1.45; margin: 0 0 12px; }
+  #whymix .wm-sys { display: grid; grid-template-columns: 130px 1fr; gap: 10px 18px; align-items: start; margin: 4px 0 14px; }
+  #whymix .wm-sys .k { font-size: 21px; color: var(--muted); line-height: 1.2; padding-top: 4px; }
+  #whymix .wm-sys .k .faint { font-size: 17px; }
+  #whymix .wm-sys .e { font-size: 25px; white-space: nowrap; }
+  #whymix .wm-sys .res { font-size: 20px; color: var(--muted); margin-top: 2px; }
+  #whymix .wm-read { font-size: 20px; line-height: 1.45; padding: 10px 16px; border-radius: 10px; background: var(--panel); border-left: 4px solid var(--obj); margin-top: 14px; }
+  #whymix .wm-read.bad { border-left-color: #d64545; }
+  #whymix .wm-read .l1 { font-size: 22px; white-space: nowrap; margin: 4px 0; }
+  #whymix .dial { display: flex; align-items: center; gap: 16px; margin-top: 20px; font-size: 22px; }
+  #whymix .dial .track { position: relative; }
+  #whymix .dial input { width: 360px; accent-color: var(--obj); display: block; }
+  #whymix .dial .band { position: absolute; top: calc(100% + 3px); height: 4px; border-radius: 2px; background: var(--obj); opacity: 0.6;
+    left: calc(8px + var(--a) * (100% - 16px)); width: calc((var(--b) - var(--a)) * (100% - 16px)); }
+  #whymix .dial .bandlab { position: absolute; top: calc(100% + 10px); left: calc(8px + (var(--a) + var(--b)) / 2 * (100% - 16px)); transform: translateX(-50%);
+    font-size: 15px; color: var(--obj); white-space: nowrap; }
+  #whymix .dial .start { position: absolute; top: calc(100% + 26px); left: calc(8px + var(--at) * (100% - 16px)); transform: translateX(-50%); font-size: 13px; color: var(--ink); }
+  #sweep .dial { display: flex; align-items: center; gap: 16px; margin-top: 34px; font-size: 22px; }
+  #sweep .dial .track { position: relative; }
+  #sweep .dial input { width: 320px; accent-color: var(--obj); display: block; }
+  #sweep .dial .edge { position: absolute; top: calc(100% + 4px); left: calc(8px + var(--at) * (100% - 16px)); transform: translateX(calc(-100% + 7px));
+    font-size: 15px; line-height: 1; color: var(--muted); white-space: nowrap; }
+  #parallel .dial { display: flex; align-items: center; gap: 16px; margin-top: 18px; font-size: 22px; }
+  #parallel .dial .track { position: relative; }
+  #parallel .dial input { width: 320px; accent-color: var(--obj); display: block; }
+  #parallel .dial .start { position: absolute; top: calc(100% + 4px); left: calc(8px + var(--at) * (100% - 16px)); transform: translateX(-50%);
+    font-size: 14px; line-height: 1; color: var(--ink); }
+  #parallel .objtex { font-size: 34px; margin: 14px 0 6px; min-height: 52px; }
+  #parallel .objtex .rel { font-size: 24px; color: var(--muted); margin-left: 18px; white-space: nowrap; }
+  #parallel .objtex .rel b { color: var(--ink); }
+  #convince .cols { margin-top: 90px; gap: 60px; }
+  #convince .card h3 { margin-top: 0; }
+  #convince .card p { font-size: 26px; margin: 10px 0; }
+  #convince .cols { align-items: stretch; }  /* both cards the same height */
+  #convince .card.hard { display: flex; flex-direction: column; }
+  #convince .card.hard p { font-size: 24px; margin: 5px 0; }  /* flex items don't collapse margins: halve them */
+  #convince .card.hard h3 { margin-bottom: 9px; }
+  #convince .card.hard p.fn { font-size: 19px; margin-top: auto; padding-top: 14px; white-space: nowrap; }  /* footnote pinned to the bottom */
+  #convince .dualbox { margin-top: 30px; padding: 16px 22px; border-radius: 12px; font-size: 24px; line-height: 1.45;
+    background: var(--panel); border: 2px solid var(--proof); }
+  .boundgame .rows { display: flex; flex-direction: column; gap: 10px; }
+  .boundgame .yrow { display: grid; grid-template-columns: 200px 92px 1fr; align-items: center; gap: 10px; font-size: 28px; }
+  .boundgame .yrow .yv { font-size: 28px; text-align: right; font-variant-numeric: tabular-nums; }
+  .boundgame .yrow.used .ctex { text-shadow: 0 0 14px color-mix(in srgb, var(--rc) 55%, transparent); }
+  .boundgame .yrow:not(.used) .ctex { opacity: 0.45; }
+  .boundgame .sumrow { border-top: 1px solid #343a48; margin-top: 8px; padding-top: 12px; display: grid; grid-template-columns: 302px 1fr; font-size: 28px; align-items: center; }
+  .boundgame table.t { font-size: 25px; margin-top: 14px; }
+  .boundgame table.t td, .boundgame table.t th { padding: 6px 16px; }
+  .boundgame .presets { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .boundgame .verdict { margin-top: 12px; font-size: 24px; }
+  .boundgame .why { margin-top: 14px; font-size: 22px; line-height: 1.4; color: var(--muted); padding-left: 14px; border-left: 3px solid #3a4050; min-height: 62px; }
+  .boundgame .why b { color: var(--ink); font-weight: 600; }
+  .boundgame .nl { margin-top: 8px; }
+  #slack .chain { font-size: 34px; }
+  #slack .chain > div { margin: 10px 0; }
+  #names .cols { margin-top: 44px; gap: 40px; align-items: stretch; }
+  #names .card h3 { margin-top: 0; }
+  #names .card p { font-size: 26px; margin: 10px 0; }
+  #names .katex { white-space: nowrap; }
+  #dualvars .dv-proof { font-size: 22px; margin-top: 0; width: 1040px; white-space: nowrap; }
+  #dualvars .bl > li { margin-bottom: 14px; }
+  #dualgeneral .fd-text { margin-top: 30px; }
+  #dualgeneral .bl > li { margin-bottom: 16px; }
+  #names .card p.ex { margin-top: 20px; padding-top: 16px; border-top: 1px solid #2a2f3b; }
+  #slackvars .eqs, #dualslack .eqs { font-size: 31px; display: flex; flex-direction: column; gap: 4px; }
+  #slackvars .def, #dualslack .def { font-size: 26px; margin: 0 0 10px; }
+  .slide h2 .h2p { font-size: 30px; font-weight: 500; color: var(--muted); }
+  #dualslack .eqs .tag { font-size: 20px; color: var(--muted); margin-left: 14px; }
+  #dualslack .plan { font-size: 24px; margin: 14px 0 2px; color: var(--muted); }
+  #dualslack .plot svg { cursor: grab; touch-action: none; }
+  .meter.dm .track { background: none; display: flex; position: relative; }
+  .meter.dm .cov { display: block; height: 100%; background: var(--rc); opacity: 0.85; transition: width 300ms ease; }
+  .meter.dm .over { display: block; height: 100%; background: repeating-linear-gradient(45deg, transparent 0 6px, color-mix(in srgb, var(--rc) 70%, transparent) 6px 9px); transition: width 300ms ease; }
+  .meter.dm .short { display: block; height: 100%; background: repeating-linear-gradient(45deg, transparent 0 6px, rgba(214, 69, 69, 0.75) 6px 9px); transition: width 300ms ease; }
+  .meter.dm .need { position: absolute; top: -5px; bottom: -5px; width: 2px; background: var(--ink); }
+  .meter.dm.bad .mval { color: #e06a6a; }
+  #dualslack .ds-st { font-size: 24px; margin: 2px 0; }
+  #dualslack .ds-how { font-size: 19px; margin-top: 10px; line-height: 1.4; }
+  #slackvars .plan { font-size: 26px; margin: 14px 0 2px; color: var(--muted); }
+  #slackvars .meter, #dualslack .meter { margin: 8px 0; }
+  #slackvars .plot svg { cursor: grab; touch-action: none; }
+  #slackvars .sv-col { position: relative; }
+  #slackvars .sv-why { position: absolute; left: 0; right: 0; top: 0; }
+  #slackvars .sv-why h3 { font-size: 27px; font-weight: 600; margin: 0 0 14px; }
+  #slackvars .sv-grid { display: grid; grid-template-columns: repeat(4, 92px 26px) 92px 32px 52px auto; align-items: center; row-gap: 4px; font-size: 29px; margin-bottom: 8px; }
+  #slackvars .sv-grid > div { text-align: center; transition: opacity 250ms ease, color 250ms ease, border-color 250ms ease; }
+  #slackvars .sv-grid .rhs { text-align: left; padding-left: 8px; }
+  #slackvars .sv-grid .lab { text-align: left; font-size: 21px; padding-left: 14px; }
+  #slackvars .sv-grid .z { opacity: 0.25; }
+  #slackvars .sv-grid .vbox { margin-top: 10px; height: 46px; line-height: 42px; border-radius: 10px; border: 1.5px solid var(--ink); background: var(--panel);
+    font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  #slackvars .sv-grid .vbox.zero { border-style: dashed; border-color: #3a4050; color: var(--faint); font-weight: 500; }
+  #slackvars .sv-grid .vbox.neg { border-color: #e06a6a; color: #e06a6a; }
+  #slackvars .sv-grid .ge { font-size: 19px; color: var(--muted); }
+  #slackvars .sv-grid .ge.bad { color: #e06a6a; font-weight: 600; }
+  #slackvars .sv-bul { margin: 4px 0 8px; }
+  #slackvars .sv-bul > li { font-size: 22px; line-height: 1.4; margin-bottom: 10px; }
+  #slackvars .sv-grid .clr { text-align: left; padding-left: 14px; }
+  #slackvars .sv-grid .vbox.pick { border-color: var(--obj); color: var(--obj); }
+  #slackvars .sv-why.live .sv-grid .vbox { cursor: pointer; }
+  #slackvars .sv-why.live .sv-grid .vbox:hover { border-color: var(--obj); }
+  #slackvars .tally { font-size: 21px; color: var(--muted); }
+  #slackvars .tally b { color: var(--ink); }
+  #zeros table.t { font-size: 24px; }
+  #zeros table.t td, #zeros table.t th { padding: 7px 14px; }
+  #zeros table.t tr.on { background: rgba(255,255,255,0.08); }
+  #zeros table.t td { text-align: left; }
+  #tableau .rule { margin-top: 16px; }
+  .pvwalk .say b { color: var(--ink); }
+  .pvwalk .say { font-size: 26px; min-height: 120px; margin-top: 22px; }
+  #cookies table.t td, #cookies table.t th { padding: 8px 16px; }
+  #cookies .eqs { font-size: 30px; margin-top: 22px; display: flex; flex-direction: column; gap: 10px; }
+  #cookies .say, #cookiepivot .say { font-size: 25px; margin-top: 20px; min-height: 110px; }
+  #lift .col p { font-size: 27px; }
+  #sweep3d .col p { font-size: 27px; }
+  #proof3d .stack { font-size: 30px; display: flex; flex-direction: column; gap: 12px; margin-top: 26px; }
+  #proof3d #proof3d-scene { margin-top: 20px; }
+  #proof3d .sumline { border-top: 1px solid #59607a; padding-top: 12px; }
+  #rules table.t { font-size: 24px; }
+  #rules table.t td, #rules table.t th { padding: 7px 14px; }
+  #rules table.t td.rowh { font-size: 22px; }
+  #rules tr.rulerow td { background: rgba(255,255,255,0.035); }
+  #rules tr.rulerow td.rowh { box-shadow: inset 4px 0 0 #59607a; }
+  #morerules .card p { font-size: 25px; line-height: 1.45; margin: 10px 0; }
+  #race .callout, #kleeminty .callout { margin-top: 12px; }
+  #question .q { font-size: 27px; line-height: 1.45; display: flex; flex-direction: column; gap: 16px; }
+  #close .take { font-size: 28px; line-height: 1.45; display: flex; flex-direction: column; gap: 16px; counter-reset: t; }
+  #close .take > div { padding-left: 52px; position: relative; }
+  #close > .cols { height: 540px; }
+  #close .close-right { display: flex; flex-direction: column; align-items: center; justify-content: space-between; margin-top: -80px; height: 720px; }
+  #close .qr { display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none; }
+  #close .qr img { width: 176px; height: 176px; border-radius: 8px; display: block; }
+  #close .qr span { font-size: 16px; color: var(--muted); }
+  #close .take > div::before { counter-increment: t; content: counter(t); position: absolute; left: 0; top: 0; width: 36px; height: 36px; border-radius: 18px; background: var(--panel-2); border: 1px solid #3a4050; text-align: center; line-height: 34px; font-size: 22px; color: var(--obj); }
+  #matrixform .mf-top { position: relative; height: 64px; margin: 0 0 22px; font-size: 38px; }
+  #matrixform table.t { margin-top: 8px; }  /* same spot as on slide 3 */
+  #matrixform .mf-v { position: absolute; left: 0; top: 0; white-space: nowrap; }
+  #matrixform .mf-top .underline-line { border-bottom-width: 0.09em !important; }  /* thicker than KaTeX's default */
+  #matrixform .mf-v[data-step]:not(.shown) { transform: none; }  /* versions cross-fade in place, no slide */
+  #matrixform .mf-tablewrap { position: relative; display: inline-block; }
+  #matrixform .mf-defs { display: flex; flex-direction: column; gap: 18px; font-size: 30px; }
+  #matrixform .mf-defs > div { display: flex; align-items: center; gap: 24px; }
+  #matrixform .lbl { font-size: 22px; color: var(--muted); width: 270px; flex: 0 0 270px; line-height: 1.3; }
+  #matrixform .mf-full { margin-top: 26px; font-size: 30px; }
+
+  /* ---------- duality slides: bounds, dualvars, formdual, dualgeneral ---------- */
+  .slide .bl { list-style: none; padding: 0; margin: 0; }
+  .slide .bl > li { position: relative; padding-left: 28px; font-size: 26px; line-height: 1.4; margin: 0 0 22px; }
+  .slide .bl > li::before { content: ""; position: absolute; left: 3px; top: 0.62em; width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
+  .slide .bl .ex { margin-top: 8px; font-size: 27px; }
+  .dl-left { width: 1040px; }
+  .dl-bar { position: absolute; right: 96px; top: 436px; }
+  .dl-pic { position: absolute; right: 116px; top: 120px; }
+  .mini .tick { display: none; }
+  .mini .lab { font-size: 17px !important; }
+  .boundbar .hist { fill: var(--muted); font-size: 16px; }
+  .boundbar .lab { font-size: 20px; }
+  .boundbar .lab b { font-weight: 600; }
+  .boundbar .lab.pulse { animation: bpulse 700ms ease; }
+  @keyframes bpulse { 0% { transform: translate(0, -50%) scale(1); } 40% { transform: translate(0, -50%) scale(1.22); } 100% { transform: translate(0, -50%) scale(1); } }
+  .hid { opacity: 0 !important; }
+  .flyer { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 4; }
+  .flyer > * { white-space: nowrap; }
+  #bounds .bd-obj { text-align: center; font-size: 40px; margin: 4px 0 24px; }
+  #bounds .lbs { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+  #bounds .lb { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 9px 14px 8px; border-radius: 10px;
+    background: var(--panel); border: 1.5px solid #2a2f3b; }
+  #bounds .lb.cur { border-color: var(--obj); }
+  #bounds .lb.old { opacity: 0.5; }
+  #bounds .lb .v { font-size: 23px; white-space: nowrap; }
+  #bounds .lb .cap { font-size: 16px; color: var(--obj); }
+  #bounds .ar { font-size: 26px; color: var(--muted); }
+  #bounds p.fn { position: absolute; left: 72px; bottom: 72px; margin: 0; font-size: 17px; color: var(--muted); }
+  #bounds p.fn a { color: inherit; }
+  .lp { display: grid; column-gap: 12px; row-gap: 10px; font-size: 30px; align-items: baseline; position: relative; justify-content: start; }
+  .lp > div:not(.mfbox):not(.rowband) { position: relative; z-index: 1; white-space: nowrap; transition: opacity 400ms ease, transform 400ms ease; }
+  .lp .r { text-align: right; }
+  .lp .c { text-align: center; }
+  .lp .span { grid-column: 2 / -1; }
+  .lp .tag { padding-left: 30px; font-size: 26px; }
+  .lp .tag.pre { opacity: 0; transform: translateX(18px); }
+  .lp .dim { opacity: 0.3; }
+  .lp .rowband { position: absolute; border-radius: 8px; opacity: 0; transition: top 450ms ease, opacity 300ms ease, background 450ms ease, box-shadow 450ms ease; }
+  #dualvars .dv-top { display: flex; align-items: center; gap: 44px; margin: 4px 0 22px; }
+  #dualvars .dv-scaled { flex: 1; min-height: 150px; padding: 16px 24px; border-radius: 12px; background: var(--panel); border: 1px solid #2a2f3b;
+    display: flex; flex-direction: column; justify-content: center; gap: 8px; font-size: 26px; white-space: nowrap; opacity: 0; transition: opacity 220ms ease; }
+  #dualvars .dv-scaled .l2 { font-size: 21px; color: var(--muted); margin-top: 4px; }
+  .fd-row { display: flex; align-items: stretch; justify-content: space-between; gap: 20px; margin-top: 22px; }
+  .fd-card { flex: 0 0 auto; padding: 18px 28px 22px; }
+  .fd-lab { font-size: 18px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .fd-lab .katex { text-transform: none; letter-spacing: 0; }
+  .fd-mid { flex: 0 0 auto; align-self: center; transition: opacity 400ms ease; }
+  #formdual .fd-min { font-size: 19px; margin-top: 14px; transition: opacity 400ms ease; }
+  .fd-row + .fd-text { margin-top: 36px; }
+  #dualgeneral .fd-card:first-child { width: 479px; }  /* same card sizes as the slide before */
+  #dualgeneral .fd-card:last-child { width: 509px; }
+  .mm { position: relative; }
+  .mm svg { position: absolute; left: 0; top: 0; overflow: visible; }
+  .mm .e, .mm .md { position: absolute; transform: translate(-50%, -50%); white-space: nowrap; }
+  .mm .ml { position: absolute; transform: translate(-100%, -50%); white-space: nowrap; }
+  .mm .ml .q { margin-left: 3px; }
+  .mm .md { font-size: 20px; color: var(--muted); }
+  .gf { display: grid; grid-template-columns: auto auto; justify-content: start; column-gap: 18px; row-gap: 16px; font-size: 34px; align-items: baseline; }
+  .gf.g3 { grid-template-columns: auto auto auto; }
+  .gf .g1 { display: flex; align-items: baseline; white-space: nowrap; }
+  .gf .g1 > *, .gf > * { transition: opacity 400ms ease; }
+  .gf .note { font-size: 20px; color: var(--muted); padding-left: 14px; white-space: nowrap; }
+  .gf .gtag { font-size: 26px; margin-left: 20px; color: var(--muted); }
+  .dg-dim { margin-top: 18px; font-size: 20px; color: var(--muted); }
+  #review .rv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 32px; margin-top: 44px; }
+  #review .rv-h { font-size: 20px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding-left: 18px; }
+  #review .rv-h .faint { text-transform: none; letter-spacing: 0; }
+  #review .rv-c { font-size: 27px; line-height: 1.45; padding: 20px 24px; border-radius: 12px; background: var(--panel); border-left: 4px solid; }
+  #review .rv-c.rv-p { border-left-color: var(--obj); }
+  #review .rv-c.rv-d { border-left-color: var(--proof); }
+  #howsimplex .hs-mats { display: flex; align-items: flex-start; gap: 26px; margin-top: 0; }
+  #howsimplex .mblk { display: flex; align-items: flex-start; gap: 8px; }
+  #howsimplex .mblk .mlab { font-size: 25px; margin-top: 74px; white-space: nowrap; }
+  #howsimplex .hs-grp { display: flex; flex-direction: column; gap: 2px; }
+  #howsimplex .hs-grow { display: flex; align-items: flex-start; gap: 26px; }
+  #howsimplex .hs-grow + .hs-grow .mlab { margin-top: 56px; }
+  #howsimplex .mrow { display: grid; padding: 0 11px; }
+  #howsimplex .mrow > div, #howsimplex .mnames > div { height: 36px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-variant-numeric: tabular-nums; transition: background 300ms ease, color 300ms ease; }
+  #howsimplex .mhead > div, #howsimplex .mnames > .mh { height: 38px; font-size: 22px; }
+  #howsimplex .mnames > div { justify-content: flex-end; padding-right: 4px; font-size: 20px; }
+  #howsimplex .mat { position: relative; }
+  #howsimplex .mat::before, #howsimplex .mat::after { content: ""; position: absolute; top: 0; bottom: 0; width: 9px; border: 2.5px solid var(--ink); }
+  #howsimplex .mat::before { left: 0; border-right: none; }
+  #howsimplex .mat::after { right: 0; border-left: none; }
+  #howsimplex .mat.foc::before, #howsimplex .mat.foc::after { border-color: var(--obj); }
+  #howsimplex .mrow > .bas, #howsimplex .mnames > .bas { background: rgba(255, 255, 255, 0.07); }
+  #howsimplex .mrow > .foc { background: rgba(255, 255, 255, 0.17); }
+  #howsimplex .mrow > .ent, #howsimplex .mnames > .ent { background: color-mix(in srgb, var(--obj) 30%, transparent); }
+  #howsimplex .mrow > .lev, #howsimplex .mnames > .lev { background: rgba(214, 69, 69, 0.32); }
+  #howsimplex .mrow > .neg { color: #e06a6a; }
+  #howsimplex .mblk.off { opacity: 0; }
+  #howsimplex .mblk { transition: opacity 300ms ease; }
+  #howsimplex .hs-low { display: grid; grid-template-columns: 1fr 300px; gap: 30px; margin-top: -6px; }
+  #howsimplex #hs-plot { margin-top: 28px; }
+  #howsimplex .hs-it { font-size: 18px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 6px 0 4px; }
+  #howsimplex .hs-steps { display: grid; grid-template-columns: 104px 1fr; gap: 2px 14px; align-items: baseline; }
+  #howsimplex .hs-steps .k { font-size: 18px; color: var(--muted); text-align: right; }
+  #howsimplex .hs-steps .v { font-size: 22px; padding-left: 10px; border-left: 3px solid transparent; }
+  #howsimplex .hs-steps .v .note { font-size: 18px; color: var(--muted); margin-left: 10px; }
+  #howsimplex .hs-steps .cur { border-left-color: var(--obj); }
+  #howsimplex .hs-steps .off { opacity: 0; }
+  #howsimplex .hs-steps > * { transition: opacity 300ms ease; }
+  #howsimplex .hs-low > div:first-child { position: relative; }
+  #howsimplex .hs-note { position: absolute; left: 118px; right: 0; top: 232px; font-size: 21px; line-height: 1.45; padding: 12px 18px; border-radius: 12px; background: var(--panel);
+    border-left: 4px solid var(--proof); opacity: 0; transition: opacity 400ms ease; }
+  #howsimplex .hs-note.on { opacity: 1; }
+  #pairs .pr-corner { font-size: 24px; margin: 4px 0 14px; min-height: 34px; }
+  #pairs .pr-corner .v { font-weight: 600; }
+  #pairs .pr-grid { display: grid; grid-template-columns: 96px repeat(5, 116px); column-gap: 12px; row-gap: 4px; align-items: center; }
+  #pairs .pr-grid .rl { font-size: 19px; color: var(--muted); text-align: right; padding-right: 8px; letter-spacing: 0.06em; text-transform: uppercase; }
+  #pairs .pr-grid .nm { text-align: center; font-size: 24px; }
+  #pairs .pr-grid .bx { height: 52px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 600;
+    font-variant-numeric: tabular-nums; border: 1.5px solid var(--ink); background: var(--panel); transition: all 250ms ease; }
+  #pairs .pr-grid .bx.bas { background: rgba(255, 255, 255, 0.1); }
+  #pairs .pr-grid .bx.zero { border-style: dashed; border-color: #3a4050; color: var(--faint); font-weight: 500; background: none; }
+  #pairs .pr-grid .bx.neg { border-color: #e06a6a; color: #e06a6a; }
+  #pairs .pr-grid .bx.hid { opacity: 0; }
+  #pairs .pr-grid .pp { text-align: center; font-size: 18px; color: var(--muted); height: 30px; transition: opacity 300ms ease; }
+  #pairs .pr-bul { margin-top: 22px; }
+  #pairs .pr-bul > li { font-size: 23px; margin-bottom: 12px; }
+  #pairs #pairs-plot svg { cursor: pointer; }
+  #whyroute .wr-cards { margin-top: 30px; }
+  #whyroute .card h3 { margin: 6px 0 10px; }
+  #whyroute .card p { font-size: 22px; line-height: 1.45; margin: 0; }
+  #whyroute .wr-big { font-size: 24px; color: var(--obj); font-weight: 600; letter-spacing: 0.02em; }
+  #whyroute .wr-next { margin-top: 28px; font-size: 26px; }
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- ============================ PART 0: HOOK ============================ -->
+
+<section class="slide" id="title" data-part="">
+  <div class="wrap">
+    <div class="col">
+      <h1>Walking the Corners</h1>
+      <p class="sub">The simplex method, duality, and the art of choosing a pivot</p>
+      <p class="credits"><span class="muted">Slides by:</span> Danielle Ripsman<br><span class="muted">Made for:</span> Optimal Lab · Johns Hopkins University</p>
+    </div>
+    <div id="title-plot"></div>
+  </div>
+  <aside class="notes">Opening. The picture walks the simplex path on the bakery LP we will build.</aside>
+</section>
+
+<section class="slide" id="hook" data-part="Why LPs">
+  <h2>Linear programs (LPs)</h2>
+  <p class="sub">Making the most of limited resources</p>
+  <div class="cards">
+    <div class="card" data-step="1">
+      <svg viewBox="0 0 200 110" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round">
+        <path d="M44 40 L156 40 L146 16 L54 16 Z"/>
+        <path d="M66 16 L62 40 M82 16 L80 40 M100 16 L100 40 M118 16 L120 40 M134 16 L138 40" stroke-width="2"/>
+        <path d="M50 40 L50 98 L150 98 L150 40"/>
+        <rect x="66" y="60" width="22" height="38"/>
+        <rect x="102" y="56" width="34" height="22"/>
+        <path d="M30 98 L170 98"/>
+      </svg>
+      <h3>Business decisions</h3>
+      <dl>
+        <dt>decide</dt><dd>how much of each product to make</dd>
+        <dt>limited by</dt><dd>materials, machine time, staff hours</dd>
+        <dt>goal</dt><dd>maximize profit</dd>
+      </dl>
+      <div class="foot">Our running example: a small bakery.</div>
+    </div>
+    <div class="card" data-step="2">
+      <svg viewBox="0 0 200 110" fill="none" stroke-linejoin="round">
+        <!-- beams diverge from point sources (narrow) toward the tumor (wide) -->
+        <g stroke="none" fill="var(--obj)" opacity="0.22">
+          <path d="M8 14 L108.4 65.4 L115.0 49.7 Z"/><path d="M108 0 L99.5 60.0 L116.5 60.0 Z"/><path d="M196 16 L100.8 49.9 L107.9 65.4 Z"/>
+          <path d="M194 104 L108.6 46.6 L100.4 61.5 Z"/><path d="M20 106 L115.7 61.4 L107.3 46.6 Z"/>
+        </g>
+        <ellipse cx="100" cy="58" rx="62" ry="42" stroke="var(--ink)" stroke-width="2.5"/>
+        <path d="M70 66 C62 56 70 46 80 52 C88 56 86 64 82 70 C78 76 74 72 70 66 Z" stroke="var(--muted)" stroke-width="2"/>
+        <circle cx="108" cy="56" r="9" fill="var(--obj)" stroke="var(--ink)" stroke-width="2"/>
+        <circle cx="132" cy="74" r="6" stroke="var(--muted)" stroke-width="2"/>
+      </svg>
+      <h3>Radiation therapy planning</h3>
+      <dl>
+        <dt>decide</dt><dd>the intensity of each beam</dd>
+        <dt>must meet</dt><dd>the prescribed dose to the tumor</dd>
+        <dt>goal</dt><dd>as little dose to healthy organs as possible</dd>
+      </dl>
+      <div class="foot">We assume dose at each point is linear in the beam intensities.</div>
+    </div>
+    <div class="card" data-step="3">
+      <svg viewBox="0 0 200 110" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round">
+        <rect x="46" y="14" width="108" height="86" rx="6"/>
+        <path d="M46 32 L154 32"/>
+        <path d="M68 8 L68 20 M132 8 L132 20"/>
+        <g stroke-width="1.5" stroke="var(--muted)">
+          <path d="M67.6 32 L67.6 100 M89.2 32 L89.2 100 M110.8 32 L110.8 100 M132.4 32 L132.4 100"/>
+          <path d="M46 54.7 L154 54.7 M46 77.3 L154 77.3"/>
+        </g>
+        <g fill="var(--ink)" stroke="none" opacity="0.75">
+          <rect x="50" y="36" width="14" height="15" rx="2"/><rect x="93" y="36" width="14" height="15" rx="2"/>
+          <rect x="71" y="58" width="14" height="15" rx="2"/><rect x="136" y="58" width="14" height="15" rx="2"/>
+          <rect x="114" y="81" width="14" height="15" rx="2"/><rect x="50" y="81" width="14" height="15" rx="2"/>
+        </g>
+      </svg>
+      <h3>Scheduling appointments</h3>
+      <dl>
+        <dt>decide</dt><dd>which patients go in which slots</dd>
+        <dt>limited by</dt><dd>clinicians, rooms, hours in the day</dd>
+        <dt>goal</dt><dd>minimize patient wait time</dd>
+      </dl>
+      <div class="foot">Whole-number decisions: integer programs, which solve many LPs along the way.</div>
+    </div>
+  </div>
+  <div class="shape" data-step="4">
+    <span class="muted">Same shape every time:</span>
+    <span>\(\underbrace{\max\ \OB{c^\top x}}_{\text{goal}} \quad \text{s.t.} \quad \underbrace{Ax \le b}_{\text{limited resources}}, \quad \underbrace{x \ge 0}_{\text{decisions}}\)</span>
+  </div>
+  <aside class="notes">Business decisions (a bakery is just a small business), radiation therapy (beam intensities; dose is linear in intensities; constraint: the tumor gets its prescribed dose; goal: minimize dose to healthy organs, so this one is a min problem with ≥ constraints, the same shape after flipping signs), appointment scheduling (integer program, LPs inside branch-and-bound). Last step: the common skeleton.</aside>
+</section>
+
+<!-- ============================ PART 1: THE 2D PROBLEM ============================ -->
+
+<section class="slide" id="bakery" data-part="1 · Bakery example">
+  <h2>A small business example: our bakery</h2>
+  <p class="sub">Two products, three limited resources</p>
+  <div class="cols">
+    <div class="col">
+      <table class="t" id="bk-table">
+        <tr><th></th><th>bread</th><th>cake</th><th>available</th></tr>
+        <tr class="rrow" data-res="flour" style="--rc: var(--flour)"><td class="rowh"><span class="chip" style="background: var(--flour)"></span>flour</td><td>2</td><td>1</td><td>10</td></tr>
+        <tr class="rrow" data-res="oven" style="--rc: var(--oven)"><td class="rowh"><span class="chip" style="background: var(--oven)"></span>oven hours</td><td>3</td><td>2</td><td>16</td></tr>
+        <tr class="rrow" data-res="labor" style="--rc: var(--labor)"><td class="rowh"><span class="chip" style="background: var(--labor)"></span>labor hours</td><td>1</td><td>2</td><td>12</td></tr>
+        <tr class="sep rrow" data-res="profit" style="--rc: var(--obj)"><td class="rowh c-obj">profit / batch</td><td class="c-obj">9</td><td class="c-obj">8</td><td></td></tr>
+      </table>
+      <p class="muted small" style="margin-top: 22px;">$ per batch. Units are made up; I'm not actually a baker.</p>
+    </div>
+    <div class="col">
+      <div class="form">
+        <div class="row" data-step="1" style="white-space: nowrap;">\(x_1\) = bread batches,&nbsp; \(x_2\) = cake batches <span class="note">decisions</span></div>
+        <div class="row" data-step="2" data-k="profit">\(\max\ \OB{z = 9x_1 + 8x_2}\) <span class="note">profit<sup class="ast" data-step="3">*</sup></span></div>
+        <div class="row" data-step="4" data-k="flour">\(\text{s.t.}\ \ \FL{2x_1 + x_2 \le 10}\) <span class="note">flour</span></div>
+        <div class="row" data-step="5" data-k="oven">\(\phantom{\text{s.t.}}\ \ \OV{3x_1 + 2x_2 \le 16}\) <span class="note">oven hours</span></div>
+        <div class="row" data-step="6" data-k="labor">\(\phantom{\text{s.t.}}\ \ \LB{x_1 + 2x_2 \le 12}\) <span class="note">labor hours</span></div>
+        <div class="row" data-step="7">\(\phantom{\text{s.t.}}\ \ x_1,\ x_2 \ge 0\) <span class="note"><span class="uline" id="bk-noneg">no negative items</span> <i data-step="8">(why?)</i></span></div>
+        <div class="row why" data-step="9">\(\implies\) would imply we can <i>unmake</i> less profitable items and harvest their flour, labor and oven hours for more profitable products</div>
+      </div>
+    </div>
+  </div>
+  <div class="footbox" data-step="3">*recall: profit = revenue − cost</div>
+  <aside class="notes">Each table row lights up as its constraint is written. Colours stay with each resource for the rest of the talk. Step 3 (asterisk + footnote) answers "why are these numbers so low?": it's profit, not price; materials and labour come out of the revenue first. Step 8 underlines "no negative items" and asks why; step 9 answers: a negative amount would mean un-baking an item to free up its flour, labor and oven hours for something more profitable.</aside>
+</section>
+
+<section class="slide" id="matrixform" data-part="1 · Bakery example">
+  <h2>Our bakery in the general form</h2>
+  <p class="sub">The formula from slide 2, filled in with the bakery's numbers</p>
+  <div class="cols">
+    <div class="col">
+      <div class="mf-tablewrap">
+        <table class="t">
+          <tr><th></th><th>bread</th><th>cake</th><th>available</th></tr>
+          <tr><td class="rowh"><span class="chip" style="background: var(--flour)"></span>flour</td><td data-g="A">2</td><td data-g="A">1</td><td data-g="b">10</td></tr>
+          <tr><td class="rowh"><span class="chip" style="background: var(--oven)"></span>oven hours</td><td data-g="A">3</td><td data-g="A">2</td><td data-g="b">16</td></tr>
+          <tr><td class="rowh"><span class="chip" style="background: var(--labor)"></span>labor hours</td><td data-g="A">1</td><td data-g="A">2</td><td data-g="b">12</td></tr>
+          <tr class="sep"><td class="rowh c-obj">profit / batch</td><td class="c-obj" data-g="c">9</td><td class="c-obj" data-g="c">8</td><td></td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="col">
+      <div class="mf-top">
+        <div class="mf-v" data-until="0">\(\max\ c^\top x \quad \text{s.t.} \quad Ax \le b, \quad x \ge 0\)</div>
+        <div class="mf-v" data-step="1" data-until="1">\(\max\ \textcolor{d9aa14}{\underline{c}}^\top x \quad \text{s.t.} \quad Ax \le b, \quad x \ge 0\)</div>
+        <div class="mf-v" data-step="2" data-until="2">\(\max\ c^\top x \quad \text{s.t.} \quad \textcolor{f2a7c3}{\underline{A}}x \le b, \quad x \ge 0\)</div>
+        <div class="mf-v" data-step="3" data-until="3">\(\max\ c^\top x \quad \text{s.t.} \quad Ax \le \textcolor{9aa0ad}{\underline{b}}, \quad x \ge 0\)</div>
+        <div class="mf-v" data-step="4">\(\max\ \OB{c}^\top x \quad \text{s.t.} \quad \textcolor{f2a7c3}{A}x \le \textcolor{9aa0ad}{b}, \quad x \ge 0\)</div>
+      </div>
+      <div class="mf-defs">
+        <div data-step="1"><span class="lbl">profit per batch</span>\(\OB{c^\top = \begin{pmatrix} 9 & 8 \end{pmatrix}}\)</div>
+        <div data-step="2"><span class="lbl">resources used per batch<br><span class="faint">rows: resources · columns: products</span></span>\(\textcolor{f2a7c3}{A = \begin{pmatrix} \FL{2} & \FL{1} \\ \OV{3} & \OV{2} \\ \LB{1} & \LB{2} \end{pmatrix}}\)</div>
+        <div data-step="3"><span class="lbl">resources available</span>\(\textcolor{9aa0ad}{b^\top = \begin{pmatrix} \FL{10} & \OV{16} & \LB{12} \end{pmatrix}}\)</div>
+      </div>
+    </div>
+  </div>
+  <div class="mf-full" data-step="4">\(\max\ \OB{\begin{pmatrix} 9 & 8 \end{pmatrix}} \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} \quad \text{s.t.} \quad \textcolor{f2a7c3}{\begin{pmatrix} \FL{2} & \FL{1} \\ \OV{3} & \OV{2} \\ \LB{1} & \LB{2} \end{pmatrix}} \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} \le \textcolor{9aa0ad}{\begin{pmatrix} \FL{10} \\ \OV{16} \\ \LB{12} \end{pmatrix}}, \quad x \ge 0\)</div>
+  <aside class="notes">Same shape as slide 2. Vectors are columns by default, so the profit row is cᵀ and the available column is b (written bᵀ here to save space). c = profit per batch (one entry per product), A = resources used per batch (one row per resource, one column per product), b = resources available (one entry per resource), x = how much of each product to make. The last step writes the whole bakery LP in matrix form.</aside>
+</section>
+
+<section class="slide" id="region" data-part="1 · Bakery example">
+  <h2>Every constraint cuts the plane in half</h2>
+  <p class="sub">The plans that satisfy all of them form the <i>feasible region</i></p>
+  <div class="cols">
+    <div class="col">
+      <div class="list" id="rg-list">
+        <div data-k="sign">\(x_1, x_2 \ge 0\): <span class="muted">the positive quadrant</span></div>
+        <div data-k="flour">\(\FL{2x_1 + x_2 \le 10}\)<span class="icpt">\(x_1\)-intercept \((5, 0)\), \(x_2\)-intercept \((0, 10)\)</span></div>
+        <div data-k="oven">\(\OV{3x_1 + 2x_2 \le 16}\)<span class="icpt">\(x_1\)-intercept \((\tfrac{16}{3}, 0)\), \(x_2\)-intercept \((0, 8)\)</span></div>
+        <div data-k="labor">\(\LB{x_1 + 2x_2 \le 12}\)<span class="icpt">\(x_1\)-intercept \((12, 0)\), \(x_2\)-intercept \((0, 6)\)</span></div>
+      </div>
+      <div class="callout" data-step="5" style="margin-top: 34px;">Five <b>corners</b>. Each one is where two constraints meet.</div>
+    </div>
+    <div id="region-plot"></div>
+  </div>
+  <aside class="notes">Line = the constraint holds with equality (resource used up). Hatched side = plans that would need more than we have. Intercepts: set the other variable to 0 (e.g. flour: x₂ = 0 gives x₁ = 5; x₁ = 0 gives x₂ = 10). (0, 10) and (12, 0) are off the plot. The white hatching beside the axes marks x₁ < 0 and x₂ < 0, which the sign constraints rule out.</aside>
+</section>
+
+<section class="slide" id="sweep" data-part="1 · Bakery example">
+  <h2>Slide the profit line</h2>
+  <p class="sub">All plans with the same profit lie on one line</p>
+  <div class="cols">
+    <div class="col">
+      <div class="eq">\(\OB{9x_1 + 8x_2 = z}\)</div>
+      <div class="zread num c-obj" id="sw-z">z = 0</div>
+      <p data-step="1">Push the line in the direction of the <span class="c-obj">arrow</span>, as far as the region allows.</p>
+      <div class="callout" data-step="2">The last plan it touches is a <b>corner</b>: \((2, 5)\), profit \(\OB{58}\).</div>
+      <p data-step="3" class="muted">Any further and no plan is left.</p>
+      <div class="dial">
+        <span class="muted">profit z</span>
+        <div class="track"><input type="range" id="sw-slider" min="0" max="64" step="0.5"><span class="edge" style="--at: 0.90625">last feasible plan: 58 ▲</span></div>
+      </div>
+    </div>
+    <div id="sweep-plot"></div>
+  </div>
+  <aside class="notes">The shaded part = plans that earn at most z. At 58 the line only touches the region at the corner (2,5). The slider (0 to 64, snaps to 58, the last feasible profit) is for playing with afterwards; the clicks don't need it.</aside>
+</section>
+
+<section class="slide" id="parallel" data-part="1 · Bakery example">
+  <h2>Always a corner… unless the profit line is parallel to an edge</h2>
+  <p class="sub">Turn the profit direction and watch the best corner</p>
+  <div class="cols">
+    <div class="col">
+      <div class="objtex"><span id="pa-obj"></span><span class="rel" id="pa-rel"></span></div>
+      <div class="callout" id="pa-msg">Best plan: one corner.</div>
+      <div class="dial">
+        <span class="muted">bread profit</span>
+        <div class="track"><input type="range" id="pa-bread" min="1" max="20" step="0.1"><span class="start" id="pa-start">▲</span></div>
+        <span class="num" id="pa-val"></span>
+      </div>
+      <div class="rule" data-step="4">Parallel to an edge ⇒ the <b>whole edge</b> ties. Its two ends are still corners, so <b>checking corners is always enough.</b></div>
+    </div>
+    <div id="parallel-plot"></div>
+  </div>
+  <aside class="notes">Cake stays at 8; only bread's profit changes, which turns the profit line. Steps: bread 12 (parallel to oven: (4,2)–(2,5) tie at 64), bread 16 (parallel to flour: (5,0)–(4,2) tie at 80), bread 4 (parallel to labor: (2,5)–(0,6) tie at 48), then the rule; the last click turns the line back to the original 9x₁ + 8x₂ (best plan (2, 5), 58). The triangle under the slider marks the starting 9. The slider is free to play with (snaps near 9 and the three ties). Later: this tie is a zero reduced cost on a nonbasic variable.</aside>
+</section>
+
+<!-- ============================ PART 2: STRONG DUALITY ============================ -->
+
+<section class="slide" id="convince" data-part="2 · Strong duality">
+  <h2>Optimality: how do we prove 58 is the best?</h2>
+  <div class="cols">
+    <div class="col card" data-step="0">
+      <h3>Plan <i>feasibility</i> is easy to check</h3>
+      <p>Bake \(x = (2, 5)\):</p>
+      <p>\(\FL{2\cdot2 + 5 = 9 \le 10}\) ✓<br>\(\OV{3\cdot2 + 2\cdot5 = \boldsymbol{16 \le 16}}\) ✓<br>\(\LB{2 + 2\cdot5 = \boldsymbol{12 \le 12}}\) ✓</p>
+      <p>Profit:&nbsp; \(\OB{9\cdot2 + 8\cdot5 = 58}\).</p>
+    </div>
+    <div class="col card hard" data-step="1">
+      <h3>"Nothing beats it" is harder</h3>
+      <p>Check every corner? Fine here: there are 5.<sup class="ast">*</sup></p>
+      <p data-step="2">A business with 50 products and 50 resources: up to \(\binom{100}{50} \approx 10^{29}\) corners.</p>
+      <p data-step="3" class="c-proof"><b>We want a short proof that anyone can check.</b></p>
+      <p class="muted fn">*\(\binom{5}{2} = 10\) possible corners in our 2D problem, but only 5 are feasible</p>
+    </div>
+  </div>
+  <div class="dualbox" data-step="4">
+    LPs have a “built in” proof, in the form of an upper bound. Given \(n\) variables and \(m \ge n\) constraints, the best
+    plan sits where \(n\) of the constraints meet, and the proof is built from those same constraints. When a valid upper
+    bound meets a valid lower bound, we are at optimality, and the principle of <b>strong duality</b> guarantees that,
+    whenever there is a best plan, they meet.
+  </div>
+  <aside class="notes">Checking a plan = plug in. Optimality needs an argument about ALL plans. Enumeration is hopeless at scale. Last click: duality in one breath. Weak duality = any valid mix gives an upper bound; strong duality = the best bound is tight. The next slides build the dual one step at a time. In the box, m counts the sign constraints x ≥ 0 too: bakery n = 2, m = 5 (matching the C(5, 2) footnote). The best plan (2, 5) sits where oven and labor meet, and the proof is 2.5 × oven + 1.5 × labor.</aside>
+</section>
+
+<section class="slide" id="bounds" data-part="2 · Strong duality">
+  <h2>Duality and bounds<sup class="ast">*</sup></h2>
+  <div class="bd-obj">\(\max\ \OB{9x_1 + 8x_2}\)</div>
+  <div class="dl-left">
+    <ul class="bl">
+      <li data-step="1">A feasible solution to our original model (called the <i>primal</i> model) is a <b class="c-obj">lower bound</b>.
+        <div class="lbs">
+          <div class="lb" data-step="1"><span class="v">\(9(0) + 8(0) = \OB{0}\)</span><span class="cap">lower bound</span></div>
+          <div class="ar" data-step="2">→</div>
+          <div class="lb" data-step="2"><span class="v">\(9(5) + 8(0) = \OB{45}\)</span><span class="cap">new lower bound</span></div>
+          <div class="ar" data-step="3">→</div>
+          <div class="lb" data-step="3"><span class="v">\(9(4) + 8(2) = \OB{52}\)</span><span class="cap">new lower bound</span></div>
+          <div class="ar" data-step="4">→</div>
+          <div class="lb" data-step="4"><span class="v">\(9(2) + 8(5) = \OB{58}\)</span><span class="cap">new lower bound</span></div>
+        </div>
+      </li>
+      <li data-step="5">Any function with coefficients ≥ our objective function's coefficients is ≥ our objective function, for any value of \(x \ge 0\).
+        <div class="ex">e.g., \(\OB{9}x_1 + \OB{8}x_2 \le 10x_1 + 8x_2\)</div>
+      </li>
+      <li data-step="6">We can thus use constraints, that are all <b>true</b> for this problem, to bound our objective function <b class="c-proof">from above</b>:
+        <div class="ex">\(\FL{2x_1 + x_2 \le 10} \quad (\times\, \FL{8}) \quad \Rightarrow \quad 16x_1 + 8x_2 \le 80\)</div>
+        <div class="ex" data-step="7">\(z = \OB{9x_1 + 8x_2} \le 16x_1 + 8x_2 \le 80\)</div>
+      </li>
+    </ul>
+  </div>
+  <div class="dl-pic" id="bd-pic" data-step="1"></div>
+  <div class="dl-bar" id="bd-bar" data-step="1"></div>
+  <p class="fn">* Adapted from A. Majumdar, <a href="https://medium.com/data-science/duality-the-unsung-hero-of-optimization-explained-through-an-example-f53f3fb191d9" target="_blank">“Duality: the unsung hero of optimization explained through an example”</a>, Towards Data Science (2021).</p>
+  <aside class="notes">Lower bounds come from plans: every feasible plan's profit is at most the best profit, so each better corner raises the lower bound (0, 45, 52, 58; the little plot walks those corners, with the profit line through each, as on the sweep slide; it is the route the simplex method will take later). Upper bounds come from the constraints: they are all true, so any multiple of one (by a number ≥ 0) is true too; 8 × flour = 16x₁ + 8x₂ ≤ 80 has coefficients at least the profit's, and x ≥ 0, so profit ≤ 80. The bar on the right: the best profit is squeezed between the two bounds (58 to 80); the little plot shows both as profit lines, 58 touching the region and 80 (dashed white) beyond it. The next slides tighten the upper bound.</aside>
+</section>
+
+<section class="slide" id="dualvars" data-part="2 · Strong duality">
+  <h2>Understanding dual variables</h2>
+  <p class="sub">Given our primal model, we can assign a <i>dual variable</i> \(y\) to each constraint</p>
+  <div class="dl-left">
+    <div class="dv-top">
+      <div class="lp" id="dv-lp"></div>
+      <div class="dv-scaled" id="dv-scaled"><div class="l1"></div><div class="l1b"></div><div class="l2"></div></div>
+    </div>
+    <ul class="bl">
+      <li data-step="1">Our first dual guess from the previous slide was \(y^\top = (\FL{8}, \OV{0}, \LB{0})\), with \(z \le 80\).</li>
+      <li data-step="2">Constraint 2 would give us \(y^\top = (\FL{0}, \OV{4}, \LB{0})\): \(z \le 64\)<span data-step="3">; constraint 3, \(y^\top = (\FL{0}, \OV{0}, \LB{9})\): \(z \le 108\). So <b>64 is our best upper bound</b> so far.</span></li>
+      <li data-step="4">We can also take combinations of the constraints, but they need to remain ≥ our coefficient values.</li>
+    </ul>
+    <div class="rule dv-proof" data-step="5">Dual variables \(y \ge 0\) whose mix covers the profit form a <b>valid dual</b>, with bound \(\FL{10y_1} + \OV{16y_2} + \LB{12y_3}\).</div>
+  </div>
+  <div class="dl-pic" id="dv-pic"></div>
+  <div class="dl-bar" id="dv-bar"></div>
+  <aside class="notes">Each constraint gets a multiplier y_i ≥ 0. One constraint alone needs a multiplier big enough to cover BOTH profit coefficients: flour needs max(9/2, 8/1) = 8 (bound 80, from the last slide), oven max(9/3, 8/2) = 4 (bound 64, better: the marker drops), labor max(9/1, 8/2) = 9 (bound 108, worse). Beaten bounds stay on the bar as faint ticks; the best upper bound is now 64. Mixing constraints is allowed as long as every coefficient still covers the profit's; that's the next slide. Last click: from now on a "valid dual" means exactly this: y ≥ 0 whose mix covers the profit; its bound is b·y.</aside>
+</section>
+
+<section class="slide boundgame" id="proof" data-part="2 · Strong duality">
+  <h2>The bound game: add up the constraints</h2>
+  <p class="sub">Pick a dual variable ≥ 0 for each resource. If the mix covers the profit, it is a valid dual: it caps the profit.</p>
+  <div class="cols" style="gap: 40px;">
+    <div class="col" style="flex: 1.25 1 0;">
+      <div class="rows pf-rows"></div>
+      <div class="sumrow"><span class="muted">sum:</span><span class="pf-sum"></span></div>
+      <div class="pf-lower">
+      <table class="t pf-cover">
+        <tr><th></th><th>sum covers</th><th>profit</th><th>dual slack<br><span class="small">(covers − profit)</span></th></tr>
+        <tr><td class="rowh">bread \(x_1\)</td><td class="pf-c0"></td><td class="c-obj">9</td><td class="pf-s0"></td></tr>
+        <tr><td class="rowh">cake \(x_2\)</td><td class="pf-c1"></td><td class="c-obj">8</td><td class="pf-s1"></td></tr>
+      </table>
+      <div class="verdict pf-verdict"></div>
+      <div class="presets pf-presets"></div>
+      <div class="why pf-why"></div>
+      </div>
+    </div>
+    <div class="col" style="flex: 0 0 560px;">
+      <div class="pf-plot"></div>
+      <div class="nl pf-nl"></div>
+    </div>
+  </div>
+  <aside class="notes">Opens on 9 × labor (≤ 108): the bound line sits well away from the region, so the next clicks visibly pull it in. Then 4 × oven (≤ 64), the best single constraint from the last slide; then the mixes: 3 oven + 1 labor (≤ 60), and 2.5 oven + 1.5 labor (≤ 58, matches the plan, gap 0). Flour gets 0 because it has a spare unit: weight on flour raises the bound without raising the profit. Buttons: reset, and the best dual. Sliders work any time; Esc returns the keyboard to the deck. Why it works: for x ≥ 0, if each coefficient of the sum is at least the profit coefficient, profit ≤ sum ≤ sum of limits. Where the numbers come from (caption under the buttons): one constraint alone needs multiplier = max over products of profit ÷ coefficient (labor: max(9/1, 8/2) = 9; oven: max(9/3, 8/2) = 4; flour: max(9/2, 8/1) = 8 → 80). Then trade: 4 × oven over-covers bread, so 3 × oven + 1 × labor; finally cover both exactly (3y₂ + y₃ = 9, 2y₂ + 2y₃ = 8).</aside>
+</section>
+
+<section class="slide" id="formdual" data-part="2 · Strong duality">
+  <h2>Formalizing the dual</h2>
+  <p class="sub">The bound game as an LP: choose \(y \ge 0\) so the mix covers every product's profit, with the smallest bound</p>
+  <div class="fd-row">
+    <div class="card fd-card"><div class="fd-lab">Primal</div><div class="lp" id="fd-primal"></div></div>
+    <div class="fd-mid" id="fd-mat"></div>
+    <div class="card fd-card"><div class="fd-lab">Dual</div><div class="lp" id="fd-dual"></div><div class="fd-min muted" id="fd-min">min: we want the <b>smallest</b> upper bound</div></div>
+  </div>
+  <ul class="bl fd-text">
+    <li data-step="1">In other words, the sum of all the coefficients in the first column times their dual variables must be ≥ the objective function coefficient.</li>
+    <li data-step="3">And for every unit of dual value, one unit of the \(b\) vector is added.</li>
+    <li data-step="6">The primal's columns became the dual's rows: the dual uses \(\textcolor{f2a7c3}{A^\top}\).</li>
+  </ul>
+  <aside class="notes">Click 1: bread's column (2, 3, 1 and profit 9) becomes the dual's first constraint, 2y₁ + 3y₂ + y₃ ≥ 9: the mixed constraints must cover bread's profit. Click 2: cake's column gives y₁ + 2y₂ + 2y₃ ≥ 8. Click 3: b is boxed: each unit of y_i adds b_i to the bound. Click 4: so the bound is 10y₁ + 16y₂ + 12y₃, and we want the smallest one: min. Click 5: the coefficient block A. Click 6: the last bullet; the dual's coefficient block is boxed too. Click 7: A transposes into Aᵀ.</aside>
+</section>
+
+<section class="slide" id="dualgeneral" data-part="2 · Strong duality">
+  <h2>Primal and dual, in general</h2>
+  <div class="fd-row">
+    <div class="card fd-card">
+      <div class="fd-lab">Primal</div>
+      <div class="gf">
+        <span class="g0">\(\max\)</span><span class="g1">\(\OB{c}^\top x\)</span>
+        <span class="g0">\(\text{s.t.}\)</span><span class="g1">\(\textcolor{f2a7c3}{A}x \le \textcolor{9aa0ad}{b}\)<span class="gtag">\((y)\)</span></span>
+        <span class="g0"></span><span class="g1">\(x \ge 0\)</span>
+      </div>
+      <div class="dg-dim">\(n\) variables, \(m\) constraints</div>
+    </div>
+    <div class="fd-mid" id="dg-mat"></div>
+    <div class="card fd-card">
+      <div class="fd-lab">Dual</div>
+      <div class="gf">
+        <span class="g0">\(\min\)</span><span class="g1">\(\textcolor{9aa0ad}{b}^\top y\)</span>
+        <span class="g0">\(\text{s.t.}\)</span><span class="g1">\(\textcolor{f2a7c3}{A}^\top y \ge \OB{c}\)</span>
+        <span class="g0"></span><span class="g1">\(y \ge 0\)</span>
+      </div>
+      <div class="dg-dim">\(m\) variables, \(n\) constraints</div>
+    </div>
+  </div>
+  <ul class="bl fd-text">
+    <li data-step="1">Transposing swaps rows and columns: \(\textcolor{f2a7c3}{A}\) is \(m \times n\), \(\textcolor{f2a7c3}{A}^\top\) is \(n \times m\).</li>
+    <li data-step="2">Each column \(j\), times the dual variables, must cover its objective coefficient: \(\sum_i \textcolor{f2a7c3}{a_{ij}}\, y_i \ge \OB{c_j}\) for every \(j\), that is, \(\textcolor{f2a7c3}{A}^\top y \ge \OB{c}\).</li>
+    <li data-step="3">Every unit of \(y_i\) adds \(\textcolor{9aa0ad}{b_i}\) to the bound: \(\sum_i \textcolor{9aa0ad}{b_i}\, y_i = \textcolor{9aa0ad}{b}^\top y\), and we want the smallest bound.</li>
+    <li data-step="4">LPs have <b>weak duality</b>: for every feasible \(x\) and \(y\), \(\OB{c}^\top x \le \textcolor{9aa0ad}{b}^\top y\). They also have <b>strong duality</b>: if the primal has an optimal solution, so does the dual, and at optimality \(\OB{c}^\top x = \textcolor{9aa0ad}{b}^\top y\).</li>
+  </ul>
+  <aside class="notes">The formalizing slide again, in matrix notation; everything is already in place and the bullets name the moves. A is m × n (one row per constraint, one column per variable), Aᵀ is n × m. Column j of A times y must cover c_j, for every j: Aᵀy ≥ c. Each unit of y_i adds b_i to the bound, so the dual minimises bᵀy. One dual variable per primal constraint, one dual constraint per primal variable. Last bullet: weak duality is the bound game (every valid mix caps every plan); strong duality is its last preset, y = (0, 2.5, 1.5) giving 10·0 + 16·2.5 + 12·1.5 = 58 = the best plan. Strong duality needs an optimal solution to exist (not infeasible, not unbounded).</aside>
+</section>
+
+<section class="slide" id="names" data-part="2 · Strong duality">
+  <h2>Common names and interpretations for parts of the dual</h2>
+  <div class="cols">
+    <div class="col card" data-step="0">
+      <h3>Dual variable = shadow price</h3>
+      <p>\(\FL{y_1}, \OV{y_2}, \LB{y_3}\): what one more unit of each resource is worth. At the optimum, \(y = (\FL{0}, \OV{2.5}, \LB{1.5})\).</p>
+      <p class="ex" data-step="1">Best profit = best bound = \(\FL{10y_1} + \OV{16y_2} + \LB{12y_3}\), so one more oven hour adds \(\OV{y_2}\), as long as the same dual stays best: 17 hours ⇒ 58 → 60.5, that's \(+\OV{2.5}\). One more unit of flour ⇒ +0 (we already have spare).</p>
+    </div>
+    <div class="col card" data-step="2">
+      <h3>Dual slack = reduced cost</h3>
+      <p>Each product has a dual constraint: the value of the resources it uses must cover its profit (bread: \(\FL{2y_1} + \OV{3y_2} + \LB{y_3} \ge \OB{9}\)). Its slack is the product's <b>reduced cost</b>: value of the resources it uses − its profit.</p>
+      <p class="ex" data-step="3"><b>Negative ⇒ the prices undervalue it ⇒ worth making more.</b> <span class="muted">At \((0, 0)\) every price is 0, so \(d_1 = -9\) and \(d_2 = -8\): both are worth making.</span></p>
+    </div>
+  </div>
+  <aside class="notes">Convention used throughout: reduced cost d_j = y·a_j − c_j (the dual slack). Optimal ⇔ every dual slack ≥ 0 and every y ≥ 0. Negative = a violated dual constraint = a candidate to enter. Shadow-price check: with 17 oven hours the optimum moves to (2.5, 4.75), profit 60.5.</aside>
+</section>
+
+<section class="slide" id="whymix" data-part="2 · Strong duality">
+  <h2>Two readings of the same equations</h2>
+  <div class="cols">
+    <div class="col wm-left">
+      <p>The primal and the dual are <b>two readings of the same equations</b>: at the best corner, the tight constraints form one square system.</p>
+      <div class="wm-sys">
+        <div class="k">primal<br><span class="faint">by rows</span></div>
+        <div><div class="e">\(\OV{3x_1 + 2x_2 = 16}, \quad \LB{x_1 + 2x_2 = 12}\)</div><div class="res">\(\Rightarrow x = (2, 5)\): where the lines meet</div></div>
+        <div class="k">dual<br><span class="faint">by columns</span></div>
+        <div><div class="e">\(\OV{3}y_2 + \LB{1}y_3 = \OB{9}, \quad \OV{2}y_2 + \LB{2}y_3 = \OB{8}\)</div><div class="res">\(\Rightarrow y_2 = \OV{2.5},\ y_3 = \LB{1.5}\): multipliers of those lines that add up to \(\OB{c}\)</div></div>
+      </div>
+      <p data-step="1">In \(\mathbb{R}^n\), the primal finds where \(n\) constraints meet; the dual finds multipliers of those same \(n\) constraints that add up to \(c\). Same numbers, same value: \(58 = 16 \cdot 2.5 + 12 \cdot 1.5\). When an optimal solution exists the multipliers <span style="white-space: nowrap">are \(\ge 0\)</span> (the profit line only touches the region), so the two views agree exactly.</p>
+      <div class="wm-read" id="wm-read"><div class="l1"></div><div class="l2"></div></div>
+      <div class="dial">
+        <span class="muted">bread profit</span>
+        <div class="track"><input type="range" id="wm-bread" min="1" max="20" step="0.5"><span class="band" style="--a: 0.1579; --b: 0.5789"></span><span class="bandlab" style="--a: 0.1579; --b: 0.5789">(2, 5) is best</span><span class="start" style="--at: 0.4211">▲</span></div>
+        <span class="num" id="wm-val"></span>
+      </div>
+    </div>
+    <div id="wm-plot"></div>
+  </div>
+  <aside class="notes">Two readings of one square system (the constraints tight at the best corner): by rows it is the primal's question, where do these lines meet (x = (2, 5)); by columns, the same matrix transposed, it is the dual's question, which multipliers of these lines add up to c (y₂ = 2.5, y₃ = 1.5; flour isn't tight, so y₁ = 0). Same numbers, so cᵀx = (Aᵀy)ᵀx = yᵀ(Ax) = yᵀb: 58 both ways. In ℝⁿ: n tight constraints, an n × n system. Optimality is what makes the multipliers ≥ 0, i.e. a valid dual. The tool: every line through (2, 5) is a mix λ·oven + μ·labor of the two tight constraints, and because all of them pass through (2, 5), the bound λ·16 + μ·12 equals the profit there. The slider turns the profit direction (cake stays at 8, as on the ties slide): profit b·x₁ + 8x₂ = λ·oven + μ·labor with λ = (b − 4)/2, μ = 6 − b/2. Both are ≥ 0 exactly for 4 ≤ b ≤ 12 (the gold band): the line only touches the region and (2, 5) is best. Outside, a weight is negative, the line cuts into the region (red), and another corner wins (ringed). Click 1 plays a sweep from 9 to 12 and past, down to 4 and past, and back to 9. The slider works any time.</aside>
+</section>
+
+<section class="slide" id="review" data-part="2 · Strong duality">
+  <h2>Properties of our system at optimality</h2>
+  <div class="rv-grid">
+    <div class="rv-h rv-p">Primal perspective</div>
+    <div class="rv-h rv-d">Dual perspective</div>
+    <div class="rv-c rv-p" data-step="1">We expect that \(n\) of our primal equations are actively at an intersection (i.e., a corner point).</div>
+    <div class="rv-c rv-d" data-step="3">We expect that \(n\) of our dual multipliers are \(\geq 0\).</div>
+    <div class="rv-c rv-p" data-step="2">These constraints are tight, or at equality, meaning they should have 0&nbsp;slack.</div>
+    <div class="rv-c rv-d" data-step="4">We also expect our \(c\) vector to be exactly equal to the original, which means all constraints should have 0&nbsp;slack.</div>
+  </div>
+  <aside class="notes">Review of what the last few slides showed. Primal: n equations meet at the corner; those constraints are tight (0 slack). Dual: n multipliers (one per tight constraint) are ≥ 0, and their mix rebuilds c exactly, so the dual's constraints have 0 slack. Next: slack as a variable.</aside>
+</section>
+
+<!-- ============================ PART 3: CORNERS & TABLEAUX ============================ -->
+
+<section class="slide" id="slackvars" data-part="3 · Corners &amp; tableaux">
+  <h2>Turning slack into a decision variable <span class="h2p">(and inequalities into equalities)</span></h2>
+  <p class="sub">Slack is a big part of optimality, and we can turn it into a variable, just like our \(x\)'s</p>
+  <div class="cols">
+    <div class="col sv-col">
+      <div class="sv-main" data-until="3">
+      <p class="def">A <i>slack variable</i> \(s_i\) is how much of resource \(i\) is left over:</p>
+      <div class="eqs">
+        <div>\(\FL{2x_1 + x_2 + s_1 = 10}\)</div>
+        <div>\(\OV{3x_1 + 2x_2 + s_2 = 16}\)</div>
+        <div>\(\LB{x_1 + 2x_2 + s_3 = 12}\)</div>
+        <div>\(x_1, x_2, s_1, s_2, s_3 \ge 0\)</div>
+      </div>
+      <div class="plan" id="sv-plan"></div>
+      <div id="sv-meters"></div>
+      <div class="rule" data-step="3">\(x\) on a line ⇔ that resource is used up ⇔ its slack is&nbsp;0.<br><span class="muted small">At a corner, two things are zero.</span></div>
+      </div>
+      <div class="sv-why" data-step="4">
+        <h3>3 equations, 5 unknowns: set 2 to 0, solve for the other 3</h3>
+        <div class="sv-grid" id="sv-grid"></div>
+        <ul class="bl sv-bul">
+          <li data-step="4">Set 2 of them to 0 (here \(s_1 = s_2 = 0\): flour and oven are tight), then solve the 3 equations for the other 3.</li>
+          <li data-step="5">\(x_1 = s_2 = 0\) is a corner too, at \((0, 8)\), but solving gives \(s_3 = -4\): labor runs over. Not a <i>feasible</i> corner.</li>
+          <li data-step="6">Try it yourself: hit <b>clear</b>, then click any 2 boxes to set them to 0; the other 3 get solved for. There are \(\binom{5}{2} = 10\) corners and 5 are feasible. Find them all!</li>
+        </ul>
+        <div class="tally" id="sv-tally"></div>
+      </div>
+    </div>
+    <div id="slackvars-plot"></div>
+  </div>
+  <aside class="notes">Slack as a variable, like x: each ≤ becomes an = with its leftover. Drag the plan point around (it stays inside the region). Steps move it to (3,2), then to the corner (4,2) where flour and oven both hit zero. Last three clicks (bases, shown instead of told): 3 equations in 5 unknowns, so set 2 to 0 and solve for the other 3. Click 4: s₁ = s₂ = 0, on the flour and oven lines, solves to x₁ = 4, x₂ = 2, s₃ = 4: the corner (4, 2). Click 5: x₁ = s₂ = 0, the corner (0, 8), but s₃ = −4 (labor over): not a feasible corner. Click 6: "try it yourself": hit clear, then click any 2 value boxes to set them to 0 (the other 3 are solved for); the corner is computed and plotted ((0, 10) and (12, 0) are off the plot's edges, marked with arrows), and the tally counts the corners found. There are C(5, 3) = 10, 5 of them feasible (every variable ≥ 0); only 2 unknowns are x's, so a slack is always among the 3 solved for. The bullets build up one per click. Next: the whole algorithm in one picture. Esc gives the keyboard back to the deck.</aside>
+</section>
+
+<section class="slide" id="dualslack" data-part="3 · Corners &amp; tableaux">
+  <h2>Dual slack: the same trick for the dual <span class="h2p">(≥ into =)</span></h2>
+  <p class="sub">Each dual constraint, one per product, gets a slack too</p>
+  <div class="cols">
+    <div class="col">
+      <p class="def">A <i>dual slack</i> \(d_j\) is how much the mix over-covers product \(j\)'s profit:</p>
+      <div class="eqs">
+        <div>\(\FL{2y_1} + \OV{3y_2} + \LB{y_3} - d_1 = \OB{9}\)<span class="tag">bread</span></div>
+        <div>\(\FL{y_1} + \OV{2y_2} + \LB{2y_3} - d_2 = \OB{8}\)<span class="tag">cake</span></div>
+        <div>\(y_1, y_2, y_3, d_1, d_2 \ge 0\)</div>
+      </div>
+      <div class="plan" id="ds-plan"></div>
+      <div class="ds-st" id="ds-x"></div>
+      <div class="ds-st" id="ds-y"></div>
+      <div id="ds-meters"></div>
+      <div class="ds-how muted">At each corner, \(y\) is fixed by its two tight constraints: \(y^\top = c_B^\top B^{-1}\) (\(B\): its basis, coming up with the tableau).</div>
+      <div class="rule" data-step="6">Inside the region the primal is valid; outside, the dual can be.<br><span class="muted small">Outside bounds: 80, 64, 108, 61.33. Only \((2, 5)\) has both: \(58 = 58\).</span></div>
+    </div>
+    <div id="dualslack-plot"></div>
+  </div>
+  <aside class="notes">Every corner (crossing of two constraint lines) has a basis, so a y = c_Bᵀ B⁻¹ (the multipliers of its two tight constraints that add up to c), whether or not the corner is feasible. The drag snaps to all ten corners; hollow dots are outside the region (not feasible). Clicks: Dantzig's route (0,0) → (5,0) → (4,2) → (2,5) (primal valid, dual not until (2,5)); then two infeasible corners: (0, 8), oven alone, dual valid with bound 64, and (2.67, 4.67), flour + labor, dual valid with bound 61.33; last click back to (2, 5). The other infeasible corners: (0, 10) flour alone → 80, (12, 0) labor alone → 108, (5.33, 0) neither valid. Inside the region the primal is valid but the dual usually isn't; outside, the primal isn't but the dual can be; only (2, 5) has both (that is optimality, and walking the infeasible corners is the dual simplex). Every product we make is covered exactly (x_j > 0 ⇒ d_j = 0): see the meters at (4,2) and (2,5). Meters: gold = how much the mix covers, white tick = the profit, hatched gold = over-cover (d > 0), hatched red = short (d < 0).</aside>
+</section>
+
+<section class="slide" id="pairs" data-part="3 · Corners &amp; tableaux">
+  <h2>Primal and dual variables and slacks at a corner point</h2>
+  <p class="sub">Every primal variable has a dual partner: \(x_j\) with its dual slack \(d_j\), \(s_i\) with its dual variable \(y_i\)</p>
+  <div class="cols">
+    <div class="col">
+      <div class="pr-corner" id="pr-corner"></div>
+      <div class="pr-grid" id="pr-grid"></div>
+      <ul class="bl pr-bul">
+        <li data-step="0"><b>Primal:</b> the corner's 2 tight constraints give 2 zeros (a slack, or an \(x\) on its axis); the other 3 are solved for: the basis.</li>
+        <li data-step="1"><b>Dual:</b> the partners of those 3 are 0; the other 2 are solved for: the multipliers of the 2 tight constraints (the dual's basis).</li>
+        <li data-step="2">In every pair at least one is 0: <i>complementary slackness</i>. The corner is optimal when both rows are \(\ge 0\).</li>
+      </ul>
+    </div>
+    <div class="col" style="flex: 0 0 520px;"><div id="pairs-plot"></div></div>
+  </div>
+  <aside class="notes">The pairs line up as on the next slides' x and y vectors: x₁–d₁, x₂–d₂, s₁–y₁, s₂–y₂, s₃–y₃. At a corner, the 2 tight constraints are the primal's zeros (s_i = 0 on a resource line, x_j = 0 on an axis); the other 3 primal variables are the basis. In the dual it flips: the partners of the basis are 0, and the 2 partners of the tight constraints are solved for. They are the multipliers of the tight constraints' normals that add up to c (slide 15's "two readings"), labelled on the tight lines. So every pair has a 0 (complementary slackness), and the corner is optimal exactly when both rows are ≥ 0 (primal feasible and dual feasible). Clicks: the three bullets at (0, 0), then (5, 0), (4, 2) (y₁ = −6: not optimal), (2, 5) (both rows ≥ 0: optimal). Any corner on the plot can be clicked.</aside>
+</section>
+
+<section class="slide" id="walk" data-part="3 · Corners &amp; tableaux">
+  <h2>The simplex method, in one picture</h2>
+  <p class="sub">The best plan is always at a corner, so walk from corner to corner</p>
+  <div class="cols">
+    <div class="col">
+      <ol>
+        <li data-step="0">Start at a corner.</li>
+        <li data-step="1">Look along the edges. Which ones improve <span class="c-obj">profits</span>?</li>
+        <li data-step="2">Walk one to the next corner. Repeat.</li>
+        <li data-step="3">Stop when no edge improves <span class="c-obj">profits</span>.</li>
+      </ol>
+      <div class="callout" data-step="4" style="margin-top: 26px;">There was a shorter way (2 pivots vs. 3 pivots). <b>Which edge to take</b> is the <i>pivot rule</i>, and it's the question this talk builds up to.</div>
+    </div>
+    <div id="walk-plot"></div>
+  </div>
+  <aside class="notes">The whole algorithm in one picture, before the bookkeeping: the next slides write it down with bases (revised simplex) and the tableau, whose bottom row shows "which edges improve" and "stop". Step 2 walks the 3-pivot route (via bread, the same corners whose profits were the lower bounds 0, 45, 52, 58); step 4 shows the 2-pivot route via cake.</aside>
+</section>
+
+<section class="slide" id="howsimplex" data-part="3 · Corners &amp; tableaux">
+  <h2>Putting it all together: how simplex works</h2>
+  <p class="sub">Relax dual feasibility. Go from corner point to feasible corner point, guided by dual variable values towards dual feasibility.</p>
+  <div class="hs-mats" id="hs-mats"></div>
+  <div class="hs-low">
+    <div>
+      <div class="hs-it" id="hs-it"></div>
+      <div class="hs-steps" id="hs-steps"></div>
+      <div class="hs-note" id="hs-note">This is essentially the <b>revised simplex method</b>. Real solvers skip \(D\) and reuse \(B\): \(y^\top = c_B^\top B^{-1}\), because \(B^{-1}\) already holds what \(D\) needs. They also update \(B\)'s factorization at each pivot instead of rebuilding it: much cheaper on large problems.</div>
+    </div>
+    <div id="hs-plot"></div>
+  </div>
+  <aside class="notes">Revised simplex on the bakery, Dantzig's rule, from the origin. Iteration 1 one formula per click: the basis B (slacks: B = I); primal B x_B = b gives x_B = (10, 16, 12), the corner (0, 0); dual: D = −I (d₁, d₂ are the dual basics) gives d = (−9, −8), with y = 0 fixed by the basis; pricing d_j = yᵀa_j − c_j on the nonbasic columns gives d = (−9, −8): not optimal; x₁ enters (most negative); direction u = B⁻¹a₁ = (2, 3, 1): x₁'s column written in terms of the basis, i.e. each unit of x₁ uses up 2 of s₁, 3 of s₂ and 1 of s₃; ratio test x_B ÷ u over the positive u: min(5, 5.33, 12) = 5, so s₁ is the first to hit 0 and leaves; update B and walk to (5, 0). Every later iteration is built the same way, one formula per click: at (5, 0) y = (4.5, 0, 0), x₂ enters (−3.5), s₂ leaves → (4, 2); at (4, 2) y = (−6, 7, 0), so d_{s₁} = −6: s₁ enters, s₃ leaves → (2, 5); at (2, 5) y = (0, 2.5, 1.5), every d ≥ 0: optimal, cᵀx = bᵀy = 58. On screen: A with its variables above the columns, the vectors x and c (one entry per variable), y (5 long like x and row-aligned with it: d₁, d₂, y₁, y₂, y₃, each next to its primal partner x₁, x₂, s₁, s₂, s₃; it is the bottom row yᵀA − c over all 5 columns. The partners of the 3 basic variables are 0 by choice (complementary slackness) and appear with the basis; the dual's other 2 are solved, y at the dual step, d at pricing. the dual's own basis D (2 × 2) = the columns of [Aᵀ | −I] for the 2 dual basics, i.e. the normals of the 2 tight constraints, e.g. [−1 0; 0 −1] at (0, 0); the dual step solves D·(dual basics) = (9, 8). Sanity check / the reuse: B and D share one core block K = tight resource rows × basic product columns (B contains K, B⁻¹ contains K⁻¹, D = Kᵀ plus −I columns for the d's), so the textbook shortcut Bᵀy = c_B, i.e. yᵀ = c_Bᵀ B⁻¹, gives the same y without a second factorization; e.g. at (4, 2) K = [2 1; 3 2], D = [2 3; 1 2]), b (lined up with A's rows), then B and B⁻¹ written out for the current basis. Basic columns of A and basic entries of x and c are tinted (that is B, x_B, c_B); entering gold, leaving red; the brackets of the vectors a step uses turn gold. Last click: the note that this is essentially revised simplex; real solvers reuse B (yᵀ = c_Bᵀ B⁻¹) and update a factorization of B rather than building D, which is far cheaper for large problems.</aside>
+</section>
+
+<!-- DISABLED for now (2026-10-06): "A corner = two of the five variables at zero" slide. Restore by deleting this comment's first and last lines.
+<section class="slide" id="zeros" data-part="3 · Corners &amp; tableaux">
+  <h2>A corner = two of the five variables at zero</h2>
+  <p class="sub">Each edge is one variable held at 0; each corner is where two edges meet</p>
+  <div class="cols">
+    <div id="zeros-plot"></div>
+    <div class="col">
+      <table class="t" id="zr-table" data-step="2">
+        <tr><th>corner</th><th>zero<br><span class="small">(nonbasic)</span></th><th>the other three<br><span class="small">(basic)</span></th></tr>
+      </table>
+      <div class="rule small" data-step="3">5 unknowns, 3 equations: set 2 to zero, solve for the other 3.<br>The set of 3 <b>basic</b> variables is a <b>basis</b>, and each feasible basis is a corner.</div>
+    </div>
+  </div>
+  <aside class="notes">Edge labels first, then each corner gets its pair of zeros, then the table: the basic variables' values come from solving the three equations.</aside>
+</section>
+-->
+
+<section class="slide" id="tableau" data-part="3 · Corners &amp; tableaux">
+  <h2>The tableau: all the bookkeeping in one place</h2>
+  <p class="sub">Bottom row: reduced costs (dual slacks) under the products, shadow prices (dual variables) under the slacks</p>
+  <div class="cols tb-cols">
+    <div class="col">
+      <div id="tb-view"></div>
+      <div class="rule small" data-step="2"><b>Optimal ⇔ every bottom-row entry ≥ 0</b>: the primal is feasible <i>and</i> the dual is valid. Here \(-9\) and \(-8\) say: not yet.</div>
+    </div>
+    <div class="col" style="flex: 0 0 500px;"><div id="tableau-plot"></div></div>
+  </div>
+  <aside class="notes">Everything from the last two slides on one grid: the constraint rows (with the basic columns, B, as the identity), the value column (x_B = B⁻¹b), and the bottom row = yᵀA − c with yᵀ = c_Bᵀ B⁻¹: reduced costs (dual slacks) under the products, shadow prices (dual variables) under the slacks, profit at the right. Each row is written beside the grid as an equation, basic variable first. Step 1: the shaded basic columns are identity columns, so each row just says "this basic variable = value"; nonbasic variables are 0. Step 2: the stopping rule. At the origin the bottom row reads (−9, −8 | 0, 0, 0): not optimal yet.</aside>
+</section>
+
+<!-- ============================ PART 4: PIVOTING ============================ -->
+
+<section class="slide pvwalk" id="walk2" data-part="4 · Pivoting">
+  <h2>Pivoting: enter, walk the edge, leave, repeat</h2>
+  <p class="sub">One step per click: entering variable, min ratio test, exiting variable, pivot</p>
+  <div class="cols tb-cols">
+    <div class="col">
+      <div class="pv-view"></div>
+      <div class="say"></div>
+    </div>
+    <div class="col" style="flex: 0 0 500px;"><div class="pv-plot"></div></div>
+  </div>
+  <aside class="notes">Same tableau, same place as the last slide; the equations make way for the min ratio column. Each iteration takes four clicks. Entering: any negative bottom-row entry can enter (raising it raises the profit); Dantzig's rule is greedy: the most negative, the biggest gain per unit, not necessarily the biggest step. Min ratio test: value ÷ entry for the positive entries of the entering column (how far it can grow before a basic variable hits 0). Exiting: the smallest ratio's row. Pivot: row operations turn the entering column into the identity column the leaving variable had. (0,0): bread enters (−9), flour runs out at 5 (oven 5.33), s₁ leaves → (5,0), 45. (5,0): cake enters (−3.5), oven runs out (ratio 2), s₂ leaves → (4,2), 52. (4,2): s₁ enters (−6, flour's shadow price is negative: stop using all the flour); the x₂ row's −3 doesn't limit it; labor runs out (ratio 1), s₃ leaves → (2,5), 58, optimal. Last click: Dantzig took 3 pivots. What if we had entered cake (−8) instead? Next slide.</aside>
+</section>
+
+<section class="slide pvwalk" id="walkcake" data-part="4 · Pivoting">
+  <h2>What if we chose the other direction?</h2>
+  <p class="sub">Cake (−8) is negative too, so it can enter first: same steps, a different route</p>
+  <div class="cols tb-cols">
+    <div class="col">
+      <div class="pv-view"></div>
+      <div class="say"></div>
+    </div>
+    <div class="col" style="flex: 0 0 500px;"><div class="pv-plot"></div></div>
+  </div>
+  <aside class="notes">The same four clicks per iteration, entering cake first. (0,0): x₂ enters (−8); ratios 10/1 = 10, 16/2 = 8, 12/2 = 6: labor runs out first (oven at 8, flour at 10) ⇒ s₃ leaves → (0, 6), profit 48. (0,6): bread's reduced cost is now −5 (labor is priced at 4, a batch of bread uses 1 hour: 4 − 9); x₁ enters; ratios 4/1.5 = 2.67, 4/2 = 2, 6/0.5 = 12: oven runs out ⇒ s₂ leaves → (2, 5), 58, optimal. 2 pivots instead of Dantzig's 3: the greedy choice isn't always the shortest route. Which negative entry to pick is the pivot rule; that's the next part. Last click shows Dantzig's route dashed for comparison.</aside>
+</section>
+
+<!-- ============================ PART 5: THE THIRD DIMENSION ============================ -->
+
+<section class="slide" id="whyroute" data-part="4 · Pivoting">
+  <h2>2 pivots or 3: does it matter?</h2>
+  <p class="sub">Not for our bakery. But real problems are bigger, often integer, and rarely start at a convenient corner.</p>
+  <div class="cards wr-cards">
+    <div class="card" data-step="1">
+      <div class="wr-big">thousands to millions</div>
+      <h3>Bigger problems</h3>
+      <p>Real LPs (airline crews, power grids, supply chains) have thousands to millions of variables and constraints. Every pivot is a solve with \(B\), and the number of pivots grows with the problem.</p>
+    </div>
+    <div class="card" data-step="2">
+      <div class="wr-big">an LP at every node</div>
+      <h3>Integer problems</h3>
+      <p>Whole-number decisions (appointment slots, how many trucks) are solved by branch and bound: thousands of LPs per problem, each restarted from its parent's basis. A few extra pivots per LP add up fast.</p>
+    </div>
+    <div class="card" data-step="3">
+      <div class="wr-big">no easy first corner</div>
+      <h3>Harder starts</h3>
+      <p>Here \(x = 0\) is a feasible corner. With "at least" or "exactly" constraints (bake at least 20 batches, staff exactly 8 hours) the origin is infeasible: simplex first needs a whole phase just to find a feasible corner.</p>
+    </div>
+  </div>
+  <div class="callout wr-next" data-step="4">Even <b>one more dimension</b> on this toy problem changes the landscape. Next: a third product.</div>
+  <aside class="notes">Bridge from the 2D walk to the rest of the talk. One pivot doesn't matter for the bakery; it matters when (1) problems are large (each pivot is a linear solve; pivot counts grow), (2) problems are integer (branch and bound solves thousands of LPs, each warm-started from its parent's basis, so savings multiply), (3) the start is hard (≥ or = constraints make the origin infeasible; Phase 1 finds a first feasible corner, often with artificial variables). Last click: even one more product (cookies, a third dimension) changes the landscape, and the pivot rules start to disagree.</aside>
+</section>
+
+<section class="slide" id="cookies" data-part="5 · The third dimension">
+  <h2>A new product: cookies. Worth making?</h2>
+  <p class="sub">Price it with the shadow prices we already have</p>
+  <div class="cols">
+    <div class="col">
+      <table class="t">
+        <tr><th></th><th>bread</th><th>cake</th><th data-step="1" class="c-obj">cookies</th><th>available</th><th>price \(y\)</th></tr>
+        <tr><td class="rowh"><span class="chip" style="background: var(--flour)"></span>flour</td><td>2</td><td>1</td><td data-step="1">1</td><td>10</td><td class="c-flour">0</td></tr>
+        <tr><td class="rowh"><span class="chip" style="background: var(--oven)"></span>oven hours</td><td>3</td><td>2</td><td data-step="1">1</td><td>16</td><td class="c-oven">2.5</td></tr>
+        <tr><td class="rowh"><span class="chip" style="background: var(--labor)"></span>labor hours</td><td>1</td><td>2</td><td data-step="1">1</td><td>12</td><td class="c-labor">1.5</td></tr>
+        <tr class="sep"><td class="rowh c-obj">profit / batch</td><td class="c-obj">9</td><td class="c-obj">8</td><td class="c-obj" data-step="1">5</td><td></td><td></td></tr>
+      </table>
+      <div class="eqs" data-step="2">
+        <div>value of a batch \(= 1\cdot\FL{0} + 1\cdot\OV{2.5} + 1\cdot\LB{1.5} = 4\)</div>
+        <div>reduced cost \(d_3 = 4 - \OB{5} = -1\)</div>
+      </div>
+    </div>
+    <div class="col">
+      <div id="ck-view" class="smtab"></div>
+      <div class="say" id="ck-say"></div>
+    </div>
+  </div>
+  <aside class="notes">Pricing out a new column with the current duals: the resources a batch of cookies uses are worth 4 at today's prices, but it earns 5. Negative reduced cost = undervalued = not optimal any more. In the tableau this is just a new column whose bottom entry is −1.</aside>
+</section>
+
+<section class="slide" id="lift" data-part="5 · The third dimension">
+  <h2>Cookies add a dimension</h2>
+  <div class="cols">
+    <div class="col" style="flex: 0 0 440px;">
+      <p data-step="0">Our pentagon, seen from above.</p>
+      <p data-step="1">Tilt the camera: it is the <b>floor</b> of a 3D picture, where \(x_3 = 0\) (no cookies).</p>
+      <p data-step="2">Each constraint becomes a <b>plane</b>, and the plans form a polyhedron with 8 corners.</p>
+      <div class="callout" data-step="3">The 2D picture was the floor all along.<br><span class="muted small">Drag the picture to rotate it.</span></div>
+    </div>
+    <div id="lift-scene"></div>
+  </div>
+  <aside class="notes">Step 1 tilts the camera (the pentagon and its lines now lie on the floor). Step 2 raises the polyhedron. The gold dot is the 2D optimum (2,5,0). Drag to rotate at any point; stepping back resets the camera.</aside>
+</section>
+
+<section class="slide" id="sweep3d" data-part="5 · The third dimension">
+  <h2>Slide the profit plane</h2>
+  <p class="sub">In 3D, all plans with the same profit lie on a plane</p>
+  <div class="cols">
+    <div class="col" style="flex: 0 0 440px;">
+      <div class="eq">\(\OB{9x_1 + 8x_2 + 5x_3 = z}\)</div>
+      <div class="zread num c-obj" id="s3-z">z = 0</div>
+      <p data-step="1">Push the plane along the <span class="c-obj">arrow</span>. The gold slice is every plan that earns exactly z.</p>
+      <div class="callout" data-step="2">The slice shrinks to a single <b>corner</b>: \((2, 4, 2)\), profit \(\OB{60}\).</div>
+      <p data-step="3" class="muted">Any further and no plan is left.</p>
+    </div>
+    <div id="sweep3d-scene"></div>
+  </div>
+  <aside class="notes">Same idea as the 2D sweep, one dimension up: a level line becomes a level plane. The slice grows from the origin until z = 45 (the first corner it reaches), then the faces clip it and it shrinks to the optimal corner at z = 60.</aside>
+</section>
+
+<section class="slide" id="cookiepivot" data-part="5 · The third dimension">
+  <h2>One pivot up</h2>
+  <p class="sub">Cookies enter; walk up the edge until a resource runs out</p>
+  <div class="cols">
+    <div class="col">
+      <div id="cp-view" class="smtab"></div>
+      <div class="say" id="cp-say"></div>
+    </div>
+    <div id="cookiepivot-scene"></div>
+  </div>
+  <aside class="notes">Same machinery as 2D, one more column. Ratio test: flour runs out after 2 batches (1 ÷ 0.5), so s₁ leaves. Each batch of cookies adds |d₃| = 1, so profit 58 → 60. The new bottom row is (0,0,0 | 2,1,2 | 60): optimal, and every resource now has a positive price.</aside>
+</section>
+
+<section class="slide" id="proof3d" data-part="5 · The third dimension">
+  <h2>The 3D dual: three planes meet at the corner</h2>
+  <div class="cols">
+    <div class="col" style="flex: 0 0 600px;">
+      <div class="stack">
+        <div data-step="0">\(2 \times (\FL{2x_1 + x_2 + x_3 \le 10})\)</div>
+        <div data-step="1">\(1 \times (\OV{3x_1 + 2x_2 + x_3 \le 16})\)</div>
+        <div data-step="2">\(2 \times (\LB{x_1 + 2x_2 + x_3 \le 12})\)</div>
+        <div data-step="3" class="sumline">\(= 9x_1 + 8x_2 + 5x_3 \le 60\)</div>
+      </div>
+      <p data-step="3" style="margin-top: 22px;">That is exactly the profit \(\OB{9x_1 + 8x_2 + 5x_3}\), so no plan beats 60, and \((2, 4, 2)\) earns 60.</p>
+      <div class="rule small" data-step="4">Three tight planes, three unknowns ⇒ one corner. The <span class="c-obj">profit arrow</span> lies inside the cone of the planes' outward directions ⇔ every multiplier ≥ 0 ⇔ optimal.</div>
+    </div>
+    <div id="proof3d-scene"></div>
+  </div>
+  <aside class="notes">The multipliers 2, 1, 2 are the new shadow prices (bottom row of the last tableau). Same story as the 2D dual, one dimension up: the corner is where the three planes used in the dual meet.</aside>
+</section>
+
+<!-- ============================ PART 6: PIVOT RULES ============================ -->
+
+<section class="slide" id="rules" data-part="6 · Pivot rules">
+  <h2>One corner, four rules</h2>
+  <p class="sub">At the origin, bread, cake and cookies all have negative reduced costs. Which one enters?</p>
+  <div class="cols">
+    <div class="col">
+      <table class="t" id="rt">
+        <tr><th></th><th>bread \(x_1\)</th><th>cake \(x_2\)</th><th>cookies \(x_3\)</th></tr>
+        <tr data-row="d"><td class="rowh">reduced cost \(d\)</td><td></td><td></td><td></td></tr>
+        <tr class="rulerow" data-row="dantzig" data-step="1"><td class="rowh"><b>Dantzig</b>: most negative \(d\)</td><td></td><td></td><td></td></tr>
+        <tr class="sep" data-row="t" data-step="2"><td class="rowh">step until a resource runs out \(t^*\)</td><td></td><td></td><td></td></tr>
+        <tr class="rulerow" data-row="gi" data-step="2"><td class="rowh"><b>Greatest increment</b>: biggest gain \(|d|\,t^*\)</td><td></td><td></td><td></td></tr>
+        <tr class="sep" data-row="len2" data-step="3"><td class="rowh">edge length² \(1 + \lVert B^{-1}a_j \rVert^2\)</td><td></td><td></td><td></td></tr>
+        <tr class="rulerow" data-row="se" data-step="3"><td class="rowh"><b>Steepest edge</b>: \(d^2 \,/\) length²</td><td></td><td></td><td></td></tr>
+        <tr class="rulerow sep" data-row="bland" data-step="4"><td class="rowh"><b>Bland</b>: lowest index</td><td></td><td></td><td></td></tr>
+      </table>
+      <p class="small muted" data-step="3" style="margin: 10px 0 0;">The edge length counts all six variables, leftovers included: a batch of bread uses up a lot of resources.</p>
+      <div class="callout small" data-step="5" style="margin-top: 14px;">Three different answers at the same corner. Each rule is a different guess at which edge leads to the top fastest.</div>
+    </div>
+    <div id="rules-scene"></div>
+  </div>
+  <aside class="notes">All numbers are computed live from the tableau at the origin. Dantzig: −9 is most negative. Greatest increment: |d|·t* = 45, 48, 50. Steepest edge: d²/(1 + ‖B⁻¹aⱼ‖²) = 81/15, 64/10, 25/4. Bland: lowest index. Steepest edge is NOT "steepest in the picture": in the 3D picture all three edges leave along axes and bread rises fastest per unit distance; the length here also counts the slack variables.</aside>
+</section>
+
+<section class="slide" id="race" data-part="6 · Pivot rules">
+  <h2>The race: same polyhedron, four routes</h2>
+  <p class="sub">Every rule reaches the same optimum (2, 4, 2), by a different path</p>
+  <div class="race">
+    <div class="lane" data-rule="dantzig"><div class="lname">Dantzig</div><div class="lsub">most negative d</div><div class="lscene"></div><div class="lcount"></div></div>
+    <div class="lane" data-rule="bland"><div class="lname">Bland</div><div class="lsub">lowest index</div><div class="lscene"></div><div class="lcount"></div></div>
+    <div class="lane" data-rule="se"><div class="lname">Steepest edge</div><div class="lsub">best gain per unit length</div><div class="lscene"></div><div class="lcount"></div></div>
+    <div class="lane" data-rule="gi"><div class="lname">Greatest increment</div><div class="lsub">biggest gain this step</div><div class="lscene"></div><div class="lcount"></div></div>
+  </div>
+  <div class="callout small" data-step="2">Dantzig solves the bread-and-cake problem on the floor first, then climbs: <b>4 pivots</b>. The others need <b>3</b>, the fewest possible here (there are four different shortest routes). On a problem this small the gap is one pivot. It can be much worse…</div>
+  <aside class="notes">Routes are computed by running each rule. Dantzig: floor tour then up. Bland: two floor pivots then up the slanted face. Steepest edge: via the cake axis. Greatest increment: straight up the cookie axis to (0,0,10), then down the flour face. Drag any panel to rotate it.</aside>
+</section>
+
+<section class="slide" id="kleeminty" data-part="6 · Pivot rules">
+  <h2>When the rule really matters: the Klee–Minty cube</h2>
+  <p class="sub">\(\max\ 4x_1 + 2x_2 + x_3\) s.t. \(x_1 \le 5,\ 4x_1 + x_2 \le 25,\ 8x_1 + 4x_2 + x_3 \le 125\) <span class="small">(axes rescaled to look like a cube)</span></p>
+  <div class="race">
+    <div class="lane" data-rule="dantzig"><div class="lname">Dantzig</div><div class="lscene"></div><div class="lcount"></div></div>
+    <div class="lane" data-rule="se"><div class="lname">Steepest edge</div><div class="lscene"></div><div class="lcount"></div></div>
+  </div>
+  <div class="callout small" data-step="2">Dantzig visits <b>all 8 corners</b> (7 pivots); steepest edge goes straight to the top (1 pivot). The same construction in n dimensions makes Dantzig take \(2^n - 1\) pivots: about \(10^{15}\) in 50 dimensions. <span class="muted">(Bland: 5 here.)</span></div>
+  <aside class="notes">Klee and Minty (1972). The cube is squashed so each step of Dantzig's tour improves the profit a little: z = 0, 20, 30, 50, 75, 95, 105, 125. Every rule above has its own bad examples, so no simple rule is fast on every LP; that is the open question behind the RL work.</aside>
+</section>
+
+<section class="slide" id="morerules" data-part="6 · Pivot rules">
+  <h2>Two more things about rules</h2>
+  <div class="cards" style="margin-top: 40px;">
+    <div class="card">
+      <h3>Devex</h3>
+      <p>Steepest edge needs the length of every candidate edge at every pivot, which is expensive on large problems. Devex keeps cheap running <i>estimates</i> of those lengths instead.</p>
+      <p>Real solvers use Devex or steepest edge. <span class="muted">On the bakery, Devex makes the same choices as Bland.</span></p>
+    </div>
+    <div class="card" data-step="1">
+      <h3>Bland's rule and cycling</h3>
+      <p>At a <i>degenerate</i> corner (more constraints tight than needed), a pivot can change the basis without moving. A careless rule can then cycle through the same bases forever.</p>
+      <p>Bland's rule provably never cycles. It is slow in practice, so it is mostly a safety net; solvers also break ties with small perturbations.</p>
+    </div>
+  </div>
+  <aside class="notes">Optional (✂ for the 30-minute version).</aside>
+</section>
+
+<!-- ============================ PART 7: BEYOND WHAT WE CAN DRAW ============================ -->
+
+<section class="slide" id="question" data-part="7 · Beyond what we can draw">
+  <h2>Our question: can a policy <i>learn</i> to pick pivots?</h2>
+  <p class="sub">Pivots needed on an LP with 40 products and 40 resources (its timeline is coming up)</p>
+  <div class="cols" style="gap: 60px;">
+    <div class="col" style="flex: 1.15 1 0;"><div class="bars" id="q-bars"></div></div>
+    <div class="col q">
+      <div data-step="1">A short route <b>exists</b>: 6 pivots. A* proves it, but only by searching far more than a solver can afford.</div>
+      <div data-step="2">Every rule is a <b>fixed guess</b> about which edge to take. The best one here needs 9; Bland needs 37.</div>
+      <div data-step="3" class="callout"><b>SimplexRL</b>: learn the guess. A neural policy looks at the current tableau, picks the entering variable, and is rewarded for reaching the optimum in fewer pivots.</div>
+    </div>
+  </div>
+  <aside class="notes">Opens Part 7: the research question first, then the timelines that show these routes (the 40 × 40 LP is the third timeline). Bar values are read from the viewer data (talk/viewer/talk_data.js). The dashed bar is a placeholder: to show a learned policy, add its route to the dataset (see the viewer README: a route with kind "rl") and re-run talk/tools/sync_viewer.py, or just put the number in.</aside>
+</section>
+
+<section class="slide" id="tl-bakery" data-part="7 · Beyond what we can draw">
+  <h2>The same race, as a pivot timeline</h2>
+  <p class="sub">Our research viewer draws routes without drawing the polyhedron, so it works for any LP</p>
+  <div class="cols">
+    <div class="col guide" style="flex: 0 0 380px;">
+      <div><b>Columns</b> are pivots: start → … → optimum.</div>
+      <div data-step="1"><b>Rows</b> are variables. A node is the variable that <b>enters</b> at that pivot; ↓ marks the one that <b>leaves</b>.</div>
+      <div data-step="2"><b>Each coloured thread is one rule.</b> Dantzig's needs an extra column.</div>
+      <div data-step="3"><b>A*</b> (black) searches every option to find a provably shortest route. Far too slow to run inside a solver, but it shows how short a route <i>can</i> be.</div>
+    </div>
+    <div class="frame"><iframe data-src="viewer/index.html?embed=1&amp;p=bakery_3d" title="pivot timeline: bakery"></iframe></div>
+  </div>
+  <aside class="notes">This is the real research tool (SimplexRL-py/web), copied into talk/viewer by talk/tools/sync_viewer.py. Click a node to see its basis (the side panels are hidden here; open talk/viewer/index.html directly for the full app). Arrow keys still drive the slides when the viewer has focus.</aside>
+</section>
+
+<section class="slide" id="tl-km" data-part="7 · Beyond what we can draw">
+  <h2>Klee–Minty, as a timeline</h2>
+  <p class="sub">Dantzig's thread snakes through 7 columns; steepest edge and A* jump straight to the optimum</p>
+  <div class="frame" style="height: 640px;"><iframe data-src="viewer/index.html?embed=1&amp;p=klee_minty_3d" title="pivot timeline: Klee-Minty"></iframe></div>
+  <aside class="notes">Optional (✂). Bland and Devex take 5 here.</aside>
+</section>
+
+<section class="slide" id="tl-big" data-part="7 · Beyond what we can draw">
+  <h2>40 products, 40 resources: no picture, same timeline</h2>
+  <p class="sub">An 80-dimensional polyhedron we can't draw, but every route is still visible</p>
+  <div class="frame" style="height: 640px;"><iframe data-src="viewer/index.html?embed=1&amp;p=traj_40x40" title="pivot timeline: 40 by 40 LP"></iframe></div>
+  <aside class="notes">A random dense 40×40 LP from the viewer's demo set. A*'s route (6 pivots, certified shortest) jumps to the optimum; Bland's purple thread wanders for 37 pivots. Untick methods in the bar to declutter.</aside>
+</section>
+
+<section class="slide" id="close" data-part="">
+  <h2>Takeaways</h2>
+  <div class="cols" style="margin-top: 26px; gap: 50px;">
+    <div class="col take">
+      <div>The best plan sits at a <b>corner</b> (or on a tied edge or face, whose corners are all best too).</div>
+      <div><b>Shadow prices are dual variables</b>: adding up the tight constraints with them proves a plan optimal.</div>
+      <div><b>Reduced costs are dual slacks</b>: a negative one says the dual doesn't work yet, and which way to move.</div>
+      <div>A <b>pivot rule</b> is actually just a policy that we can decide. The 'best' one can vary problem to problem, potentially creating or removing exponential amounts of work.</div>
+    </div>
+    <div class="close-right">
+      <div id="close-scene"></div>
+      <a class="qr" href="https://optimal-lab.com/talks/walking-the-corners" target="_blank"><img src="qr-walking-the-corners.svg" alt="QR code linking to optimal-lab.com/talks/walking-the-corners"><span>optimal-lab.com/talks/walking-the-corners</span></a>
+    </div>
+  </div>
+  <p class="muted" style="margin-top: 26px; font-size: 24px;">Thank you! Questions?<br><span class="faint">dripsma1@jh.edu · <a href="https://danirip.github.io/" target="_blank" style="color: inherit; text-decoration: none;">danirip.github.io</a></span></p>
+  <aside class="notes">The polyhedron rotates slowly while this slide is up (drag to stop and turn it by hand).</aside>
+</section>
+
+<!-- DISABLED for now (2026-10-06): appendix slide "Why the constraints in the dual have zero slack". Restore by deleting this comment's first and last lines.
+<section class="slide" id="slack" data-part="Appendix">
+  <h2>Why the constraints in the dual have zero slack</h2>
+  <div class="cols">
+    <div class="col chain">
+      <div data-step="0">\(\OB{z} = 9x_1 + 8x_2\)</div>
+      <div data-step="1">\(\phantom{z} = 2.5\,(\OV{3x_1 + 2x_2}) + 1.5\,(\LB{x_1 + 2x_2})\)</div>
+      <div data-step="2">\(\phantom{z} \le 2.5 \cdot \OV{16} + 1.5 \cdot \LB{12} = 58\)</div>
+      <div data-step="3" class="small" style="margin-top: 22px;">For \(\OB{z = 58}\), both brackets must hit their limits:<br>\(\OV{3x_1 + 2x_2 = 16}\) and \(\LB{x_1 + 2x_2 = 12}\): two equations, two unknowns ⇒ \(x = (2, 5)\).</div>
+      <div data-step="4" class="small">Flour's multiplier is 0, so flour is <b>allowed</b> slack. It has some: 9 of 10 used.</div>
+      <div class="rule small" data-step="5">multiplier \(> 0\) ⇒ that constraint is tight (zero slack)<br>product is made \((x_j > 0)\) ⇒ the dual covers it exactly (dual slack = 0)</div>
+    </div>
+    <div id="slack-plot"></div>
+  </div>
+  <aside class="notes">This is complementary slackness, without the name. Both directions matter later: tight constraints ↔ positive prices; products made ↔ zero dual slack (zero reduced cost).</aside>
+</section>
+-->
+</div>
+
+<script src="viewer/talk_data.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/plot2d.js"></script>
+<script src="js/part1.js"></script>
+<script src="js/duality.js"></script>
+<script src="js/tableau.js"></script>
+<script src="js/part2.js"></script>
+<script src="js/plot3d.js"></script>
+<script src="js/part3.js"></script>
+<script src="js/part4.js"></script>
+<script src="js/part5.js"></script>
+<script>Deck.start();</script>
+</body>
+</html>

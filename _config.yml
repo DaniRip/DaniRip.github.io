@@ -1,14 +1,35 @@
 title: Danielle A. Ripsman
-email: dripsma1 [at] jh.edu
+email: dripsma1@jh.edu
 
 # 1. This new field is ONLY for the visual header on your site
-header_subtitle: "Ph.D. in Management Science & Engineering <br> Operations Research | Healthcare Applications | Analytics & Optimization"
+header_subtitle: "Operations Research | Healthcare Applications | Analytics & Optimization"
 
-# 2. This field is ONLY for Google (No HTML tags allowed here!)
-description: "Portfolio of Danielle A. Ripsman, Ph.D. in Management Science & Engineering. Researcher in Operations Research, Healthcare Applications, Analytics, and Optimization."
+# 2. This field is ONLY for Google and link previews (No HTML tags allowed here!)
+description: "Danielle A. Ripsman is a Malone Postdoctoral Fellow at Johns Hopkins University. Her research is at the intersection of large-scale optimization and healthcare engineering."
 
-baseurl: "" 
+baseurl: ""
 url: "https://danirip.github.io"
+lang: en
 github_username: danirip
 author:
-  name: "Danielle Ripsman"
+  name: "Danielle A. Ripsman"
+
+# Search engines: jekyll-seo-tag adds description/preview tags to every page,
+# jekyll-sitemap builds /sitemap.xml (both are built into GitHub Pages)
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+social:
+  name: Danielle A. Ripsman
+  links:
+    - https://www.linkedin.com/in/danielleripsman/
+    - https://scholar.google.com/citations?user=29TV-goAAAAJ
+    - https://github.com/DaniRip
+
+defaults:
+  # The talk's embedded viewer is only meant to be seen inside the slides
+  - scope:
+      path: "talks/walking-the-corners/viewer"
+    values:
+      sitemap: false

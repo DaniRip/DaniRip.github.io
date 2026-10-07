@@ -1,6 +1,6 @@
 ---
 layout: home
-title: About Me
+title: Danielle A. Ripsman
 image: /assets/profile.jpg
 ---
 
@@ -8,8 +8,7 @@ image: /assets/profile.jpg
   <a href="https://malonecenter.jhu.edu/people/danielle-ripsman/" target="_blank">Malone Postdoctoral Fellow</a> at <a href="https://www.jhu.edu" target="_blank">Johns Hopkins University</a>
 </div>
 
-My research is at the intersection of **large-scale optimization** and **healthcare engineering**, and is presently being supervised by <a href="https://systems.jhu.edu/kimia/" target="_blank">Dr. Kimia Ghobadi</a>. I earned my
-My Ph.D. (2024) and M.A.Sc. (2018) at the <a href="https://uwaterloo.ca/">University of Waterloo</a> in <a href="https://uwaterloo.ca/management-sciences/" target="_blank">Management Sciences and Engineering</a> under <a href="https://uwaterloo.ca/scholar/h6mahmou" target="_blank">Dr. Houra Mahmoudzadeh</a>. I hold a B.A.Sc. (2016) from the <a href="https://www.utoronto.ca/" target="_blank">University of Toronto (UofT)</a> in <a href="https://www.mie.utoronto.ca/" target="_blank">Industrial Engineering</a>, where I was also introduced to research in <a href="https://morlab.mie.utoronto.ca/" target="_blank">morLAB</a>. I was previously a Postdoctoral Fellow at the <a href="https://www.rotman.utoronto.ca/" target="_blank">Rotman School of Management</a> at UofT, under <a href="https://discover.research.utoronto.ca/16076-andre-augusto-cire" target="_blank">Dr. Andre Cire</a> and <a href="https://schulich.yorku.ca/faculty/adam-diamant/" target="_blank">Dr. Adam Diamant</a>.
+My research is at the intersection of **large-scale optimization** and **healthcare engineering**. At Johns Hopkins, I work with <a href="https://systems.jhu.edu/kimia/" target="_blank">Dr. Kimia Ghobadi</a>. I earned my Ph.D. (2024) and M.A.Sc. (2018) at the <a href="https://uwaterloo.ca/">University of Waterloo</a> in <a href="https://uwaterloo.ca/management-sciences/" target="_blank">Management Sciences and Engineering</a> under <a href="https://uwaterloo.ca/scholar/h6mahmou" target="_blank">Dr. Houra Mahmoudzadeh</a>. I hold a B.A.Sc. (2016) from the <a href="https://www.utoronto.ca/" target="_blank">University of Toronto (UofT)</a> in <a href="https://www.mie.utoronto.ca/" target="_blank">Industrial Engineering</a>, where I was also introduced to research in <a href="https://morlab.mie.utoronto.ca/" target="_blank">morLAB</a>. I was previously a Postdoctoral Fellow at the <a href="https://www.rotman.utoronto.ca/" target="_blank">Rotman School of Management</a> at UofT, working with <a href="https://discover.research.utoronto.ca/16076-andre-augusto-cire" target="_blank">Dr. Andre Cire</a> and <a href="https://schulich.yorku.ca/faculty/adam-diamant/" target="_blank">Dr. Adam Diamant</a>.
 
 I enjoy tackling **large-scale**, **data-driven**, **societal problems**, particularly within **healthcare systems**. By leveraging a toolbox of **linear** and **mixed-integer optimization**, **inverse optimization**, and **decision diagrams**, I develop efficient heuristics and algorithms designed for **real-world** implementation. With a background in **interface design**, my goal is to translate complex theoretical solutions into accessible, actionable tools for decision-makers and the community at large.
 
@@ -17,6 +16,13 @@ I enjoy tackling **large-scale**, **data-driven**, **societal problems**, partic
 &#8226; <a href="https://malonecenter.jhu.edu/" target="_blank">Malone Center for Engineering in Healthcare (MCEH)</a><br>
 &#8226; <a href="https://systems.jhu.edu/" target="_blank">Center for Systems Science and Engineering (CSSE)</a> <br>
 &#8226; <a href="https://hbhi.jhu.edu/" target="_blank">Hopkins Business of Health Initiative (HBHI)</a> 
+
+**Selected Honors:**<br>
+&#8226; NSERC Canada Graduate Scholarship – Doctoral (CGS-D), 2019–2022<br>
+&#8226; Engineering Excellence PhD Fellowship, University of Waterloo, 2018–2022<br>
+&#8226; Sandford Fleming Foundation TA Award, 2020 and 2022<br>
+&#8226; First Place, CORS Health Care Operational Research SIG Student Presentation Competition, 2019<br>
+<small>Full list in my <a href="{{ "/cv/" | relative_url }}">CV</a>.</small>
 
 <!-- Whether exploring public health systems or fundamental algorithmic mathematics, I am driven by a commitment to clear communication, illustration, and teaching.  -->
 

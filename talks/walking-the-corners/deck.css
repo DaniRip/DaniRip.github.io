@@ -1,0 +1,265 @@
+/* Simplex talk — manim-flavoured dark deck. Colour tokens are set from js/theme.js (single source). */
+:root {
+  --bg: #0e1015;
+  --panel: #161922;
+  --panel-2: #1d212c;
+  --ink: #ececec;
+  --muted: #9aa0ad;
+  --faint: #5b6170;
+  --grid: #20242f;
+  --axis: #8a90a0;
+  --proof: #f2f2f2;
+  --sans: "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); overflow: hidden; }
+body { font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+
+/* ---------- stage & slides ---------- */
+#stage {
+  position: fixed; left: 50%; top: 50%;
+  width: 1600px; height: 900px;
+  transform-origin: center center;
+  background: var(--bg);
+}
+.slide {
+  position: absolute; inset: 0;
+  padding: 56px 72px 64px;
+  opacity: 0; visibility: hidden;
+  transition: opacity 280ms ease, visibility 0s linear 280ms;
+}
+.slide.active { opacity: 1; visibility: visible; transition: opacity 280ms ease; }
+.slide h2 {
+  margin: 0 0 6px; font-size: 46px; font-weight: 600; letter-spacing: -0.01em;
+}
+.slide .sub { margin: 0 0 26px; font-size: 26px; color: var(--muted); font-weight: 400; }
+.slide p, .slide li { font-size: 28px; line-height: 1.42; }
+.muted { color: var(--muted); }
+.eq { font-size: 34px; }
+.faint { color: var(--faint); }
+.small { font-size: 22px !important; }
+.big { font-size: 40px !important; }
+
+aside.notes { display: none; }
+
+/* step reveal */
+[data-step], [data-until] { transition: opacity 360ms ease, transform 360ms ease; }
+[data-step]:not(.shown) { opacity: 0; transform: translateY(8px); pointer-events: none; }
+.gone { opacity: 0 !important; pointer-events: none; }
+.slide.snap * { transition: none !important; }
+
+/* chrome */
+#chrome { position: absolute; left: 0; right: 0; bottom: 0; height: 40px; pointer-events: none; }
+#chrome .part { position: absolute; left: 72px; bottom: 16px; font-size: 17px; color: var(--faint); letter-spacing: 0.06em; text-transform: uppercase; }
+#chrome .num { position: absolute; right: 72px; bottom: 16px; font-size: 17px; color: var(--faint); font-variant-numeric: tabular-nums; }
+#chrome .bar { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--faint); opacity: 0.6; transition: width 300ms ease; }
+
+#notes {
+  position: fixed; left: 0; right: 0; bottom: 0; max-height: 34vh; overflow: auto;
+  background: rgba(10, 12, 16, 0.94); border-top: 1px solid #333; color: #ddd;
+  font: 17px/1.5 var(--sans); padding: 14px 24px; display: none; z-index: 10;
+}
+#notes.on { display: block; }
+#notes b { color: #fff; }
+
+/* ---------- layout helpers ---------- */
+.cols { display: flex; gap: 48px; align-items: flex-start; }
+.col { flex: 1 1 0; min-width: 0; }
+.center { text-align: center; }
+.kbd { font-family: ui-monospace, Menlo, monospace; font-size: 0.8em; padding: 1px 6px; border: 1px solid #444; border-radius: 4px; }
+
+/* resource chips & colour helpers (colours injected as --flour etc.) */
+.c-flour { color: var(--flour); } .c-oven { color: var(--oven); } .c-labor { color: var(--labor); }
+.c-obj { color: var(--obj); } .c-proof { color: var(--proof); }
+.chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px; margin-right: 10px; vertical-align: 1px; }
+
+/* ---------- plot ---------- */
+.plot { position: relative; }
+.plot svg { display: block; overflow: visible; }
+.plot .ov { position: absolute; inset: 0; pointer-events: none; }
+.plot .lab { position: absolute; white-space: nowrap; font-size: 22px; transform: translate(-50%, -50%); transition: opacity 300ms ease; }
+.plot .lab.l { transform: translate(0, -50%); } .plot .lab.r { transform: translate(-100%, -50%); }
+.plot .lab.halo { text-shadow: 0 0 6px var(--bg), 0 0 6px var(--bg), 0 0 3px var(--bg); }
+.plot text { font-family: var(--sans); }
+.plot .tick { fill: var(--muted); font-size: 17px; }
+.plot .axis-title { fill: var(--muted); font-size: 21px; }
+.fade { transition: opacity 420ms ease; }
+
+/* ---------- tables ---------- */
+table.t { border-collapse: collapse; font-size: 27px; }
+table.t th, table.t td { padding: 10px 20px; text-align: center; font-variant-numeric: tabular-nums; }
+table.t th { color: var(--muted); font-weight: 500; font-size: 22px; }
+table.t td.rowh { text-align: left; }
+table.t tr.sep td { border-top: 1px solid #2c313d; }
+table.t tr.rrow { transition: background 300ms ease, box-shadow 300ms ease; }
+table.t tr.rrow.lit td:first-child { box-shadow: inset 4px 0 0 var(--rc); }
+table.t tr.rrow.lit { background: color-mix(in srgb, var(--rc) 12%, transparent); }
+
+/* ---------- formulation rows ---------- */
+.form { display: flex; flex-direction: column; gap: 18px; font-size: 32px; }
+.form .row { display: flex; align-items: baseline; gap: 24px; }
+.form .row .note { font-size: 22px; color: var(--muted); }
+.form .row.lit .note { color: var(--ink); }
+
+/* ---------- cards (hook) ---------- */
+.cards { display: flex; gap: 32px; margin-top: 18px; }
+.card {
+  flex: 1 1 0; background: var(--panel); border: 1px solid #262b37; border-radius: 16px; padding: 26px 28px 24px;
+}
+.card h3 { margin: 14px 0 14px; font-size: 30px; font-weight: 600; }
+.card dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; font-size: 22px; line-height: 1.35; }
+.card dt { color: var(--muted); }
+.card dd { margin: 0; }
+.card .foot { margin-top: 16px; font-size: 19px; color: var(--muted); }
+.card svg { display: block; height: 110px; width: 100%; }
+
+/* ---------- interactive bits ---------- */
+input[type=range].yslider { width: 190px; height: 28px; accent-color: var(--rc, #ccc); cursor: pointer; }
+.btn {
+  font: 500 19px var(--sans); color: var(--ink); background: var(--panel-2); border: 1px solid #333949;
+  border-radius: 8px; padding: 7px 14px; cursor: pointer;
+}
+.btn:hover { border-color: #59607a; }
+.btn.on { border-color: var(--obj); color: var(--obj); }
+.verdict { font-size: 26px; padding: 12px 18px; border-radius: 10px; background: var(--panel); border-left: 4px solid var(--faint); }
+.verdict.ok { border-left-color: var(--obj); }
+.callout { font-size: 26px; padding: 14px 20px; border-radius: 12px; background: var(--panel); border: 1px solid #2a2f3b; }
+div.rule { font-size: 26px; padding: 14px 20px; border-radius: 12px; background: var(--panel); border-left: 4px solid var(--proof); margin-top: 14px; }
+
+/* numeric fields that tween */
+.num { font-variant-numeric: tabular-nums; }
+
+/* ---------- on-screen help, navigation, errors ---------- */
+#nav { position: fixed; right: 18px; bottom: 18px; display: flex; gap: 8px; opacity: 0; transition: opacity 300ms ease; z-index: 5; }
+#nav.on, #nav:hover { opacity: 1; }
+#nav button { font: 600 26px var(--sans); width: 46px; height: 46px; border-radius: 23px; border: 1px solid #3a4050; background: rgba(22, 25, 34, 0.9); color: var(--ink); cursor: pointer; }
+#nav button:hover { border-color: #6b7390; }
+#hint {
+  position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); padding: 10px 18px; border-radius: 10px;
+  background: rgba(22, 25, 34, 0.95); border: 1px solid #333949; color: var(--muted); font: 16px var(--sans);
+  opacity: 0; transition: opacity 500ms ease; pointer-events: none; z-index: 6; white-space: nowrap;
+}
+#hint.on { opacity: 1; }
+/* touch screens: no keyboard hints; keep the arrows visible */
+@media (hover: none) and (pointer: coarse) {
+  #hint { display: none; }
+  #nav { opacity: 0.85; }
+}
+#hint b { color: var(--ink); }
+#fatal {
+  position: fixed; left: 16px; top: 16px; right: 16px; padding: 14px 18px; background: #3b0d0d; border: 1px solid #a33;
+  color: #ffd7d7; font: 15px/1.5 ui-monospace, Menlo, monospace; white-space: pre-wrap; z-index: 20; border-radius: 8px;
+}
+
+/* ---------- tableau ---------- */
+table.tab { border-collapse: separate; border-spacing: 0; font-size: 27px; font-variant-numeric: tabular-nums; }
+table.tab th, table.tab td { padding: 8px 16px; text-align: right; transition: background 300ms ease; min-width: 82px; }
+table.tab .rlab { min-width: 0; }
+table.tab th { font-weight: 400; font-size: 28px; border-bottom: 1px solid #343a48; }
+table.tab .rlab { text-align: left; padding-right: 22px; border-right: 1px solid #343a48; }
+table.tab .rhs { border-left: 1px solid #343a48; padding-left: 22px; }
+table.tab th.rlab, table.tab th.rhs, table.tab th.ratio { font-size: 19px; color: var(--muted); }
+table.tab .ratio { color: var(--muted); font-size: 21px; padding-left: 26px; text-align: left; white-space: nowrap; }
+table.tab .ratio.min { color: var(--obj); font-weight: 600; }
+table.tab .side { text-align: left; padding-left: 30px; white-space: nowrap; font-size: 25px; border: none !important; background: none !important; }
+table.tab th.side { font-size: 19px; color: var(--muted); }
+table.tab tr.bottom td { border-top: 2px solid #59607a; }
+table.tab td.zval { color: var(--obj); }
+table.tab .basiccol { background: rgba(255, 255, 255, 0.035); }
+table.tab .enter { background: color-mix(in srgb, var(--obj) 16%, transparent); }
+table.tab tr.leave td:not(.ratio) { background: color-mix(in srgb, var(--rc) 18%, transparent); }
+table.tab td.pivot { box-shadow: inset 0 0 0 3px var(--obj); border-radius: 6px; }
+table.tab td.neg { box-shadow: inset 0 0 0 2px var(--obj); border-radius: 6px; color: var(--obj); }
+table.tab tr.ann td { border: none; padding-top: 4px; }
+table.tab tr.ann div { font-size: 17px; color: var(--muted); text-align: center; border-top: 2px solid #59607a; padding-top: 6px; line-height: 1.3; }
+table.tab tr.ann b { color: var(--ink); }
+@keyframes flash { from { background: color-mix(in srgb, var(--obj) 40%, transparent); } }
+table.tab td.flash { animation: flash 900ms ease-out; }
+
+/* ---------- resource meters ---------- */
+.meter { display: grid; grid-template-columns: 150px 330px 1fr; align-items: center; gap: 16px; margin: 12px 0; font-size: 24px; }
+.meter .mname { color: var(--rc); }
+.meter .track {
+  height: 24px; border-radius: 6px; border: 1.5px solid var(--rc); overflow: hidden; display: block;
+  background: repeating-linear-gradient(45deg, transparent 0 7px, color-mix(in srgb, var(--rc) 22%, transparent) 7px 9px);
+}
+.meter .used { display: block; height: 100%; background: var(--rc); opacity: 0.85; }
+.meter .mval { font-size: 24px; }
+.meter.tight .mval { color: var(--rc); font-weight: 600; }
+.nobasic table.tab .basiccol { background: none; }
+
+/* ---------- 3D scenes, small tableaux ---------- */
+.plot .lab.tick3 { color: var(--muted); font-size: 17px; }
+table.tab .mark { box-shadow: inset 2px 0 0 var(--obj), inset -2px 0 0 var(--obj); }
+.smtab table.tab { font-size: 23px; }
+.smtab table.tab th, .smtab table.tab td { min-width: 60px; padding: 7px 11px; }
+.smtab table.tab th { font-size: 24px; }
+.smtab table.tab .ratio { font-size: 19px; padding-left: 16px; }
+
+/* ---------- pivot-rule lanes ---------- */
+.race { display: flex; gap: 20px; margin-top: 4px; }
+.lane { flex: 1 1 0; min-width: 0; background: var(--panel); border: 1px solid #262b37; border-radius: 14px; padding: 12px 14px 8px; }
+.lane .lname { font-size: 26px; font-weight: 600; }
+.lane .lsub { font-size: 18px; color: var(--muted); min-height: 24px; }
+.lane .lcount { font-size: 24px; text-align: center; font-variant-numeric: tabular-nums; }
+.lane .lcount.done { color: var(--obj); }
+table.t td.win { color: var(--obj); font-weight: 700; box-shadow: inset 0 0 0 2px var(--obj); border-radius: 6px; }
+
+/* ---------- embedded viewer, guide lists, bar chart ---------- */
+.frame { flex: 1 1 0; height: 640px; border-radius: 12px; overflow: hidden; border: 1px solid #2c313d; background: #f5f7fa; }
+/* the viewer is laid out at 1/1.2 size and scaled up, so its text is readable from the back row */
+.frame iframe { width: calc(100% / 1.2); height: calc(100% / 1.2); transform: scale(1.2); transform-origin: 0 0; border: 0; display: block; }
+.guide { display: flex; flex-direction: column; gap: 18px; font-size: 25px; line-height: 1.4; }
+.guide > div { padding-left: 16px; border-left: 3px solid #3a4050; }
+.bars { display: grid; grid-template-columns: 260px 1fr; row-gap: 14px; column-gap: 18px; align-items: center; font-size: 25px; }
+.bars .bl { text-align: right; color: var(--ink); }
+.bars .bt { position: relative; height: 34px; }
+.bars .bf { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 0 6px 6px 0; background: #6b7387; transition: width 700ms cubic-bezier(.2,.8,.2,1); }
+.bars .bf.best { background: var(--obj); }
+.bars .bf.unknown { background: none; border: 2px dashed var(--muted); }
+.bars .bv { position: absolute; top: 50%; transform: translateY(-50%); font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; transition: left 700ms cubic-bezier(.2,.8,.2,1); }
+
+/* ---------- slide jump & overview ---------- */
+#jump {
+  position: fixed; right: 24px; top: 20px; padding: 10px 16px; border-radius: 10px; z-index: 8;
+  background: rgba(22, 25, 34, 0.95); border: 1px solid #3a4050; color: var(--ink); font: 600 20px var(--sans);
+  opacity: 0; transition: opacity 200ms ease; pointer-events: none;
+}
+#jump.on { opacity: 1; }
+#overview { position: fixed; inset: 0; z-index: 9; background: rgba(8, 9, 12, 0.88); display: none; overflow: auto; }
+#overview.on { display: block; }
+#overview .ovbox { max-width: 1100px; margin: 40px auto; padding: 0 24px; }
+#overview .ovhead { color: var(--ink); font: 600 24px var(--sans); margin-bottom: 14px; }
+#overview .ovlist { columns: 2; column-gap: 40px; }
+#overview .ovpart { color: var(--faint); font: 15px var(--sans); text-transform: uppercase; letter-spacing: 0.06em; margin: 14px 0 6px; break-after: avoid; }
+#overview button {
+  display: flex; gap: 12px; width: 100%; text-align: left; padding: 7px 10px; margin: 2px 0; border-radius: 8px; break-inside: avoid;
+  background: none; border: 1px solid transparent; color: var(--ink); font: 18px var(--sans); cursor: pointer;
+}
+#overview button span { color: var(--muted); min-width: 26px; text-align: right; font-variant-numeric: tabular-nums; }
+#overview button:hover { background: var(--panel-2); border-color: #3a4050; }
+#overview button.cur { border-color: var(--obj); }
+
+/* footnote box: gold outline, light gold shading */
+.footbox {
+  display: inline-block; margin-top: 34px; padding: 8px 16px; border-radius: 10px; font-size: 22px; color: var(--ink);  /* same size as .small */
+  background: color-mix(in srgb, var(--obj) 20%, transparent); border: 2px solid var(--obj);
+}
+sup.ast { color: var(--ink); font-size: 0.85em; margin-left: 1px; }
+
+/* underline that draws itself left to right when .on is added */
+.uline { position: relative; }
+.uline::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -3px; height: 2px; background: currentColor;
+  transform: scaleX(0); transform-origin: left; transition: transform 500ms ease;
+}
+.uline.on::after { transform: scaleX(1); }
+
+/* highlight boxes drawn around groups of table cells (slide 4: c, A, b) */
+.mfbox { position: absolute; border-radius: 10px; border: 3px solid var(--ink); background: rgba(255, 255, 255, 0.05);
+  opacity: 0; transition: opacity 300ms ease; pointer-events: none; }
+.mfbox.on { opacity: 1; }
+.mfbox.mf-c { border-color: var(--obj); background: color-mix(in srgb, var(--obj) 10%, transparent); }
+.mfbox.mf-A { border-color: #f2a7c3; background: rgba(242, 167, 195, 0.08); }  /* light pink: A (same hex as the KaTeX letter) */
+.mfbox.mf-b { border-color: #9aa0ad; background: rgba(154, 160, 173, 0.08); }  /* mid-grey: b (same hex as the KaTeX letter) */

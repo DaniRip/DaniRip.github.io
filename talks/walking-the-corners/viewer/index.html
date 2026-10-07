@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- talk: added by talk/tools/sync_viewer.py -->
+<style>
+  html.embed header, html.embed aside { display: none !important; }
+  html.embed .app { grid-template-columns: 1fr !important; height: 100vh !important; min-width: 0 !important; }
+  html.embed body { overflow: hidden; }
+</style>
+<script>
+  if (new URLSearchParams(location.search).get("embed")) document.documentElement.classList.add("embed");
+  addEventListener("keydown", (e) => {
+    const nav = ["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "PageDown", "PageUp", " ", "Home", "End",
+                 "f", "n", "o", "?", "Enter", "Escape", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    if (window.parent !== window && nav.includes(e.key)) {
+      e.preventDefault();
+      window.parent.postMessage({ deckKey: e.key, shiftKey: e.shiftKey }, "*");
+    }
+  });
+</script>
+<script src="talk_data.js"></script>
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SimplexRL — Shortest Pivot-Path Viewer</title>
+<style>
+  :root {
+    --bg: #f5f7fa; --panel: #ffffff; --ink: #1f2d3d; --muted: #6b7a8d;
+    --line: #d7dee8; --accent: #1f4e79; --start: #cfe3ff; --start-edge: #1f4e79;
+    --goal: #c9f0d2; --goal-edge: #1a7f37; --mid: #eceff4; --mid-edge: #5b6b7d;
+    --green: #1a7f37; --red: #c1121f; --grey: #9aa3ad; --sel: #f6a800;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.45 -apple-system, Segoe UI, Roboto, sans-serif;
+         color: var(--ink); background: var(--bg); }
+  header { display: flex; align-items: center; gap: 14px; padding: 10px 16px;
+           background: var(--panel); border-bottom: 1px solid var(--line); }
+  header h1 { font-size: 15px; margin: 0; font-weight: 650; }
+  header .sub { color: var(--muted); font-size: 12px; }
+  header .spacer { flex: 1; }
+  button, label.btn { font: inherit; padding: 6px 12px; border: 1px solid var(--line);
+           background: #fff; border-radius: 6px; cursor: pointer; }
+  button:hover, label.btn:hover { background: #eef3f9; }
+  #status { color: var(--muted); font-size: 12px; }
+  .app { display: grid; grid-template-columns: 280px minmax(440px, 1fr) 320px;
+         min-width: 1040px; height: calc(100vh - 49px); }
+  body { overflow-x: auto; }
+  aside, main { overflow: auto; }
+  aside { background: var(--panel); padding: 12px 14px; }
+  aside.left { border-right: 1px solid var(--line); }
+  aside.right { border-left: 1px solid var(--line); }
+  main { padding: 8px; }
+  h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .04em;
+       color: var(--muted); margin: 16px 0 6px; border-bottom: 1px solid var(--line);
+       padding-bottom: 4px; }
+  h2:first-child { margin-top: 4px; }
+  .prog-list { display: flex; flex-direction: column; gap: 4px; }
+  .prog-item { padding: 7px 9px; border: 1px solid var(--line); border-radius: 6px;
+               cursor: pointer; background: #fff; }
+  .prog-item:hover { background: #eef3f9; }
+  .prog-item.active { border-color: var(--accent); background: #eaf2fb; font-weight: 600; }
+  .prog-item .meta { color: var(--muted); font-weight: 400; font-size: 12px; }
+  .prog-select { width: 100%; padding: 7px 9px; border: 1px solid var(--line);
+                 border-radius: 6px; background: #fff; font-size: 13px; cursor: pointer;
+                 font-family: inherit; margin-bottom: 4px; }
+  .prog-select:focus { outline: none; border-color: var(--accent); }
+  .cert { font-size: 11px; font-weight: 600; padding: 1px 6px; border-radius: 4px; margin-left: 4px;
+          cursor: help; white-space: nowrap; }
+  .cert.ok { color: #0a7d33; background: #e3f6e8; }
+  .cert.detour { color: #9a5b00; background: #fdeccd; }
+  .cert.bad { color: #a01722; background: #fbe1e3; }
+  .modebanner { font-size: 12px; font-weight: 600; padding: 6px 9px; border-radius: 6px;
+                margin: 2px 0 8px; border: 1px solid transparent; }
+  .modebanner.ok { color: #0a5f2a; background: #e8f7ed; border-color: #b8e6c6; }
+  .modebanner.detour { color: #7d4a00; background: #fdf1da; border-color: #f0d59a; }
+  .modebanner.bad { color: #8f141f; background: #fce4e6; border-color: #f2b8bd; }
+  .atbound { font-size: 10px; font-weight: 600; color: #0a7d33; background: #e3f6e8;
+             padding: 0 4px; border-radius: 4px; cursor: help; }
+  table.kv { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.kv td { padding: 2px 4px; vertical-align: top; }
+  table.kv td.k { color: var(--muted); white-space: nowrap; }
+  table.kv td.v { text-align: right; font-variant-numeric: tabular-nums; }
+  table.mat { border-collapse: collapse; margin: 4px 0; font-variant-numeric: tabular-nums; }
+  table.mat td { border: 1px solid var(--line); padding: 2px 7px; text-align: right;
+                 min-width: 34px; font-size: 12.5px; }
+  table.tableau th { border: 1px solid var(--line); padding: 2px 7px; font-size: 11.5px;
+                     background: #f4f6f9; font-weight: 600; }
+  table.tableau th.bcol, table.tableau td.bcol { background: #eef4fb; }
+  table.tableau .rl { text-align: left; font-weight: 600; }
+  table.tableau .zrow td { background: #f7f4ec; border-top: 2px solid var(--line); }
+  table.tableau td.neg { color: #c1121f; font-weight: 600; }
+  table.tableau td.rhs, table.tableau th.rhs { border-left: 2px solid var(--line); font-weight: 600; }
+  table.tableau .bvar { color: #1f4e79; }
+  table.tableau th.hcol { cursor: pointer; }
+  table.tableau th.hcol:hover { background: #dbe7f5; }
+  table.tableau th.entercol, table.tableau td.entercol { background: #fff3d6; }
+  table.tableau th.ratio, table.tableau td.ratio { border-left: 2px solid var(--line);
+    background: #fbfaf6; color: #6b5a2a; min-width: 66px; white-space: nowrap; }
+  table.tableau th.ratio.ratio-empty { color: #b9b3a1; font-weight: 500; }
+  table.tableau tr.leaverow td { background: #eaf5ec; }
+  table.tableau td.minratio { color: #0a7d33; font-weight: 700; }
+  table.tableau td.pivotelem { box-shadow: inset 0 0 0 1px #4a6fa0; }
+  /* degenerate-tie annotation: which columns are eligible, which cells count */
+  table.tableau th.blockcol, table.tableau td.blockcol {
+    border-left: 2px solid #0f766e; color: #0f766e; font-weight: 700;
+    text-align: center; min-width: 34px; }
+  table.tableau td.eligcol { background: #fef3c7; }
+  table.tableau td.blockcell { box-shadow: inset 0 0 0 2px #0f766e;
+    background: #ccfbf1; font-weight: 700; }
+  .tiedot { display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+    margin-right: 5px; vertical-align: middle; }
+  .tietag { font-size: 8.5px; font-weight: 700; margin-left: 4px; }
+  .tiebox { font-size: 11.5px; background: #f0fdfa; border: 1px solid #99f6e4;
+    border-radius: 4px; padding: 7px 10px; margin-top: 8px; line-height: 1.5; }
+  table.tableau .nbtoggle { cursor: pointer; color: var(--muted); font-weight: 700;
+    font-size: 13px; padding: 0 5px; user-select: none; }
+  table.tableau .nbtoggle:hover { color: #1f4e79; }
+  table.tableau .chips { display: flex; gap: 2px; }
+  table.tableau .mchip { font-size: 8.5px; line-height: 11px; min-width: 11px;
+    padding: 0 2px; border-radius: 3px; color: #fff; font-weight: 700;
+    text-align: center; letter-spacing: -0.2px; }
+  /* exits: borderless left column, chips aligned right against the grid */
+  table.tableau th.exithead, table.tableau td.exitcell {
+    border: none; background: transparent; padding: 0 5px 0 0; }
+  table.tableau .exitcell .chips { justify-content: flex-end; flex-wrap: nowrap; }
+  /* enters: borderless bottom row, chips stacked so they don't widen columns */
+  table.tableau tr.enterrow td { border: none; background: transparent;
+    padding: 3px 2px 0; vertical-align: top; }
+  table.tableau .enterrow .entercell .chips { flex-direction: column;
+    align-items: center; }
+  table.tableau td.enterhead, table.tableau th.exithead {
+    font-size: 9px; color: var(--muted); font-weight: 600;
+    text-transform: uppercase; letter-spacing: .4px; }
+  table.tableau th.exithead { text-align: right; }
+  table.grid { width: 100%; border-collapse: collapse; font-size: 12.5px;
+               font-variant-numeric: tabular-nums; }
+  table.grid th, table.grid td { border-bottom: 1px solid var(--line); padding: 3px 5px;
+               text-align: right; }
+  table.grid th { color: var(--muted); font-weight: 600; text-align: right; }
+  table.grid td.l, table.grid th.l { text-align: left; }
+  .pill { display: inline-block; padding: 0 6px; border-radius: 9px; font-size: 11px;
+          line-height: 17px; margin-right: 3px; }
+  .pill.D { background: #e3edf9; color: #1f4e79; }
+  .pill.B { background: #efe7f7; color: #6b3fa0; }
+  .pill.S { background: #e3f3ea; color: #1a7f37; }
+  .pill.V { background: #fcecd9; color: #b3640a; }
+  .pill.G { background: #d9f3f3; color: #0a7a7a; }
+  .pill.none { background: #fde2e2; color: #c1121f; }
+  .pill.forced { background: #eceff4; color: #6b7a8d; }
+  .muted { color: var(--muted); }
+  .formula { font-size: 13px; background: #f8fafc; border: 1px solid var(--line);
+             border-radius: 6px; padding: 8px; white-space: pre-wrap; line-height: 1.5;
+             max-height: 160px; overflow: auto; }
+  table.mat.scroll { display: block; max-height: 200px; overflow: auto; }
+  .routebar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+              padding: 6px 10px; border-bottom: 1px solid var(--line); font-size: 12px;
+              background: #fbfcfe; }
+  .routebar .title { color: var(--muted); font-weight: 600; }
+  .routebar label { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+  .routebar .sw { width: 22px; height: 0; border-top-width: 3px; border-top-style: solid;
+                  display: inline-block; }
+  .routebar .rl-empty { color: var(--muted); font-style: italic; }
+  .routebar .vtabs { display: inline-flex; gap: 4px; margin-right: 6px; }
+  .routebar .vtabs button { padding: 3px 10px; border: 1px solid var(--line);
+      background: #fff; border-radius: 5px; cursor: pointer; font-size: 12px; }
+  .routebar .vtabs button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .routebar .mbtn { padding: 3px 9px; border: 1px solid var(--line); background: #fff;
+      border-radius: 5px 5px 0 0; cursor: pointer; font-size: 12px; }
+  .routebar .mbtn.on { background: #eef3f9; font-weight: 600; }
+  .pcount { font-weight: 700; color: #1f2d3d; }
+  .flipcount { color: #8a6d00; font-weight: 600; font-size: 11px; }
+  .oodtag { font-size: 10px; font-weight: 700; color: #7a1020; background: #fbe0e4;
+    border-radius: 3px; padding: 0 4px; cursor: help; }
+  .mnode { cursor: pointer; }
+  .tlarr { font-size: 15px; font-weight: 700; pointer-events: none; }
+  .zoom { margin-left: auto; display: inline-flex; gap: 3px; align-items: center; }
+  .zoom button { padding: 2px 8px; border: 1px solid var(--line); background: #fff;
+      border-radius: 5px; cursor: pointer; font-size: 12px; }
+  .zoom button:hover { background: #eef3f9; }
+  h2 .expand { float: right; font-weight: 400; font-size: 12px; color: var(--accent);
+      border: 1px solid var(--line); border-radius: 4px; padding: 0 6px; cursor: pointer;
+      line-height: 16px; }
+  h2 .expand:hover { background: #eef3f9; }
+  #modal { position: fixed; inset: 0; background: rgba(20,30,45,0.55); display: none;
+      z-index: 50; align-items: center; justify-content: center; }
+  #modal.open { display: flex; }
+  #modal .box { background: #fff; border-radius: 8px; max-width: 92vw; max-height: 90vh;
+      overflow: auto; padding: 18px 22px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+  #modal .box h3 { margin: 0 0 10px; }
+  #modal .x { float: right; cursor: pointer; font-size: 20px; color: var(--muted);
+      line-height: 1; border: none; background: none; }
+  .cornnav { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .cornnav button { padding: 0 7px; border: 1px solid var(--line); background: #fff;
+      border-radius: 4px; cursor: pointer; }
+  .svgwrap { width: 100%; height: calc(100% - 33px); overflow: auto; }
+  svg { width: 100%; height: 100%; display: block; }
+  .node circle { cursor: pointer; stroke-width: 1.6; }
+  .node text { pointer-events: none; font-size: 11px; }
+  .edge { cursor: pointer; }
+  .edge .hit { stroke: transparent; stroke-width: 14; fill: none; }
+  .elabel { font-size: 11px; }
+  .legend { fill: var(--muted); font-size: 11px; }
+  .hint { color: var(--muted); font-size: 13px; padding: 20px; }
+  .dropzone { outline: 2px dashed var(--accent); outline-offset: -8px; }
+  /* print buttons (diagram routebar + tableau/modal) */
+  .printbtn { padding: 2px 8px; border: 1px solid var(--line); background: #fff;
+      border-radius: 5px; cursor: pointer; font-size: 12px; }
+  .printbtn:hover { background: #eef3f9; }
+  #modal .modalprint { float: right; margin: -2px 10px 0 0; color: var(--muted); }
+
+  /* ---------- publication export ----------
+     Diagram exports as a standalone .svg (see exportDiagramSVG) — vector, so it
+     scales into a paper at any size with no page-fit concern. The tableau prints
+     via an in-place body class that only bites under @media print: it strips the
+     viewer chrome AND the modal's heading/explanatory text, leaving just the
+     grid, then scales it (zoom) to a single page. The class has no on-screen
+     effect, so a lingering one is harmless. */
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    @page { margin: 12mm; }
+    /* Tableau → isolate just the grid: drop the viewer chrome, the dialog
+       controls, and the modal's heading + explanatory paragraph, then scale the
+       bare table to one page (--pk set in printModal; zoom so print pagination
+       sees the scaled box and never spills onto page 2). */
+    body.print-modal > header,
+    body.print-modal .app,
+    body.print-modal #modal .x,
+    body.print-modal #modal .modalprint,
+    body.print-modal #modalbody h3,
+    body.print-modal #modalbody > .muted,
+    body.print-modal #modalbody > .modebanner { display: none !important; }
+    body.print-modal #modal {
+      position: static !important; background: #fff !important;
+      display: flex !important; align-items: center !important;
+      justify-content: center !important;
+      min-height: 100vh !important; width: 100% !important; }
+    body.print-modal #modal .box {
+      max-width: none !important; max-height: none !important;
+      width: auto !important; height: auto !important;
+      box-shadow: none !important; border: none !important;
+      overflow: visible !important; padding: 0 !important; margin: 0 !important; }
+    body.print-modal #modalbody {
+      display: flex !important; align-items: center !important; justify-content: center !important; }
+    body.print-modal #modalbody > div { overflow: visible !important; }
+    body.print-modal #modalbody table.tableau { zoom: var(--pk, 1); }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>SimplexRL · Shortest Pivot-Path Viewer</h1>
+  <span class="sub">A* minimum-pivot DAG + classical-rule characterization</span>
+  <span class="spacer"></span>
+  <span id="status"></span>
+  <label class="btn">Load dataset (.json)
+    <input id="file" type="file" accept=".json,application/json" hidden />
+  </label>
+</header>
+<div class="app">
+  <aside class="left" id="left"><div class="hint">No dataset loaded.</div></aside>
+  <main id="center"><div class="hint">Select a linear program on the left.</div></main>
+  <aside class="right" id="right"><div class="hint">Click a node or edge to inspect it.</div></aside>
+</div>
+<div id="modal"><div class="box"><button class="x" onclick="closeModal()">×</button>
+  <button class="printbtn modalprint" onclick="printModal()" title="print / Save as PDF — the bare tableau grid, scaled to fit one page">⎙ Print</button>
+  <div id="modalbody"></div></div></div>
+
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+let DATA = null, PROG = null, SELECTED = null, ZOOM = 1, CUR_NODE = null;
+
+// ---------- zoom (applies to the merged-view SVG) ----------
+function clamp(x,a,b){ return Math.max(a, Math.min(b, x)); }
+function setZoom(m){ ZOOM = (m==="fit") ? 1 : clamp(ZOOM*m, 0.15, 8); applyZoom(); }
+function applyZoom(){
+  const svg = document.querySelector("#center .svgwrap svg");
+  if(!svg || !svg.dataset.w) return;
+  const fit = +svg.dataset.fit, W = +svg.dataset.w, H = +svg.dataset.h, s = fit*ZOOM;
+  svg.style.width = (W*s)+"px"; svg.style.height = (H*s)+"px";
+  const z = $("zlabel"); if(z) z.textContent = Math.round(fit*ZOOM*100)+"%";
+}
+function fitSvg(){   // size the merged svg to its pane (× ZOOM), enable scroll
+  const wrap = document.querySelector("#center .svgwrap"), svg = wrap && wrap.querySelector("svg");
+  if(!svg) return; const W=+svg.dataset.w, H=+svg.dataset.h;
+  const fit = Math.min(1.25, (wrap.clientWidth-10)/W, (wrap.clientHeight-10)/H);
+  svg.dataset.fit = fit > 0 ? fit : 1; applyZoom();
+}
+
+// ---------- fullscreen modal (LP model / basis) ----------
+function openModal(title, html){
+  $("modalbody").innerHTML = `<h3>${title}</h3>${html}`;
+  $("modal").classList.add("open");
+}
+function closeModal(){ $("modal").classList.remove("open"); }
+
+// ---------- publication export (diagram → SVG, tableau → one-page PDF) ----------
+// Print helper (tableau): toggle a print-only body class, print, then drop it once
+// the dialog closes. window.print() blocks until dismissed on desktop, and the
+// class is inert on screen, so a missed afterprint just lingers harmlessly.
+function _printWith(mode, landscape){
+  document.body.classList.remove("print-modal");
+  document.body.classList.add(mode);
+  let pageStyle = null;
+  if(landscape){
+    pageStyle = document.createElement("style");
+    pageStyle.textContent = "@media print{@page{size:landscape}}";
+    document.head.appendChild(pageStyle);
+  }
+  const done = ()=>{
+    document.body.classList.remove(mode);
+    if(pageStyle) pageStyle.remove();
+    window.removeEventListener("afterprint", done);
+  };
+  window.addEventListener("afterprint", done);
+  window.print();
+}
+
+// Enabled methods, in diagram order, for the baked-in SVG legend.
+function _legendMethods(){
+  const out = [];
+  if(ENABLED.has("astar")){
+    const a = allRoutes().find(r=> r.kind==="astar");
+    if(a){ const piv = (PROG.stats && PROG.stats.min_pivots!=null) ? PROG.stats.min_pivots : (a.enters||[]).length;
+      out.push({label:`A* · ${piv} piv (min)`, color:ROUTE_COLORS.astar, width:4}); }
+  }
+  allRoutes().filter(r=> r.kind!=="astar" && ENABLED.has(r.name)).forEach(r=>{
+    const nFlip = r.leaves ? r.leaves.reduce((a,x)=> a + (x==null?1:0), 0) : 0;
+    const piv = (r.enters||[]).length - nFlip;
+    out.push({label:`${r.label} · ${piv} piv${r.ood?" (OOD)":""}`, color:routeColor(r), width:r.kind==="rl"?3.2:2.4});
+  });
+  return out;
+}
+
+// Diagram → standalone .svg. Self-contained: the live SVG references CSS custom
+// properties (node fills) and text classes from the page stylesheet, neither of
+// which a bare .svg (or Inkscape/Illustrator) honours — so resolve every var() to
+// a literal colour and inline the text-class rules. Legend baked in below.
+function exportDiagramSVG(){
+  const live = document.querySelector("#center .svgwrap svg");
+  if(!live || !PROG) return;
+  const fname = `${PROG.id||PROG.name||"diagram"}_pivot-path.svg`;
+  if(!confirm(`Download the diagram as “${fname}”?`)) return;   // guard accidental clicks
+  const W = +live.dataset.w, H = +live.dataset.h;
+  const cs = getComputedStyle(document.documentElement);
+  const rv = name => cs.getPropertyValue(name).trim();
+  let inner = live.innerHTML;
+  ["--start","--start-edge","--goal","--goal-edge","--mid","--mid-edge","--muted","--ink","--line"]
+    .forEach(v=>{ inner = inner.split(`var(${v})`).join(rv(v)); });
+
+  // Legend below the figure, in as many columns as the width allows (min 2 — a
+  // narrow figure stacks two-up; a wide one lays them out in a single row).
+  // Column count comes from the measured widest label; short swatch (~a third of
+  // the old length).
+  const meth = _legendMethods();
+  // Scale the legend up for large figures: when the whole SVG is later shrunk to
+  // fit a page, a fixed-size legend becomes illegible, so grow it in proportion to
+  // the figure's size (≈ the inverse of the page-fit shrink, ref ≈ one page ≈
+  // 700u, capped). Small figures (≤ ref) are unchanged.
+  const s = Math.max(1, Math.min(3.5, Math.max(W, H) / 700));
+  const swatch = 15*s, gap = 7*s, cpad = 24*s, rowH = 18*s, fs = 12*s;
+  const topGap = 26*s, botPad = 10*s, divGap = 10*s, txtDy = 4*s;
+  let cols = 0, rows = 0, cellW = 0, legendW = 0;
+  if(meth.length){
+    const mc = document.createElement("canvas").getContext("2d");
+    mc.font = `${fs}px -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif`;
+    const maxLabelW = Math.max(...meth.map(m=> mc.measureText(m.label).width));
+    cellW = swatch + gap + maxLabelW + cpad;
+    cols = Math.max(2, Math.min(meth.length, Math.floor((W - 80) / cellW) || 1));
+    rows = Math.ceil(meth.length / cols);
+    legendW = cols * cellW;
+  }
+  const legH = meth.length ? topGap + rows*rowH + botPad : 0;
+  const contentW = Math.max(W, legendW + 80);   // widen the canvas if the legend is wider…
+  const dx = (contentW - W) / 2;                 // …and re-centre the diagram within it
+  const totalH = H + legH;
+
+  let legend = "";
+  if(meth.length){
+    const x0 = (contentW - legendW) / 2, top = H + topGap;
+    legend += `<line x1="40" y1="${H+divGap}" x2="${contentW-40}" y2="${H+divGap}" stroke="${rv('--line')}"/>`;
+    meth.forEach((m,i)=>{
+      const cx = x0 + (i % cols)*cellW, cy = top + Math.floor(i / cols)*rowH;
+      legend += `<line x1="${cx}" y1="${cy}" x2="${cx+swatch}" y2="${cy}" stroke="${m.color}" stroke-width="${(m.width*Math.max(1, s*0.6)).toFixed(1)}" stroke-linecap="round"/>`
+              + `<text class="lg" x="${cx+swatch+gap}" y="${cy+txtDy}">${m.label}</text>`;
+    });
+  }
+  const style = `<style>text{font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}`
+    + `.legend{fill:${rv('--muted')};font-size:11px}.tlarr{font-size:15px;font-weight:700}`
+    + `.mnode text{fill:${rv('--ink')};font-size:11px}.lg{fill:${rv('--ink')};font-size:${fs.toFixed(1)}px}</style>`;
+  const out = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n`
+    + `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${contentW} ${totalH}" width="${contentW}" height="${totalH}">`
+    + `${style}<g transform="translate(${dx},0)">${inner}</g>${legend}</svg>`;
+
+  const blob = new Blob([out], {type:"image/svg+xml;charset=utf-8"});
+  const url = URL.createObjectURL(blob), a = document.createElement("a");
+  a.href = url; a.download = fname;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=> URL.revokeObjectURL(url), 2000);
+}
+
+// Tableau → one-page PDF of the bare grid. Conservative usable-page px (fits both
+// A4 and US-Letter at 12mm margins) → scale the table (zoom) to one page, in
+// whichever orientation reads larger.
+function printModal(){
+  if(!$("modal").classList.contains("open")) return;
+  const table = $("modalbody").querySelector("table.tableau");
+  if(table){
+    const tw = table.offsetWidth || 1, th = table.offsetHeight || 1;
+    const MAXUP = 2.5;                          // small tableaux grow to fill the page, up to a cap
+    const kP = Math.min(MAXUP, 703/tw, 960/th); // portrait usable px
+    const kL = Math.min(MAXUP, 960/tw, 703/th); // landscape usable px
+    const land = kL > kP;
+    table.style.setProperty("--pk", (land ? kL : kP).toFixed(4));
+    _printWith("print-modal", land);
+  } else {
+    _printWith("print-modal", false);         // non-tableau modal: print as shown
+  }
+}
+function expandLP(){
+  if(!PROG) return;
+  const A = (PROG.num_vars<=60 && PROG.num_constraints<=60) ? matTable(PROG.A)
+    : `<div class="muted">${PROG.num_constraints}×${PROG.num_vars} (too large to render)</div>`;
+  openModal(`${PROG.name} — LP model`,
+    `<div class="formula" style="max-height:none">${lpFormula(PROG)}</div><h3>Matrix A</h3>${A}`);
+}
+function expandBasis(){
+  const n = CUR_NODE; if(!n) return;
+  const mats = PROG.general_form ? "" : (()=>{
+    const B = n.basic_index ? basisMatrix(n.basic_index) : null, Bi = B ? invert(B) : null;
+    return `<h3>Basis matrix B</h3>${matTable(B)}<h3>B⁻¹</h3>${matTable(Bi)}`;
+  })();
+  openModal(`Basis — ${(n.basis||[]).join(", ")}`,
+    `<h3>x_B</h3>${vecTable(n.basic_values)}<h3>c_B (min-sense)</h3>${vecTable(n.c_B)}${mats}`);
+}
+
+function setStatus(s){ $("status").textContent = s; }
+
+function fmt(x, dec=4){
+  if (x === null || x === undefined) return "∞";
+  if (typeof x !== "number") return String(x);
+  if (Number.isInteger(x)) return String(x);
+  let s = x.toFixed(dec);
+  return s.replace(/\.?0+$/,"");
+}
+function fmtSigned(x){ if(x===null) return "∞"; return (x>=0?"":"") + fmt(x); }
+
+// ---------- data loading ----------
+let SRC_BASE = "";  // base URL for lazily-fetched per-program files (manifest galleries)
+
+// Expand a COO sparse constraint matrix (A_sparse) back to dense A in place.
+function expandSparseA(p){
+  if(p.A || !p.A_sparse) return;
+  const {shape, rows, cols, vals} = p.A_sparse, m = shape[0], n = shape[1];
+  const A = Array.from({length:m}, ()=> new Array(n).fill(0));
+  for(let k=0;k<rows.length;k++) A[rows[k]][cols[k]] = vals[k];
+  p.A = A;
+}
+
+function loadData(obj, basePath){
+  if(obj && obj.format === "simplexrl-astar-manifest"){ return loadManifest(obj, basePath||""); }
+  // A single exported program (e.g. one expert-demo gallery case) — wrap it as a
+  // one-program dataset so the Load-dataset button / drag-drop can open gallery
+  // cases one at a time, not just full datasets.
+  if(obj && obj.format !== "simplexrl-astar-viz" && obj.num_vars != null
+     && (obj.routes || obj.dag || obj.A || obj.A_sparse)){
+    expandSparseA(obj);
+    obj = {format:"simplexrl-astar-viz", programs:[obj]};
+  }
+  if(!obj || obj.format !== "simplexrl-astar-viz"){
+    setStatus("Not a simplexrl-astar-viz dataset."); return;
+  }
+  SRC_BASE = basePath || "";
+  DATA = obj;
+  setStatus(`${obj.programs.length} program(s) loaded`);
+  renderProgramList();
+  if(obj.programs.length) selectProgram(deepLinkProgram());
+}
+
+// ---------- deep links ----------
+// ?src=<manifest>&p=<program id or index>&node=<node index>&col=<var index>
+// so a specific decision can be handed to someone as a URL. `p` matches an id
+// (exact, or ignoring a trailing "_std") before falling back to a numeric index.
+function qp(k){ return new URLSearchParams(location.search).get(k); }
+function deepLinkProgram(){
+  const p = qp("p");
+  if(!p) return 0;
+  const norm = s => String(s||"").replace(/_std$/, "");
+  let i = DATA.programs.findIndex(x => x.id===p || norm(x.id)===norm(p)
+                                    || x.name===p || norm(x.name)===norm(p));
+  if(i < 0 && /^\d+$/.test(p)) i = +p;
+  return (i >= 0 && i < DATA.programs.length) ? i : 0;
+}
+// Applied after the program renders: select the node, open its tableau, and run
+// the ratio test on `col` so the tie is on screen with no clicking.
+// ONCE ONLY. selectProgram() calls this on every program change, so without the
+// latch a later switch re-applies the original ?col= to a different program --
+// and if that program has fewer columns, T[col] is undefined and the tableau
+// render throws. (Caught switching from airline_crew, nt=322, to
+// scheduling_v24, nt=82.) Bounds-checked as well, belt and braces.
+let DEEPLINK_DONE = false;
+function applyDeepLink(){
+  if(DEEPLINK_DONE) return;
+  DEEPLINK_DONE = true;
+  const nodeQ = qp("node"), colQ = qp("col");
+  if(nodeQ == null) return;
+  const els = document.querySelectorAll("#center .mnode");
+  const el = els[+nodeQ];
+  if(!el) return;
+  el.dispatchEvent(new MouseEvent("click", {bubbles:true}));
+  if(!tableauFits()) return;
+  expandTableau();
+  if(colQ != null && TAB && +colQ >= 0 && +colQ < TAB.nt) showRatioTest(+colQ);
+  const tied = [...document.querySelectorAll("#modalbody table.tableau tr")]
+    .filter(r => { const c = r.querySelector("td.ratio");
+                   return c && /^0/.test(c.textContent.trim()); });
+  if(tied.length) tied[0].scrollIntoView({block:"center"});
+}
+
+// A gallery manifest: programs are lightweight stubs; each body is fetched from
+// SRC_BASE + entry.file the first time it is selected.
+function loadManifest(man, basePath){
+  SRC_BASE = basePath || "";
+  DATA = { programs: (man.programs||[]).map(m => Object.assign({}, m, {_stub:true})) };
+  setStatus(`${DATA.programs.length} program(s) — ${man.title||"gallery"} (lazy)`);
+  renderProgramList();
+  if(DATA.programs.length) selectProgram(deepLinkProgram());
+}
+$("file").addEventListener("change", (e)=>{
+  const f = e.target.files[0]; if(!f) return;
+  f.text().then(t=>{ try{ loadData(JSON.parse(t)); }catch(err){ setStatus("Parse error: "+err.message);} });
+});
+// drag & drop
+document.body.addEventListener("dragover", e=>{e.preventDefault(); document.body.classList.add("dropzone");});
+document.body.addEventListener("dragleave", ()=>document.body.classList.remove("dropzone"));
+document.body.addEventListener("drop", e=>{
+  e.preventDefault(); document.body.classList.remove("dropzone");
+  const f = e.dataTransfer.files[0]; if(!f) return;
+  f.text().then(t=>{ try{ loadData(JSON.parse(t)); }catch(err){ setStatus("Parse error: "+err.message);} });
+});
+
+// ---------- left panel ----------
+function renderProgramList(){
+  const opts = DATA.programs.map((p,i)=>{
+    const np = p.stats.num_shortest_paths, mp = p.stats.min_pivots;
+    const cert = p.stats.min_pivots_certified, proven = p.stats.optimality_proven;
+    let tag;
+    if (p.has_astar===false) tag = "trajectories-only";
+    else if (mp==null) tag = "shortest path(s): ?";
+    else {
+      const pivs = `${mp} piv${cert ? " (min ✓)" : (p.stats.path_kind==="detour" ? ` (min, +${p.stats.path_gap})` : "")}`;
+      const paths = proven ? `${np} path(s)` : `≥${np} path(s)`;
+      tag = `${pivs}, ${paths}`;
+    }
+    return `<option value="${i}">${p.name} — ${p.num_vars}×${p.num_constraints}, ${tag}</option>`;
+  }).join("");
+  $("left").innerHTML = `<h2>Linear program</h2>
+     <select id="progSel" class="prog-select" title="choose a program">${opts}</select>
+     <div id="proginfo"></div>`;
+  $("progSel").addEventListener("change", e=>selectProgram(+e.target.value));
+}
+
+function linexpr(coeffs, names){
+  const terms = coeffs.map((c,j)=>({c,j})).filter(t=>t.c!==0);
+  if(!terms.length) return "0";
+  return terms.map((t,k)=>{
+    const sign = t.c < 0 ? "− " : (k===0 ? "" : "+ ");
+    return `${sign}${fmt(Math.abs(t.c))}·${names[t.j]}`;
+  }).join(" ");
+}
+function lpFormula(p){
+  let s = `${p.objective_sense === "max" ? "maximize" : "minimize"}   z = ${linexpr(p.objective, p.var_names)}\nsubject to\n`;
+  for(let i=0;i<p.num_constraints;i++){
+    s += `   ${p.row_names[i]}:  ${linexpr(p.A[i], p.var_names)}  ≤  ${fmt(p.rhs[i])}\n`;
+  }
+  s += `   ${p.var_names.join(", ")} ≥ 0`;
+  return s;
+}
+
+async function selectProgram(i){
+  let p = DATA.programs[i];
+  if(p && p._stub && !p._loaded){                  // gallery: fetch body on demand
+    setStatus(`Loading ${p.name}…`);
+    try{
+      const r = await fetch(SRC_BASE + p.file + "?v=" + Date.now());
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      let body = await r.json();
+      // A per-case file may be a single program OR a one-program dataset wrapper
+      // ({format, programs:[prog]}); unwrap the latter to the actual program.
+      if(body && Array.isArray(body.programs) && body.programs.length) body = body.programs[0];
+      expandSparseA(body);
+      body._loaded = true;
+      DATA.programs[i] = body; p = body;
+      setStatus(`Loaded ${p.name}`);
+    }catch(err){ setStatus("Could not load program: "+err.message); return; }
+  }
+  PROG = p; SELECTED = null;
+  if(PROG.has_astar === false) VIEW = "merged";   // trajectories-only: no Basis DAG
+  // All methods on by default; A* (envelope) included when present.
+  ENABLED = new Set((PROG.routes || []).map(r=>r.name));
+  if(PROG.has_astar !== false) ENABLED.add("astar");
+  { const sel = $("progSel"); if(sel) sel.value = i; }
+  const st = PROG.stats;
+  const na = x => (x === null || x === undefined) ? "n/a" : x;
+  const hasCov = st.rule_coverage && Object.keys(st.rule_coverage).length;
+  const cov = hasCov ? ["dantzig","bland","steepest","devex"].map(r=>{
+    const c = st.rule_coverage[r]; if(!c) return "";
+    return `<tr><td class="l">${r}</td><td>${c.pure_paths} / ${st.num_shortest_paths}</td>
+            <td>${c.follows_some_shortest_path?"✓":"—"}</td></tr>`;}).join("") : "";
+  const minPivLabel = (PROG.has_astar===false) ? "min pivots (best rule)" : "min pivots (A*)";
+  const minPivVal = (st.min_pivots==null) ? "n/a"
+    : st.min_pivots_certified
+        ? `${st.min_pivots} <span class="cert ok" title="${st.min_pivots_certificate||''}">✓ certified minimal</span>`
+    : st.path_kind==="detour"
+        ? `${st.min_pivots} <span class="cert detour" title="exceeds the |B*\\B0| lower bound by ${st.path_gap} — feasibility forces a detour (a final-basis variable is ejected en route)">detour, +${st.path_gap} over bound</span>`
+        : st.min_pivots;
+  // MODE: a complete A* envelope (all shortest paths proven) vs a single recorded
+  // trajectory whose optimality we can only *bound*, not prove (gallery exports).
+  const complete = PROG.has_astar!==false && st.num_shortest_paths!=null;
+  const singlePath = !complete;
+  // A single route A* PROVED minimal (optimality_proven), just without recording
+  // the whole envelope — that IS the minimum to optimality, only the *set* of
+  // such routes is unknown. Distinct from an unproven recorded path.
+  const provenRoute = singlePath && st.optimality_proven === true;
+  const atBound = st.min_pivots!=null && st.pivot_lower_bound===st.min_pivots;
+  const _verdict = {
+    single_minimal:   ["ok",     "path length = lower bound — minimal to its optimal basis"],
+    single_nonminimal:["detour", `+${(st.min_pivots||0)-(st.pivot_lower_bound||0)} over the lower bound — a shorter path may exist`],
+    single_degenerate:["bad",    "start basis = final basis — degenerate, not a minimum-pivot path"],
+  }[st.path_status];
+  const modeBanner = complete
+    ? `<div class="modebanner ok">Complete A* envelope — all minimum-pivot paths enumerated &amp; proven.</div>`
+    : provenRoute
+    ? `<div class="modebanner ok">Minimum-pivot route — <b>A*-proven</b>. This is a shortest route to optimality; the full set of such routes (the envelope) was not enumerated.</div>`
+    : `<div class="modebanner ${_verdict?_verdict[0]:'detour'}">Single recorded path — optimality not verified${_verdict?`: ${_verdict[1]}`:""}.${st.path_note?`<div class="muted" style="font-size:11px;font-weight:400;margin-top:3px">${st.path_note}</div>`:""}</div>`;
+  const lenLabel = provenRoute ? "min pivots (A*)" : singlePath ? "recorded path length" : minPivLabel;
+  const lbBadge = st.pivot_lower_bound==null ? "" : (provenRoute
+    ? (atBound ? `<span class="cert ok">at bound ✓ proven</span>` : `<span class="cert detour">proven min · +${st.min_pivots-st.pivot_lower_bound} over bound</span>`)
+    : singlePath
+    ? (st.path_status==="single_minimal"    ? `<span class="cert ok">path = bound</span>`
+     : st.path_status==="single_degenerate" ? `<span class="cert bad">start = final</span>`
+     : `<span class="cert detour">path +${(st.min_pivots||0)-st.pivot_lower_bound}</span>`)
+    : (atBound ? `<span class='cert ok'>A* at bound ✓</span>`
+     : st.min_pivots!=null ? `<span class='cert detour'>A* +${st.min_pivots-st.pivot_lower_bound}</span>` : ""));
+  const lbTitle = singlePath
+    ? "|B*\\B0| — variables differing between the recorded start basis and the final basis; the fewest pivots to reach that basis."
+    : "|B*\\B0| — the number of structural variables in the optimal basis; the fewest pivots ANY method could take from the all-slack start. A* hits it iff a monotone feasible path exists.";
+  $("proginfo").innerHTML = `
+    <h2>Program<span class="expand" onclick="expandLP()" title="full screen">⤢ full</span></h2><div class="formula">${lpFormula(PROG)}</div>
+    <h2>Matrix A</h2>${(PROG.num_vars<=14 && PROG.num_constraints<=14)
+        ? matTable(PROG.A)
+        : `<div class="muted" style="font-size:12px">${PROG.num_constraints}×${PROG.num_vars} matrix (${fmt(PROG.stats.density*100,0)}% dense) — omitted; see statistics.</div>`}
+    <h2>Statistics</h2>
+    ${modeBanner}
+    <table class="kv">
+      <tr><td class="k">nonzeros (nnz)</td><td class="v">${st.nnz}</td></tr>
+      <tr><td class="k">density</td><td class="v">${fmt(st.density*100,1)}%</td></tr>
+      <tr><td class="k">cond(A) (2-norm)</td><td class="v">${fmt(st.A_condition_number,2)}</td></tr>
+      <tr><td class="k">abs(coeff) range</td><td class="v">${fmt(st.min_abs_coeff)}–${fmt(st.max_abs_coeff)}</td></tr>
+      <tr><td class="k">optimal z</td><td class="v">${st.optimal_objective==null?"n/a":fmt(st.optimal_objective)}</td></tr>
+      <tr><td class="k">${lenLabel}</td><td class="v">${provenRoute?`${st.min_pivots} <span class="cert ok" title="A* proved this is the minimum number of pivots to optimality">✓ proven minimal</span>`:singlePath?(st.min_pivots==null?"n/a":st.min_pivots):minPivVal}</td></tr>
+      <tr><td class="k">pivot lower bound</td><td class="v">${st.pivot_lower_bound==null?"n/a":`${st.pivot_lower_bound} <span class="muted" title="${lbTitle}">|B*\\B0|</span> ${lbBadge}`}</td></tr>
+      <tr><td class="k"># shortest paths</td><td class="v">${singlePath?"<span class='muted'>n/a — single path (envelope not computed)</span>":na(st.num_shortest_paths)+(st.min_pivots_certified===false&&PROG.has_astar!==false?" <span class='muted'>(found so far)</span>":"")}</td></tr>
+      <tr><td class="k">A* nodes expanded</td><td class="v">${na(st.nodes_expanded)}</td></tr>
+      <tr><td class="k">all paths enumerated</td><td class="v">${singlePath?"<span class='muted'>no — single recorded path</span>":(st.optimality_proven==null?"n/a":(st.optimality_proven?"yes":"no"))}</td></tr>
+    </table>
+    ${hasCov ? `<h2>Rule coverage</h2>
+    <table class="grid"><tr><th class="l">rule</th><th>pure paths</th><th>any?</th></tr>${cov}</table>`
+      : `<div class="muted" style="font-size:12px;margin-top:8px">Trajectories-only export (no A*): no shortest-path coverage.</div>`}`;
+  renderView();
+  $("right").innerHTML = `<div class="hint">Click a node (a basis/vertex) or an edge (a pivot) to inspect it.</div>`;
+  applyDeepLink();     // ?node=&col= — no-op unless present
+}
+
+function matTable(M){
+  if(!M || !M.length) return "<span class='muted'>—</span>";
+  return `<table class="mat">` + M.map(row=>
+    `<tr>`+row.map(v=>`<td>${fmt(v,3)}</td>`).join("")+`</tr>`).join("") + `</table>`;
+}
+function vecTable(v){
+  if(!v || !v.length) return "<span class='muted'>—</span>";
+  return `<table class="mat"><tr>`+v.map(x=>`<td>${fmt(x,3)}</td>`).join("")+`</tr></table>`;
+}
+
+// B and B^-1 are reconstructed on demand from A + basic_index (not exported, to
+// keep datasets small at scale). Only rendered for modestly-sized bases.
+const MAT_MAX = 16;
+function basisMatrix(basic_index){
+  const m=PROG.num_constraints, n=PROG.num_vars, A=PROG.A;
+  const B=Array.from({length:m},()=>new Array(basic_index.length).fill(0));
+  basic_index.forEach((v,col)=>{ if(v<n){ for(let i=0;i<m;i++) B[i][col]=A[i][v]; } else { B[v-n][col]=1; } });
+  return B;
+}
+function invert(M){
+  const m=M.length; if(!m) return null;
+  const A=M.map((r,i)=>r.concat(Array.from({length:m},(_,j)=>i===j?1:0)));
+  for(let c=0;c<m;c++){
+    let piv=c; for(let r=c+1;r<m;r++) if(Math.abs(A[r][c])>Math.abs(A[piv][c])) piv=r;
+    if(Math.abs(A[piv][c])<1e-12) return null;
+    [A[c],A[piv]]=[A[piv],A[c]];
+    const d=A[c][c]; for(let j=0;j<2*m;j++) A[c][j]/=d;
+    for(let r=0;r<m;r++){ if(r===c) continue; const f=A[r][c]; if(f) for(let j=0;j<2*m;j++) A[r][j]-=f*A[c][j]; }
+  }
+  return A.map(r=>r.slice(m));
+}
+function matrixSection(n){
+  const m = PROG.num_constraints;
+  // General-form LPs (equality/≥ rows) are not standard [A|I] form, so the
+  // client-side B reconstruction below is invalid; exported node values (x_B,
+  // reduced costs) are shown instead.
+  if(PROG.general_form) return `<h2>Basis matrix B</h2>
+    <div class="muted" style="font-size:12px">B / B⁻¹ omitted — general constraint form (not standard [A|I]); basis variables and exact x_B are shown above.</div>`;
+  if(m > MAT_MAX) return `<h2>Basis matrix B</h2>
+    <div class="muted" style="font-size:12px">B is ${m}×${m} — omitted for large bases (basis variables listed above).</div>`;
+  const B = n.basic_index ? basisMatrix(n.basic_index) : null;
+  const Bi = B ? invert(B) : null;
+  return `<h2>Basis matrix B</h2>${matTable(B)}<h2>B⁻¹</h2>${matTable(Bi)}`;
+}
+
+// Full simplex tableau at a basis: T = B^-1 [A | I], with the reduced-cost
+// (z) row and the RHS column (x_B = B^-1 b). Reconstructed client-side from
+// A + basic_index. The grid is m × (n+m), so we gate on cell count (adapts to
+// problem shape) plus a constraint cap that bounds the O(m³) B⁻¹. General-form
+// LPs (equality/≥ rows) aren't standard [A|I], so — like the Basis matrix
+// section — the tableau is not offered for them. A per-basis numerical residual
+// (see fullTableau) additionally warns when the client-side inverse drifts.
+// Caps on the on-demand tableau. Raised 2026-08-03 from 6000/80, which excluded
+// every degenerate instance in the gallery except scheduling_v24 (m=58) — and
+// degeneracy is the thing the tableau is most worth looking at. Measured
+// end-to-end (fullTableau + tableauTable) in this viewer:
+//     m=58  n=24     23 ms,   34 KB
+//     m=81  n=30     49 ms,   57 KB
+//     m=222 n=100   637 ms,  445 KB
+//     m=211 n=315   817 ms, 1299 KB   (widest: 526 columns)
+//     m=304 n=100   ~1.6 s  (extrapolated; the largest gallery instance)
+// Residuals stay at or below 3e-11 throughout, so the client-side B⁻¹ is still
+// trustworthy at this size — the cost is latency and DOM weight, not accuracy.
+// A second-scale pause on a deliberate click is acceptable; TABLEAU_HEAVY_CELLS
+// is the threshold above which the link warns first.
+const TABLEAU_MAX_CELLS   = 130000;
+const TABLEAU_MAX_ROWS    = 320;
+const TABLEAU_HEAVY_CELLS = 20000;   // ~0.2 s+ — warn in the link's tooltip
+function tableauCells(){ const m=PROG.num_constraints; return m*(PROG.num_vars+m); }
+function tableauFits(){
+  if(!PROG || PROG.general_form) return false;
+  return PROG.num_constraints<=TABLEAU_MAX_ROWS && tableauCells()<=TABLEAU_MAX_CELLS;
+}
+function tableauHeavy(){ return !!PROG && tableauCells()>TABLEAU_HEAVY_CELLS; }
+// Build time is dominated by the O(m³) inversion plus the O(m²·nt) product;
+// calibrated on the m=222 measurement above (637 ms) so the tooltip is a real
+// estimate rather than a guess.
+function tableauSecs(){
+  const m=PROG.num_constraints, nt=PROG.num_vars+m;
+  const work = m*m*m + m*m*nt, ref = 222*222*222 + 222*222*322;
+  return Math.max(0.2, 0.637*work/ref).toFixed(1);
+}
+function varName(v){ const n=PROG.num_vars; return v<n ? ((PROG.var_names&&PROG.var_names[v])||("x"+(v+1))) : ("s"+(v-n+1)); }
+// Min-sense cost of a column. PROG.objective is stored in the program's STATED
+// sense, so negate only for a max program (slacks cost 0). Single source used by
+// the tableau and by enrichNode so their reduced costs can never drift apart.
+function minCost(v){ const n=PROG.num_vars; if(v>=n) return 0;
+  return PROG.objective_sense === "max" ? -PROG.objective[v] : PROG.objective[v]; }
+
+// DAG nodes are exported "lean" (basic_index only — see strip_heavy_node_fields):
+// everything else is recomputed here on demand from basic_index + the LP + the
+// kept edges, so no information is lost while the files stay small enough to draw.
+// Idempotent: a rich node (candidates already present) is returned unchanged.
+function enrichNode(n){
+  if(!n || n.candidates !== undefined || !n.basic_index) return n;
+  const tab = fullTableau(n.basic_index);
+  if(!tab){ n.candidates = []; n.basis = (n.basic_index||[]).map(varName); return n; }
+  const {T, rhs, reduced, m, nt, basic_index} = tab, tol = 1e-7;
+  n.basis = basic_index.map(varName);
+  n.basic_values = rhs.slice();
+  n.c_B = basic_index.map(minCost);
+  if(n.objective == null)
+    n.objective = basic_index.reduce((s,v,i)=> s + minCost(v)*rhs[i], 0) * (PROG.objective_sense==="max"?-1:1);
+  const inB = new Set(basic_index), cands = [];
+  for(let j=0;j<nt;j++){ if(!inB.has(j) && reduced[j] < -tol) cands.push(j); }
+  const dinf = j => Math.max(0, -reduced[j]);
+  const gamma = j => 1 + T[j].reduce((s,x)=>s+x*x,0);
+  const steep = j => { const d=dinf(j); return d*d/gamma(j); };
+  const gi = j => { let mn=Infinity; for(let i=0;i<m;i++){ const a=T[j][i];
+    if(a>1e-9){ const r=rhs[i]/a; if(r<mn) mn=r; } } return mn===Infinity? Infinity : dinf(j)*mn; };
+  const argmax = f => cands.reduce((b,j)=> f(j)>f(b)?j:b, cands[0]);
+  const picks = {};
+  if(cands.length){ picks.dantzig=argmax(dinf); picks.bland=Math.min(...cands);
+    picks.steepest=argmax(steep); picks.greatest_increment=argmax(gi); }
+  // on_shortest_path / leads_to are DAG-structural — reconstruct from kept edges.
+  const outE = {};
+  (PROG.dag.edges||[]).forEach(e=>{ if(e.source===n.id && e.enter_index!=null) outE[e.enter_index]=e.target; });
+  n.candidates = cands.map(j=>({
+    var: varName(j), index: j, reduced_cost: reduced[j], dual_infeasibility: dinf(j),
+    steepest_gamma: gamma(j), steepest_score: steep(j),
+    increment_score: (gi(j)===Infinity? null : gi(j)),
+    picked_by: ["dantzig","bland","steepest","greatest_increment"].filter(r=> picks[r]===j),
+    on_shortest_path: (outE[j] !== undefined), leads_to: (outE[j] !== undefined ? outE[j] : null),
+  }));
+  return n;
+}
+function fullTableau(basic_index){
+  const m=PROG.num_constraints, n=PROG.num_vars, A=PROG.A, b=PROG.rhs, obj=PROG.objective, nt=n+m;
+  const Bi = invert(basisMatrix(basic_index)); if(!Bi) return null;
+  const Ncol = j => (j<n) ? A.map(r=>r[j]) : Array.from({length:m},(_,i)=> i===(j-n)?1:0);
+  const mul = (M,v) => M.map(r=> r.reduce((s,x,k)=>s+x*v[k],0));   // M·v
+  const cost = minCost;  // min-sense cost (sense-aware; see minCost)
+  const T = []; for(let j=0;j<nt;j++) T.push(mul(Bi, Ncol(j)));     // T[j] = column j (len m)
+  const rhs = mul(Bi, b);                                          // x_B
+  const cB = basic_index.map(cost);
+  const dot = (a,bb)=> a.reduce((s,x,k)=>s+x*bb[k],0);
+  const reduced = []; for(let j=0;j<nt;j++) reduced.push(cost(j) - dot(cB, T[j]));
+  // Numerical health: each basic column of B⁻¹[A|I] should be a unit vector, so
+  // the max drift from that is a direct residual for the client-side inverse — it
+  // catches an ill-conditioned basis at any size (better than an a-priori cond(A)).
+  let residual = 0;
+  basic_index.forEach((bv,row)=>{ const col=T[bv];
+    for(let k=0;k<m;k++) residual=Math.max(residual, Math.abs(col[k]-(k===row?1:0))); });
+  return {T, rhs, reduced, m, n, nt, basic_index, residual};
+}
+let TAB = null;   // current tableau + selected entering column (interactive ratio test)
+
+// Which (enabled) methods pivot through THIS node, and what each does next:
+// {name,label,color, enter, leave} — enter/leave are var-name strings for a
+// single trajectory, or string[] for the A* envelope (several shortest paths
+// may leave this node differently). Used to tag the tableau's columns (enters)
+// and basic rows (leaves) so you can see what comes/goes per method in place.
+function methodsAtNode(nodeId){
+  const idMap={}; PROG.dag.nodes.forEach(nd=> idMap[nd.id]=nd);
+  const nv=PROG.num_vars;
+  const labelOf = v => v<nv ? ((PROG.var_names&&PROG.var_names[v])||("x"+(v+1))) : ("s"+(v-nv+1));
+  const basisOf = id => (idMap[id]? idMap[id].basic_index : null);
+  const leftVar = (fromId,toId,pre)=>{      // variable that leaves fromId->toId
+    if(pre!=null) return pre;               // precomputed (injected routes)
+    const a=basisOf(fromId), b=basisOf(toId); if(!a||!b) return null;
+    const cur=new Set(b); const gone=a.find(x=>!cur.has(x)); return gone==null?null:labelOf(gone);
+  };
+  const out=[];
+  allRoutes().filter(r=> r.kind!=="astar" && ENABLED.has(r.name)).forEach(r=>{
+    const seq=(r.nodes&&r.nodes.length)? r.nodes : resolveRouteNodes(r).nodes;
+    const ent=r.enters||[]; const p=seq.indexOf(nodeId);
+    if(p<0 || p>=ent.length) return;        // node not on this path (or it's terminal)
+    out.push({name:r.name, label:r.label||r.name, color:routeColor(r),
+              enter:ent[p], leave:leftVar(seq[p], seq[p+1], r.leaves? r.leaves[p]:null)});
+  });
+  if(ENABLED.has("astar")){                 // envelope: union over all shortest paths here
+    const es=new Set(), ls=new Set();
+    (PROG.paths||[]).forEach(path=>{ const seq=path.nodes||[], ent=path.enters||[];
+      const p=seq.indexOf(nodeId); if(p<0||p>=ent.length) return;
+      es.add(ent[p]); const lv=leftVar(seq[p], seq[p+1], null); if(lv) ls.add(lv); });
+    if(es.size) out.unshift({name:"astar", label:"A*", color:ROUTE_COLORS.astar,
+                             enter:[...es], leave:[...ls], astar:true});
+  }
+  return out;
+}
+function methodInitial(m){ if(m.astar) return "A*";
+  return (RULE_INI[m.name] || (m.label||m.name).replace(/[^A-Za-z0-9]/g,"")[0] || "?").toUpperCase(); }
+function methodChips(ms, role, vn){ if(!ms||!ms.length) return "";
+  return `<div class="chips">`+ms.map(m=>
+    `<span class="mchip" style="background:${m.color}" title="${m.label} ${role} ${vn} here">${methodInitial(m)}</span>`).join("")+`</div>`; }
+
+function tableauTable(tab, enterCol){
+  const {T,rhs,reduced,m,n,nt,basic_index}=tab, tol=1e-7;
+  const inB = new Set(basic_index);
+  const showBasic = !!tab._showBasic;           // basic (identity) columns hidden by default
+  const shown = j => !inB.has(j) || showBasic;  // always show non-basic; basic only when toggled on
+  // Tag columns with the methods that ENTER that var here, rows with those that LEAVE it.
+  const atNode = CUR_NODE ? methodsAtNode(CUR_NODE.id) : [];
+  const enterBy={}, leaveBy={};
+  atNode.forEach(mth=>{
+    (Array.isArray(mth.enter)?mth.enter:[mth.enter]).forEach(v=>{ if(v)(enterBy[v] ??= []).push(mth); });
+    (Array.isArray(mth.leave)?mth.leave:(mth.leave?[mth.leave]:[])).forEach(v=>{ if(v)(leaveBy[v] ??= []).push(mth); });
+  });
+  const cost = minCost;  // min-sense cost (sense-aware; see minCost)
+  const zval = basic_index.reduce((s,v,i)=> s + cost(v)*rhs[i], 0);  // c_B · x_B
+  // min-ratio test for the clicked entering column: θ_i = RHS_i / T_ij for T_ij>0
+  let ratios=null, minRow=-1;
+  if(enterCol!=null){
+    ratios=[]; let mn=Infinity;
+    for(let i=0;i<m;i++){ const a=T[enterCol][i];
+      if(a>tol){ const r=rhs[i]/a; ratios.push(r); if(r<mn-1e-12){ mn=r; minRow=i; } }
+      else ratios.push(null); }
+  }
+  const ec = j => j===enterCol ? " entercol" : "";
+  // ---- degenerate-tie annotation -------------------------------------------
+  // When the clicked column's min-ratio test TIES, the objective cannot choose
+  // the leaving row: every tied row gives the same step and the same objective.
+  // Show what the three tie-break rules are each reading.
+  //   cand         eligible entering columns (nonbasic, reduced cost < 0)
+  //   blocking(i)  |{ j in cand : j != enterCol and T[j][i] > 0 }| -- the count
+  //                of eligible columns row i takes part in the ratio test of,
+  //                i.e. the improving directions whose step length row i has a
+  //                say in bounding. (When x_B[i]=0 that bound is 0 and the row
+  //                stops those columns dead; a tie at theta>0 is the case where
+  //                the pivot CREATES such a row.) Ties are annotated either way.
+  let tiedSet=null, blocking=null, tiePick=null, candSet=null;
+  if(enterCol!=null){
+    const mn = Math.min(...ratios.filter(r=>r!=null));
+    const tied=[]; ratios.forEach((r,i)=>{ if(r!=null && Math.abs(r-mn)<1e-9) tied.push(i); });
+    if(tied.length>1){
+      candSet=new Set();
+      for(let j=0;j<nt;j++) if(!inB.has(j) && reduced[j]<-tol && j!==enterCol) candSet.add(j);
+      tiedSet=new Set(tied); blocking={};
+      tied.forEach(i=>{ let c=0; candSet.forEach(j=>{ if(T[j][i]>tol) c++; }); blocking[i]=c; });
+      const bv=i=>basic_index[i];
+      tiePick={
+        blocking: tied.reduce((a,b)=> (blocking[b]>blocking[a] ||
+                    (blocking[b]===blocking[a] && bv(b)<bv(a))) ? b : a),
+        // relative tolerance, matching block_rules.HARRIS_REL_TOL: nominally
+        // equal pivots must not be separated by inversion noise.
+        harris:   (()=>{ const mx=Math.max(...tied.map(i=>Math.abs(T[enterCol][i])));
+                    const top=tied.filter(i=>Math.abs(T[enterCol][i])>=mx*(1-1e-9));
+                    return top.reduce((a,b)=> bv(b)<bv(a) ? b : a); })(),
+        bland:    tied.reduce((a,b)=> bv(b)<bv(a) ? b : a)};
+    }
+  }
+  const TIECOL={blocking:"#0f766e",harris:"#b45309",bland:"#7c3aed"};
+  const pickOf = i => tiePick ? Object.keys(tiePick).filter(k=>tiePick[k]===i) : [];
+  // Pivot element per pivotable column: for every NONBASIC column with a bounded
+  // min-ratio test, find its winning (leaving) row and box that cell — so you can
+  // see, at a glance, where each column would pivot at this tableau.
+  const pivotRow = {};
+  for(let j=0;j<nt;j++){
+    if(inB.has(j)) continue;                       // basic columns are already in
+    let mn=Infinity, row=-1;
+    for(let i=0;i<m;i++){ const a=T[j][i];
+      if(a>tol){ const r=rhs[i]/a; if(r<mn-1e-12){ mn=r; row=i; } } }
+    if(row>=0) pivotRow[j]=row;
+  }
+  // Method indicators live OUTSIDE the numeric grid so they never widen a
+  // column: exits in a borderless left column (aligned to each basic row),
+  // enters in a borderless bottom row (stacked vertically under each column).
+  const hasChips = atNode.length>0;
+  const exitHead = hasChips ? `<th class="exithead" title="methods that LEAVE each basic variable here">exit</th>` : "";
+  const exitCell = vn => hasChips ? `<td class="exitcell">${methodChips(leaveBy[vn],'leaves',vn)}</td>` : "";
+  const exitBlank = hasChips ? `<td class="exitcell"></td>` : "";
+  let h=`<table class="mat tableau"><tr>${exitHead}<th class="rl"><span class="nbtoggle" onclick="toggleBasicCols()" title="${showBasic?'hide':'show'} basic (identity) columns">${showBasic?'−':'+'}</span></th>`;
+  for(let j=0;j<nt;j++){ if(!shown(j)) continue; const vn=varName(j);
+    h+=`<th class="hcol${inB.has(j)?' bcol':''}${ec(j)}" onclick="showRatioTest(${j})" title="click: min-ratio test for entering ${vn}">${vn}</th>`; }
+  h+=`<th class="rhs">RHS</th>`;
+  // The θ (min-ratio) column is ALWAYS present (fixed width) so clicking a header
+  // to fill it never resizes the modal; empty and dimmed until a column is picked.
+  h+=`<th class="ratio${enterCol==null?' ratio-empty':''}">${enterCol==null?'θ':('θ ⟵ '+varName(enterCol))}</th>`;
+  if(tiedSet) h+=`<th class="blockcol" title="blocking(i): eligible entering columns this row would stop at θ=0">block</th>`;
+  h+=`</tr>`;
+  h+=`<tr class="zrow">${exitBlank}<td class="rl">z</td>`;
+  for(let j=0;j<nt;j++){ if(!shown(j)) continue; const d=reduced[j];
+    h+=`<td class="${d<-tol?'neg':''}${ec(j)}${candSet&&candSet.has(j)?' eligcol':''}">${fmt(d,2)}</td>`; }
+  h+=`<td class="rhs">${fmt(zval,2)}</td><td class="ratio"></td>${tiedSet?'<td class="blockcol"></td>':''}</tr>`;
+  for(let i=0;i<m;i++){
+    const lv = i===minRow;
+    const bvn=varName(basic_index[i]);
+    const who = pickOf(i);
+    const tiedRow = tiedSet && tiedSet.has(i);
+    const rowStyle = who.length ? ` style="background:${TIECOL[who[0]]}18"` : "";
+    h+=`<tr class="${lv?'leaverow':''}${tiedRow?' tiedrow':''}"${rowStyle}>${exitCell(bvn)}<td class="rl bvar">${
+      tiedRow?`<span class="tiedot" style="background:${who.length?TIECOL[who[0]]:'#94a3b8'}"></span>`:""}${bvn}${
+      who.length?`<span class="tietag" style="color:${TIECOL[who[0]]}">${who.join("/")}</span>`:""}</td>`;
+    for(let j=0;j<nt;j++){ if(!shown(j)) continue; const pe = pivotRow[j]===i ? " pivotelem" : "";
+      const counted = tiedRow && candSet && candSet.has(j) && T[j][i]>tol;
+      h+=`<td class="${inB.has(j)?'bcol':''}${ec(j)}${pe}${counted?' blockcell':''}">${fmt(T[j][i],2)}</td>`; }
+    h+=`<td class="rhs">${fmt(rhs[i],2)}</td>`;
+    if(enterCol!=null){ const r=ratios[i];
+      h+=`<td class="ratio${lv?' minratio':''}">${r==null?'—':fmt(r,3)}${lv?' ⟵':''}</td>`; }
+    else h+=`<td class="ratio"></td>`;
+    if(tiedSet) h+=`<td class="blockcol">${tiedRow?blocking[i]:''}</td>`;
+    h+=`</tr>`;
+  }
+  if(hasChips){   // bottom enter row: methods that ENTER each column, stacked
+    h+=`<tr class="enterrow">${exitBlank}<td class="rl enterhead" title="methods that ENTER each variable here">enter</td>`;
+    for(let j=0;j<nt;j++){ if(!shown(j)) continue; const vn=varName(j);
+      h+=`<td class="entercell${ec(j)}">${methodChips(enterBy[vn],'enters',vn)}</td>`; }
+    h+=`<td class="rhs"></td><td class="ratio"></td>${tiedSet?'<td class="blockcol"></td>':''}</tr>`;
+  }
+  h+=`</table>`;
+  if(tiedSet){
+    const nm=i=>varName(basic_index[i]);
+    h+=`<div class="tiebox"><b>${tiedSet.size} rows tie at θ = ${fmt(ratios[minRow],3)}</b>
+      — the objective is indifferent between them, so the tie-break decides.
+      <span class="blockcell" style="padding:0 4px">Outlined</span> cells are the
+      positive entries in the <span class="eligcol" style="padding:0 4px">eligible
+      entering columns</span> (z-row reduced cost &lt; 0, excluding
+      ${varName(enterCol)}); <b>block</b> counts them.
+      <div style="margin-top:4px">
+      <span class="tiedot" style="background:${TIECOL.bland}"></span>Bland → ${nm(tiePick.bland)} (lowest index) &nbsp;
+      <span class="tiedot" style="background:${TIECOL.harris}"></span>Harris → ${nm(tiePick.harris)} (largest |pivot| = ${fmt(T[enterCol][tiePick.harris],2)}) &nbsp;
+      <span class="tiedot" style="background:${TIECOL.blocking}"></span>ours → ${nm(tiePick.blocking)} (blocks ${blocking[tiePick.blocking]})
+      </div></div>`;
+  }
+  return h;
+}
+function renderTableauModal(){
+  const n=CUR_NODE, tab=TAB, e=tab._enter;
+  // Static hint (does not change with the selected column) so clicking a header
+  // never reflows this paragraph and resizes the modal.
+  const hint = `Each <b>boxed</b> cell is a column's pivot element — the min-ratio winner it would leave on if it entered. Click a column header to fill the θ column with its full min-ratio test (θ = RHS/column, column&gt;0 only; the <b class="minratio">⟵ leaving</b> row is the arg-min). Click again to clear.`;
+  // Warn if the client-side B⁻¹ has visibly drifted (ill-conditioned basis). The
+  // 2-decimal display hides <~1e-3, so only flag beyond that.
+  const warn = (tab.residual > 1e-3)
+    ? `<div class="modebanner bad" style="margin:0 0 6px">⚠ Ill-conditioned basis — the client-side B⁻¹ residual is ${fmt(tab.residual,3)}; shown values may be inaccurate.</div>`
+    : "";
+  $("modalbody").innerHTML = `<h3>Simplex tableau — B⁻¹[A|I] at {${(n.basis||[]).join(", ")}}</h3>${warn}
+    <div class="muted" style="font-size:12px;margin-bottom:6px">Rows = basic vars · z-row = reduced costs (<span class="neg">red</span> = improving) · shaded = basic columns · RHS = x_B. Method ticks: bottom <b>enter</b> row (under a column) = methods entering that var here; left <b>exit</b> column (beside a row) = methods leaving it. ${hint}</div>
+    <div style="overflow:auto">${tableauTable(tab, e)}</div>`;
+}
+function showRatioTest(j){ if(!TAB) return; TAB._enter = (TAB._enter===j) ? null : j; renderTableauModal(); }
+function toggleBasicCols(){ if(!TAB) return; TAB._showBasic = !TAB._showBasic; renderTableauModal(); }
+function expandTableau(){
+  const n=CUR_NODE; if(!n||!n.basic_index) return;
+  const tab=fullTableau(n.basic_index);
+  if(!tab){ openModal("Simplex tableau", `<div class="muted">Singular basis — tableau unavailable.</div>`); return; }
+  tab._enter=null; TAB=tab;
+  renderTableauModal();
+  $("modal").classList.add("open");
+}
+
+// ---------- DAG drawing ----------
+const RULE_INI = {dantzig:"D", bland:"B", steepest:"S", devex:"V", greatest_increment:"G"};
+const ROUTE_COLORS = {rl:"#c1121f", dantzig:"#1f6fd6", bland:"#7d3fb5",
+                      steepest:"#1a7f37", devex:"#d98a00", greatest_increment:"#0aa3a3",
+                      astar:"#222"};
+// Deterministic distinct color from a method name, so injected methods (IQL, RL,
+// external solvers) draw without a built-in color or any viewer edit.
+function autoColor(name){ let h=0; for(const c of String(name)) h=(h*31+c.charCodeAt(0))>>>0;
+  return `hsl(${h%360} 62% 42%)`; }
+// A route's color: built-in > route-supplied "color" > deterministic auto.
+function routeColor(r){ const n=(r&&r.name)!=null?r.name:r;
+  return ROUTE_COLORS[n] || (r&&r.color) || autoColor(n); }
+let ENABLED = new Set();   // enabled route names
+let LAYOUT = null;          // {pos, R} for highlight()
+let VIEW = "merged";        // "merged" | "dag"
+
+function nodeStroke(n){ return n.is_start?"var(--start-edge)": n.is_goal?"var(--goal-edge)":"var(--mid-edge)"; }
+function edgeColor(e){ if(e.forced) return "var(--grey)";
+  return e.consistent_rules.length ? "var(--green)" : "var(--red)"; }
+function edgeBadge(e){ if(e.forced) return "(forced)";
+  const ini = ["dantzig","bland","steepest"].filter(r=>e.consistent_rules.includes(r))
+              .map(r=>RULE_INI[r]).join(""); return ini ? `[${ini}]` : "[—]"; }
+
+function allRoutes(){ return (PROG.routes || []); }
+
+// Resolve a route's vertex sequence. A route may specify "nodes" (node ids)
+// directly, or just "enters" (a sequence of entering-variable names) which we
+// walk from the start over DAG edges. Returns {nodes, partial} (partial=true if
+// an enter step left the shortest-path DAG and the walk stopped early).
+function resolveRouteNodes(route){
+  if(route.nodes && route.nodes.length) return {nodes: route.nodes, partial:false};
+  if(!route.enters) return {nodes:[], partial:false};
+  const bySource = {};
+  PROG.dag.edges.forEach(e=>{ (bySource[e.source] ??= []).push(e); });
+  let cur = PROG.dag.start; const seq=[cur];
+  for(const name of route.enters){
+    const e = (bySource[cur]||[]).find(x=>x.enter===name);
+    if(!e) return {nodes:seq, partial:true};
+    cur = e.target; seq.push(cur);
+  }
+  return {nodes:seq, partial:false};
+}
+
+function renderDAG(){
+  const d = PROG.dag, nodes = d.nodes, edges = d.edges;
+  // Column = node.col when present (A* depth on-DAG, step index off-DAG, optimum
+  // pinned right), else depth g. Vertical BANDS: A*-optimal vertices on top,
+  // slower-rule detour (off-DAG) vertices in a lane below.
+  const colOf = n => (n.col != null ? n.col : n.g);
+  const cols = [...new Set(nodes.map(colOf))].sort((a,b)=>a-b);
+  const maxCol = Math.max(...cols);
+  const colGap = 200, rowGap = 92, R = 24, padX = 76, padTop = 40, padBot = 54;
+
+  const onAt = {}, offAt = {};   // column -> nodes in each band
+  nodes.forEach(n=>{ (n.off_dag ? offAt : onAt)[colOf(n)] ??= []; (n.off_dag ? offAt : onAt)[colOf(n)].push(n); });
+  const wid = m => Math.max(1, ...cols.map(c=>(m[c]||[]).length));
+  const maxOn = wid(onAt), hasOff = nodes.some(n=>n.off_dag), maxOff = hasOff ? wid(offAt) : 0;
+  const topC = padTop + (maxOn-1)*rowGap/2;
+  const bandGap = 64;
+  const botTop = padTop + (maxOn-1)*rowGap + bandGap;
+  const botC = botTop + (maxOff-1)*rowGap/2;
+  const H = (hasOff ? botTop + (maxOff-1)*rowGap : padTop + (maxOn-1)*rowGap) + padBot + 20;
+  const W = padX*2 + maxCol*colGap;
+
+  const pos = {};
+  const place = (map, center)=> cols.forEach(c=>{
+    const list=(map[c]||[]).slice().sort((a,b)=>a.id.localeCompare(b.id)), k=list.length;
+    list.forEach((n,i)=> pos[n.id]={x: padX + c*colGap, y: center + (i-(k-1)/2)*rowGap}); });
+  place(onAt, topC); place(offAt, botC);
+  LAYOUT = {pos, R};
+
+  // Routes to draw (their segments also drive the black underlay).
+  const routes = allRoutes().filter(r=>ENABLED.has(r.name));
+  routes.sort((a,b)=> (a.kind==="rl"?0:-1) - (b.kind==="rl"?0:-1));  // rl last (on top)
+
+  // 1) Thick black underlay following EVERY displayed trajectory (A* edges +
+  //    enabled routes), one line per unique segment, behind everything.
+  const segSet = new Set();
+  edges.forEach(e=> segSet.add(e.source+"|"+e.target));
+  routes.forEach(r=>{ const {nodes:seq}=resolveRouteNodes(r);
+    for(let s=0;s<seq.length-1;s++) segSet.add(seq[s]+"|"+seq[s+1]); });
+  const underlaySVG = [...segSet].map(key=>{
+    const [s,t]=key.split("|"); const a=pos[s], b=pos[t]; if(!a||!b) return "";
+    return `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="#0f1620"
+            stroke-width="7" stroke-linecap="round" opacity="0.88"/>`;
+  }).join("");
+
+  // 2) Colored method routes ride just off the black line (small perp offset).
+  const K = routes.length;
+  const routeSVG = routes.map((r,j)=>{
+    const off = (j - (K-1)/2) * 3.5;
+    const col = ROUTE_COLORS[r.name] || "#444";
+    const w = r.kind==="rl" ? 4 : 2.6;
+    const {nodes:seq} = resolveRouteNodes(r);
+    let segs = "";
+    for(let s=0; s<seq.length-1; s++){
+      const a=pos[seq[s]], b=pos[seq[s+1]]; if(!a||!b) continue;
+      const dx=b.x-a.x, dy=b.y-a.y, L=Math.hypot(dx,dy)||1;
+      const px=-dy/L*off, py=dx/L*off;
+      segs += `<line x1="${a.x+px}" y1="${a.y+py}" x2="${b.x+px}" y2="${b.y+py}"
+               stroke="${col}" stroke-width="${w}" stroke-linecap="round" opacity="0.97"/>`;
+    }
+    return segs;
+  }).join("");
+
+  // 3) Rule-colored A*-edge arrows + labels (green=a rule agrees, red=none, grey=forced).
+  const edgeSVG = edges.map((e,idx)=>{
+    const a=pos[e.source], b=pos[e.target]; if(!a||!b) return "";
+    const mx=(a.x+b.x)/2, my=(a.y+b.y)/2, col=edgeColor(e);
+    return `<g class="edge" data-edge="${idx}">
+      <path class="hit" d="M${a.x} ${a.y} L${b.x} ${b.y}"/>
+      <line x1="${a.x+R}" y1="${a.y}" x2="${b.x-R}" y2="${b.y}" stroke="${col}"
+            stroke-width="2.2" marker-end="url(#ar--${idx})"/>
+      <marker id="ar--${idx}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7"
+              markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0L10 5L0 10z" fill="${col}"/></marker>
+      <rect x="${mx-36}" y="${my-21}" width="72" height="16" rx="3" fill="#fff" opacity="0.92"/>
+      <text class="elabel" x="${mx}" y="${my-9}" text-anchor="middle" fill="#1f2d3d">${e.enter} ${edgeBadge(e)}</text>
+    </g>`;
+  }).join("");
+
+  // 4) Nodes on top so the lines tuck under the circles.
+  const nodeSVG = nodes.map(n=>{
+    const p=pos[n.id];
+    const fill = n.is_start?"var(--start)": n.is_goal?"var(--goal)": (n.off_dag?"#e7ecf3":"var(--mid)");
+    const lab = n.is_start?"start": n.is_goal?"opt":"";
+    const dash = n.off_dag ? `stroke-dasharray="5 3"` : "";
+    return `<g class="node" data-node="${n.id}">
+      <circle cx="${p.x}" cy="${p.y}" r="${n.off_dag?R-3:R}" fill="${fill}" stroke="${nodeStroke(n)}"
+              data-stroke="${nodeStroke(n)}" stroke-width="1.8" ${dash}/>
+      <text x="${p.x}" y="${p.y+4}" text-anchor="middle">${lab}</text></g>`;
+  }).join("");
+
+  const layerLabels = cols.map(c=>`<text class="legend" x="${padX+c*colGap}" y="${H-14}"
+      text-anchor="middle">${c===0?"start":"pivot "+c}</text>`).join("");
+
+  const svg = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
+    ${underlaySVG}${routeSVG}${edgeSVG}${nodeSVG}${layerLabels}</svg>`;
+  $("center").innerHTML = routeBar() + `<div class="svgwrap">${svg}</div>`;
+
+  $("center").querySelectorAll(".node").forEach(el=>
+    el.addEventListener("click",()=>selectNode(el.dataset.node)));
+  $("center").querySelectorAll(".edge").forEach(el=>
+    el.addEventListener("click",()=>selectEdge(+el.dataset.edge)));
+  bindRouteBar();
+  highlight();
+}
+
+function bindRouteBar(){
+  $("center").querySelectorAll(".routebar input").forEach(el=>
+    el.addEventListener("change",()=>{ el.checked?ENABLED.add(el.value):ENABLED.delete(el.value); renderView(); }));
+}
+
+function routeBar(){
+  const tabs = "";  // single view (merged timeline); the Basis DAG view was dropped
+  const inMerged = true;
+  const routes = allRoutes().filter(r=> inMerged ? true : r.kind!=="astar");
+  const hasRL = allRoutes().some(r=>r.kind==="rl");
+  const lb = PROG.stats ? PROG.stats.pivot_lower_bound : null;   // |B*\B0|
+  const toggles = routes.map(r=>{
+    const col = routeColor(r);
+    // Bound flips (a nonbasic variable jumps to its other bound: it "enters" but
+    // nothing leaves → leaves[i]==null) are NOT pivots. Count/label them apart.
+    const nFlip = r.leaves ? r.leaves.reduce((a,x)=> a + (x==null?1:0), 0) : 0;
+    const piv = (r.enters||[]).length - nFlip;   // real pivots (A* = min)
+    const atBound = (lb!=null && piv===lb) ? ` <span class="atbound" title="hits the |B*\\B0| lower bound (${lb})">= bound</span>` : "";
+    const flipTag = nFlip ? ` <span class="flipcount" title="bound flips — a nonbasic variable jumps to its other bound; no leaving variable, not a pivot">+${nFlip} flip${nFlip>1?"s":""}</span>` : "";
+    const tag = r.kind==="astar" ? `<span class="pcount">${piv}</span> piv (min)`
+                                 : `<span class="pcount">${piv}</span> piv${flipTag}`;
+    // Out-of-distribution policy trace (e.g. a box-trained IQL run on a
+    // standardized LP): every step is still a real pivot and it may still reach
+    // the optimum, but the pivot ORDER is not meaningful. Flag it so the line
+    // isn't read as a genuine learned policy.
+    const oodTag = r.ood ? ` <span class="oodtag" title="${(r.note||"out-of-distribution policy trace").replace(/"/g,"&quot;")}">OOD${r.reached_optimal_basis===true?", reaches opt ✓":(r.reached_optimal_basis===false?", no opt ✗":"")}</span>` : "";
+    return `<label><input type="checkbox" value="${r.name}" ${ENABLED.has(r.name)?"checked":""}>
+      <span class="sw" style="border-top-color:${col}"></span>${r.label} · ${tag}${atBound}${oodTag}</label>`;
+  }).join("");
+  const astarItem = inMerged ? "" :
+    `<label><input type="checkbox" checked disabled><span class="sw" style="border-top-color:#0f1620"></span>A* optimal (all)</label>`;
+  // Mode-aware legend: complete envelope vs A*-proven-but-too-large-to-draw vs
+  // A*-proven single route vs unverified path.
+  const st = PROG.stats || {};
+  const complete = PROG.has_astar!==false && st.num_shortest_paths!=null;
+  // Envelope found but not drawn: A* found a minimum-pivot COUNT + path count,
+  // but the all-shortest-paths DAG was too large to serialize (see
+  // astar_min_pivots / envelope_truncated). The count is a PROVEN minimum only
+  // when optimality_proven===true. astar_min_pivots_certified is NOT trusted for
+  // the wording: certify_minimal_count's optimal-face enumeration is incomplete
+  // on a degenerate face, so it can certify a count a shorter path beats
+  // (scheduling_v24_00766 is certified at 13, but a hand-verified path reaches
+  // the optimum in 12). An unproven truncated count is a sound UPPER BOUND.
+  const truncated = !complete && st.envelope_truncated===true && st.astar_min_pivots!=null;
+  const truncProven = truncated && st.optimality_proven===true;
+  const provenRoute = !complete && !truncated && st.optimality_proven===true;
+  // Only mention bound flips when this program actually has any — a standardized
+  // (bounds-as-rows) LP has no boxed variables, so flips are impossible there.
+  const anyFlip = (PROG.routes||[]).some(r => (r.leaves||[]).some(x => x===null));
+  const flipLeg = anyFlip ? " · ↕ = bound flip (no pivot)" : "";
+  const note = inMerged
+    ? (complete
+        ? `<span class="rl-empty">A* envelope = all shortest paths (darker = used by more) · rows = variables · cols = iterations · ↓ = leaves${flipLeg} · node ring: <b style="color:#1a7f37">green</b>=on an A* path, <b style="color:#d98a00">amber</b>=mixed, grey=off-path (collision shows on-A*/total) · click → basis</span>`
+        : truncated
+        ? `<span class="rl-empty"><b>${truncProven?`A*-proven minimum: ${st.astar_min_pivots} pivots ✓`:`Fewest A* found: ${st.astar_min_pivots} pivots`}</b>${truncProven?"":` <span class="muted">(upper bound — minimality not proven)</span>`}${st.astar_num_shortest_paths!=null?` (${st.astar_num_shortest_paths} ${truncProven?"shortest ":""}paths at length ${st.astar_min_pivots})`:""} — full envelope too large to draw; classical${hasRL?" + RL":""} routes shown · rows = variables · cols = iterations · ↓ = leaves${flipLeg} · click a node → basis</span>`
+        : provenRoute
+        ? `<span class="rl-empty"><b>Minimum-pivot route (A*-proven)</b> — one shortest route; envelope not enumerated · rows = variables · cols = iterations · ↓ = leaves${flipLeg} · click a node → basis</span>`
+        : `<span class="rl-empty"><b>Single recorded path</b> (optimality not verified — see Statistics) · rows = variables · cols = iterations · ↓ = leaves${flipLeg} · click a node → basis</span>`)
+    : (hasRL ? "" : `<span class="rl-empty">Simplex-RL route: none loaded — add a {kind:"rl"} route to compare</span>`);
+  const zoom = inMerged ? `<span class="zoom"><button class="printbtn" onclick="exportDiagramSVG()" title="download the diagram as a standalone .svg (vector, publication-ready; legend included)">⇩ SVG</button>
+    <button onclick="setZoom(0.8)">−</button>
+    <span id="zlabel">100%</span><button onclick="setZoom(1.25)">+</button>
+    <button onclick="setZoom('fit')">fit</button></span>` : "";
+  return `<div class="routebar">${tabs}<span class="title">methods:</span>${astarItem}${toggles}${note}${zoom}</div>`;
+}
+
+function setView(v){ VIEW=v; renderView(); }
+function renderView(){ renderMerged(); }  // Basis DAG view dropped; merged only
+
+// Merged timeline of all (toggled) methods, drawn with the Basis-DAG aesthetic:
+// rows = variables, columns = iterations. A node is a (variable, iteration) cell
+// a method's ENTER lands on; several corners can collide there (cycle them in
+// the right panel). Colored arrows connect each method's entered vars start->sink;
+// ↓ arrows (method color) mark the variable that LEAVES each iteration. Fast
+// methods jump straight to the sink from an earlier column.
+function renderMerged(){
+  const idMap={}; PROG.dag.nodes.forEach(nd=> idMap[nd.id]=nd);
+  const nv = PROG.num_vars;
+  const labelOf = v => v<nv ? PROG.var_names[v] : ("s"+(v-nv+1));
+  const varKey = lab => { const i=PROG.var_names.indexOf(lab); if(i>=0) return i;
+    const m=/^s(\d+)$/.exec(lab); return m? nv+(+m[1]-1) : 1e9; };
+  const basisOf = id => (idMap[id]? idMap[id].basic_index : []);
+
+  // Drawables: each rule/RL method = its single trajectory; A* = the FULL
+  // envelope of ALL shortest paths (PROG.paths), so a method is compared against
+  // every optimal route, not just one representative.
+  const ENV_CAP = 200;
+  const drawables = [];
+  if(ENABLED.has("astar")){
+    // Complete datasets: the full envelope from PROG.paths. Single-path galleries
+    // have no envelope (PROG.paths empty) but still carry an "astar" route — draw
+    // that one recorded path so the enabled A* line actually appears.
+    const astarRoute = allRoutes().find(r=> r.kind==="astar");
+    const envPaths = (PROG.paths||[]).length
+      ? PROG.paths.slice(0,ENV_CAP).map(p=>({nodes:p.nodes, enters:p.enters}))
+      : (astarRoute ? [{nodes:astarRoute.nodes||[], enters:astarRoute.enters||[]}] : []);
+    if(envPaths.length)
+      drawables.push({name:"astar", kind:"astar", color:ROUTE_COLORS.astar, paths: envPaths});
+  }
+  allRoutes().filter(r=> r.kind!=="astar" && ENABLED.has(r.name)).forEach(r=>
+    drawables.push({name:r.name, kind:r.kind, color:routeColor(r),
+      paths:[{nodes:r.nodes||[], enters:r.enters||[], leaves:r.leaves||null}]}));
+  const methodDraw = drawables.filter(d=> d.kind!=="astar");
+  const allPaths = drawables.flatMap(d=> d.paths);
+  const maxL = Math.max(1, ...allPaths.map(p=>(p.enters||[]).length));
+
+  // Gather cells (intermediate entered vars) and rows (entered + left vars).
+  const cellCorners = {}, cellPos = {};   // "var|col" -> Set(cornerId), {v,col}
+  const usedVars = new Set();
+  const leaves = [];                       // {method, col, var}
+  const flips = [];                        // {method, col, var} — bound flips (no leave)
+  drawables.forEach(d=> d.paths.forEach(path=>{
+    const seq=path.nodes||[], ent=path.enters||[], L=ent.length;
+    for(let p=1;p<=L;p++){
+      const ev=ent[p-1]; usedVars.add(ev);
+      // Always register the cell position (line drawing needs it), but only add a
+      // real corner if this path reaches a materialized basis here — injected
+      // enters-only routes have no seq, so skip the undefined phantom corner that
+      // would break the collision cycler.
+      if(p<L){ const key=ev+"|"+p; cellPos[key]={v:ev,col:p};
+        (cellCorners[key] ??= new Set()); if(seq[p]!=null) cellCorners[key].add(seq[p]); }
+      if(d.kind!=="astar"){   // leaving arrows only for the method trajectories
+        if(path.leaves){      // precomputed leaving vars (injected routes)
+          const lv=path.leaves[p-1];
+          if(lv){ usedVars.add(lv); leaves.push({name:d.name,col:p,v:lv}); }
+          else if(p<L){ flips.push({name:d.name,col:p,v:ev}); }   // entered, nothing left → flip
+        } else {              // derive from consecutive bases (rules on the DAG)
+          const prev=new Set(basisOf(seq[p-1])), cur=new Set(basisOf(seq[p]));
+          [...prev].forEach(x=>{ if(!cur.has(x)){ const lv=labelOf(x); usedVars.add(lv); leaves.push({name:d.name,col:p,v:lv}); }});
+        }
+      }
+    }
+  }));
+
+  const rows = [...usedVars].sort((a,b)=> varKey(a)-varKey(b));
+  const rowIndex={}; rows.forEach((v,i)=> rowIndex[v]=i);
+
+  const padL=104, padT=40, padR=60, padB=46, colGap=72, rowH=40, R=15;
+  const W = padL + maxL*colGap + padR;
+  const H = padT + (rows.length-1)*rowH + padB + 16;
+  const colX = c => padL + c*colGap;
+  const rowY = i => padT + i*rowH;
+  const midY = padT + (rows.length-1)*rowH/2;
+  const posCell = key => ({x:colX(cellPos[key].col), y:rowY(rowIndex[cellPos[key].v])});
+  const startPos = {x:colX(0), y:midY}, sinkPos = {x:colX(maxL), y:midY};
+
+  // gridlines + labels
+  let grid="";
+  rows.forEach((v,i)=> grid += `<line x1="${padL-14}" y1="${rowY(i)}" x2="${W-padR+10}" y2="${rowY(i)}" stroke="#eef1f5"/>
+    <text class="legend" x="${padL-20}" y="${rowY(i)+4}" text-anchor="end">${v}</text>`);
+  for(let c=0;c<=maxL;c++) grid += `<text class="legend" x="${colX(c)}" y="${H-12}" text-anchor="middle">${c===0?"start":(c===maxL?"opt":"pivot "+c)}</text>`;
+
+  const pathPts = path => { const ent=path.enters||[], L=ent.length, pts=[startPos];
+    for(let p=1;p<L;p++) pts.push(posCell(ent[p-1]+"|"+p)); pts.push(sinkPos); return pts; };
+  const defs = `<defs>` + methodDraw.map(d=>
+    `<marker id="mk-${d.name}" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="${d.color}"/></marker>`).join("") + `</defs>`;
+
+  let lines="";
+  // A* envelope: count how many shortest paths use each edge, then draw each
+  // edge ONCE — darker & thicker the more shortest paths share it (so a "highway"
+  // common to many optimal routes stands out from an edge on just one).
+  drawables.filter(d=>d.kind==="astar").forEach(d=>{
+    const cnt={}, xy={};
+    d.paths.forEach(path=>{ const pts=pathPts(path);
+      for(let s=0;s<pts.length-1;s++){ const a=pts[s], b=pts[s+1];
+        const k=`${Math.round(a.x)},${Math.round(a.y)}|${Math.round(b.x)},${Math.round(b.y)}`;
+        cnt[k]=(cnt[k]||0)+1; xy[k]=[a,b]; }});
+    const maxC=Math.max(1,...Object.values(cnt));
+    Object.keys(cnt).forEach(k=>{ const [a,b]=xy[k], frac=cnt[k]/maxC;
+      lines += `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${d.color}"
+        stroke-width="${(3.5+2.5*frac).toFixed(1)}" stroke-linecap="round" opacity="${(0.2+0.65*frac).toFixed(2)}"/>`; });
+  });
+  // method trajectories: colored arrows, perp-offset so they stay distinguishable
+  methodDraw.forEach((d,j)=>{
+    const off=(j-(methodDraw.length-1)/2)*4, w=d.kind==="rl"?4:2.6, pts=pathPts(d.paths[0]);
+    for(let s=0;s<pts.length-1;s++){ const a=pts[s], b=pts[s+1];
+      const dx=b.x-a.x, dy=b.y-a.y, Ln=Math.hypot(dx,dy)||1, ux=dx/Ln, uy=dy/Ln, px=-uy*off, py=ux*off;
+      const ax=a.x+ux*R+px, ay=a.y+uy*R+py, bx=b.x-ux*(R+3)+px, by=b.y-uy*(R+3)+py;
+      lines += `<line x1="${ax}" y1="${ay}" x2="${bx}" y2="${by}" stroke="${d.color}" stroke-width="${w}"
+        stroke-linecap="round" opacity="0.96" marker-end="url(#mk-${d.name})"/>`;
+    }
+  });
+
+  // leaving arrows (method-colored ↓), offset horizontally per method
+  let leaveSVG="";
+  const mi={}, mColor={}; methodDraw.forEach((d,j)=>{ mi[d.name]=j; mColor[d.name]=d.color; });
+  leaves.forEach(lv=>{ const j=mi[lv.name]??0, off=(j-(methodDraw.length-1)/2)*9;
+    const x=colX(lv.col)+off, y=rowY(rowIndex[lv.v]);
+    leaveSVG += `<text class="tlarr" x="${x}" y="${y+5}" text-anchor="middle" fill="${mColor[lv.name]||'#444'}">↓</text>`; });
+
+  // bound flips (no leaving var): a method-colored ↕ on the entered cell — sibling
+  // of the ↓ leave arrow, and deliberately NOT a dashed ring: dashed rings already
+  // mean "several distinct bases collide at this cell".
+  let flipSVG="";
+  flips.forEach(f=>{ const j=mi[f.name]??0, off=(j-(methodDraw.length-1)/2)*9;
+    const x=colX(f.col)+off, y=rowY(rowIndex[f.v]);
+    flipSVG += `<text class="tlarr" x="${x}" y="${y+5}" text-anchor="middle" fill="${mColor[f.name]||'#444'}">↕<title>bound flip (${f.v} jumps to its other bound — no pivot, basis unchanged)</title></text>`; });
+
+  // nodes: start, sink, intermediate cells (with collision count)
+  let nodeSVG = `<g class="mnode" data-corners="${enc([PROG.dag.start])}">
+      <circle cx="${startPos.x}" cy="${startPos.y}" r="${R}" fill="var(--start)" stroke="var(--start-edge)" stroke-width="1.8"/>
+      <text x="${startPos.x}" y="${startPos.y+4}" text-anchor="middle">start</text></g>`;
+  // The optimum: every path's goal basis. Usually one (unique optimum), but with
+  // alternative optima there are several distinct optimal bases here — surface
+  // that with a count + dashed ring (cycle them in the panel) instead of hiding
+  // them in one node. (The last *entering* variable isn't row-placed on purpose:
+  // different shortest paths reach the same basis by entering different vars last.)
+  const sinkCorners=[...new Set(allPaths.map(p=>(p.nodes||[])[ (p.enters||[]).length ]).filter(Boolean))];
+  const nOpt=sinkCorners.length, optColl=nOpt>1;
+  nodeSVG += `<g class="mnode" data-corners="${enc(sinkCorners)}">
+      <circle cx="${sinkPos.x}" cy="${sinkPos.y}" r="${R}" fill="var(--goal)" stroke="var(--goal-edge)" stroke-width="${optColl?3:1.8}" ${optColl?'stroke-dasharray="4 2"':''}/>
+      <text x="${sinkPos.x}" y="${sinkPos.y+4}" text-anchor="middle" font-size="${optColl?'10':'11'}">${optColl?('opt·'+nOpt):'opt'}</text></g>`;
+  Object.keys(cellPos).forEach(key=>{
+    const p=posCell(key), ids=[...cellCorners[key]], coll=ids.length>1;
+    // How many of the colliding corners are on an A* shortest path (on the DAG,
+    // not an off-DAG detour vertex). Ring: green all on A*, grey none, amber mixed.
+    const od = ids.filter(id=> idMap[id] && !idMap[id].off_dag).length;
+    const ring = od===ids.length ? "var(--goal-edge)" : od===0 ? "var(--mid-edge)" : "#d98a00";
+    const fill = od>0 ? "#eaf5ec" : "var(--mid)";
+    const lab = coll ? (od>0 && od<ids.length ? `${od}/${ids.length}` : `${ids.length}`) : "";
+    nodeSVG += `<g class="mnode" data-corners="${enc(ids)}">
+      <circle cx="${p.x}" cy="${p.y}" r="${R-2}" fill="${fill}" stroke="${ring}" stroke-width="${coll?3:1.8}" ${coll?'stroke-dasharray="4 2"':''}/>
+      ${lab?`<text x="${p.x}" y="${p.y+4}" text-anchor="middle" font-size="10" font-weight="600">${lab}</text>`:""}</g>`;
+  });
+
+  // viewBox keeps aspect; fitSvg() sizes it to the pane (× ZOOM) and the wrap
+  // scrolls when zoomed in — so the view scales with the variable/iteration count.
+  const svg = `<svg viewBox="0 0 ${W} ${H}" data-w="${W}" data-h="${H}"
+    preserveAspectRatio="xMidYMid meet" style="display:block;margin:auto;max-width:none">${defs}${grid}${lines}${leaveSVG}${flipSVG}${nodeSVG}</svg>`;
+  $("center").innerHTML = routeBar() + `<div class="svgwrap">${svg}</div>`;
+  bindRouteBar();
+  fitSvg();
+  $("center").querySelectorAll(".mnode").forEach(el=>
+    el.addEventListener("click",()=> selectCorners(dec(el.dataset.corners))));
+}
+function enc(ids){ return ids.join("~~"); }
+function dec(s){ return s? s.split("~~") : []; }
+
+function highlight(){
+  $("center").querySelectorAll(".node circle").forEach(c=>{
+    c.setAttribute("stroke", c.getAttribute("data-stroke"));   // reset to base color
+    c.setAttribute("stroke-width","1.6");
+  });
+  $("center").querySelectorAll(".edge line").forEach(l=>l.setAttribute("stroke-width","1.8"));
+  if(SELECTED && SELECTED.type==="node"){
+    const g=$("center").querySelector(`.node[data-node="${CSS.escape(SELECTED.id)}"] circle`);
+    if(g){ g.setAttribute("stroke","var(--sel)"); g.setAttribute("stroke-width","3.4"); }
+  }
+  if(SELECTED && SELECTED.type==="edge"){
+    const g=$("center").querySelector(`.edge[data-edge="${SELECTED.idx}"] line`);
+    if(g) g.setAttribute("stroke-width","3.6");
+  }
+}
+
+// ---------- right panel ----------
+function selectNode(id){
+  SELECTED={type:"node", id};
+  CUR_NODE = PROG.dag.nodes.find(x=>x.id===id);
+  $("right").innerHTML = nodePanelHTML(CUR_NODE);
+  highlight();
+}
+
+// Inspect a set of colliding corners at one merged node; cycle with prev/next.
+let CORNERS = [], CORNER_I = 0;
+function selectCorners(ids){
+  CORNERS = ids.filter(Boolean); CORNER_I = 0;
+  SELECTED = {type:"node", id: CORNERS[0]};
+  showCorner(); highlight();
+}
+function cycleCorner(d){ CORNER_I = (CORNER_I + d + CORNERS.length) % CORNERS.length;
+  SELECTED = {type:"node", id: CORNERS[CORNER_I]}; showCorner(); highlight(); }
+function showCorner(){
+  const n = PROG.dag.nodes.find(x=>x.id===CORNERS[CORNER_I]);
+  CUR_NODE = n;
+  const nav = CORNERS.length>1
+    ? `<div class="cornnav">colliding corners at this cell:
+        <button onclick="cycleCorner(-1)">◀</button> ${CORNER_I+1} / ${CORNERS.length}
+        <button onclick="cycleCorner(1)">▶</button></div>` : "";
+  $("right").innerHTML = nav + nodePanelHTML(n);
+}
+
+function nodePanelHTML(n){
+  if(!n) return `<div class="hint">No corner data.</div>`;
+  enrichNode(n);  // fill basis/x_B/c_B/candidates for lean nodes (recompute on click)
+  let cand = "";
+  if(n.candidates && n.candidates.length){
+    // The "off-DAG" label is only reliable when the shortest-path set is
+    // COMPLETE. If enumeration was partial (optimality_proven=false), a pivot
+    // marked off-DAG might actually lie on a shortest path we never reached, so
+    // we soften the label to "(off enum)" with a caveat.
+    const complete = PROG.stats.optimality_proven !== false;
+    const rows = n.candidates.map(c=>{
+      const pills = ["dantzig","bland","steepest","greatest_increment"].filter(r=>c.picked_by.includes(r))
+            .map(r=>`<span class="pill ${RULE_INI[r]}">${RULE_INI[r]}</span>`).join("") ||
+            `<span class="pill none">—</span>`;
+      const star = c.on_shortest_path ? ""
+            : complete ? " <span class='muted'>(off-DAG)</span>"
+                       : " <span class='muted' title='shortest-path set is partial — this may actually be on a shortest path'>(off enum?)</span>";
+      return `<tr><td class="l">${c.var}${star}</td><td>${fmt(c.reduced_cost,3)}</td>
+        <td>${fmt(c.dual_infeasibility,3)}</td><td>${fmt(c.steepest_score,3)}</td>
+        <td>${c.increment_score==null?"—":fmt(c.increment_score,3)}</td>
+        <td class="l">${pills}</td></tr>`;}).join("");
+    cand = `<h2>Entering candidates (what each rule picks)</h2>
+      <table class="grid"><tr><th class="l">var</th><th>reduced cost</th><th>dual&nbsp;inf</th>
+      <th>steep&nbsp;score</th><th>incr&nbsp;(GI)</th><th class="l">picks</th></tr>${rows}</table>
+      <div class="muted" style="font-size:12px;margin-top:4px">
+      D=Dantzig, B=Bland (lowest index), S=steepest, G=greatest-increment (|reduced cost|×step) — the memoryless rules.
+      Devex is path-dependent (see the route lines), not a per-vertex pick. ${complete
+        ? `"off-DAG" = a pivot that leaves the shortest-path set.`
+        : `"off enum?" = not on an <em>enumerated</em> shortest path; the set is partial (not all shortest paths found) so this is not certain.`}</div>`;
+  } else {
+    cand = `<div class="muted">Optimal basis — no entering candidates.</div>`;
+  }
+  const depth = (n.col != null ? n.col : n.g);
+  const role = n.is_start ? "start BFS" : n.is_goal ? "optimal"
+             : n.off_dag ? "off-optimal (slower-rule vertex)" : "interior (on A* DAG)";
+  return `
+    <h2>Vertex (column ${depth})<span class="expand" onclick="expandBasis()" title="full screen">⤢ full</span>${
+      (n.basic_index && tableauFits()) ? `<span class="expand" onclick="expandTableau()" title="full simplex tableau B⁻¹[A|I]${tableauHeavy() ? ` — large basis (m=${PROG.num_constraints}), takes about ${tableauSecs()} s to build` : ""}">⤢ tableau${tableauHeavy() ? " ·" : ""}</span>` : ""}</h2>
+    <table class="kv">
+      <tr><td class="k">role</td><td class="v">${role}</td></tr>
+      <tr><td class="k">objective z</td><td class="v">${fmt(n.objective)}</td></tr>
+      <tr><td class="k">basis</td><td class="v">${n.basis.join(", ")}</td></tr>
+    </table>
+    <h2>Basic values (x_B)</h2>${vecTable(n.basic_values)}
+    <h2>c_B (min-sense)</h2>${vecTable(n.c_B)}
+    ${matrixSection(n)}
+    ${cand}`;
+}
+
+function selectEdge(idx){
+  SELECTED={type:"edge", idx};
+  const e = PROG.dag.edges[idx];
+  const rules = e.forced ? `<span class="pill forced">forced (1 candidate)</span>`
+    : (e.consistent_rules.length
+        ? e.consistent_rules.map(r=>`<span class="pill ${RULE_INI[r]}">${r}</span>`).join("")
+        : `<span class="pill none">no classical rule</span>`);
+  $("right").innerHTML = `
+    <h2>Pivot (edge)</h2>
+    <table class="kv">
+      <tr><td class="k">enter</td><td class="v">${e.enter}</td></tr>
+      <tr><td class="k">leave</td><td class="v">${e.leave}</td></tr>
+      <tr><td class="k">leaving row</td><td class="v">${e.row_out}</td></tr>
+    </table>
+    <h2>Consistent with</h2><div>${rules}</div>
+    <div class="muted" style="font-size:12px;margin-top:8px">
+      A pivot is "consistent" with a memoryless rule if its entering variable is
+      that rule's pick at the source vertex.</div>`;
+  highlight();
+}
+
+// ---------- boot ----------
+// Default auto-loads the synthetic A* demos (data.json). The expert-demo gallery
+// is available at ?src=expert-demos-astar/manifest.json; individual gallery cases
+// load one at a time via the Load-dataset button or drag-drop; ?src=<url> loads
+// any dataset/manifest.
+const DEFAULT_SRC = "data.json";
+function fetchInto(url, base, onFail){
+  return fetch(url + "?v=" + Date.now())
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(o => loadData(o, base))
+    .catch(onFail);
+}
+window.addEventListener("DOMContentLoaded", ()=>{
+  if(window.SIMPLEXRL_DATA){ loadData(window.SIMPLEXRL_DATA); return; }
+  const param = new URLSearchParams(location.search).get("src");
+  const src = param || DEFAULT_SRC;
+  fetchInto(src, src.replace(/[^/]*$/, ""), ()=>{
+    setStatus(param ? ("Could not load " + src)
+                    : "Load a dataset (.json) to begin — or drop one anywhere.");
+  });
+});
+</script>
+</body>
+</html>
