@@ -735,7 +735,7 @@ details[open] .toggle-chevron {
 
 /* List view: every project in the open tab, stacked, no arrows */
 .projects-display-area.list-view .project-slide {
-    display: block;
+    visibility: visible;
 }
 
 .projects-display-area.list-view .project-slide + .project-slide {
@@ -749,31 +749,37 @@ details[open] .toggle-chevron {
 }
 
 .projects-display-area.list-view .slides-wrapper {
+    display: block;
     padding: 0;
 }
 
-/* --- Carousel dots: one per project, filled for the one shown --- */
+/* --- Carousel dots: one per project; the one shown is a short teal pill --- */
 .carousel-dots {
     display: flex;
     justify-content: center;
-    gap: 8px;
-    margin-top: 25px;
+    align-items: center;
+    gap: 6px;
+    margin-top: 20px;
 }
 
 .carousel-dot {
-    width: 10px;
-    height: 10px;
+    width: 7px;
+    height: 7px;
     padding: 0;
-    border-radius: 50%;
-    border: 2px solid var(--accent-color);
-    background: transparent;
+    border: none;
+    border-radius: 4px;
+    background: #d8dde2;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, width 0.2s;
 }
 
-.carousel-dot.active,
 .carousel-dot:hover {
-    background: var(--accent-color);
+    background: #b8c0c8;
+}
+
+.carousel-dot.active {
+    width: 18px;
+    background: var(--primary-gradient-end);
 }
 
 .projects-display-area.list-view .carousel-dots {
@@ -840,15 +846,19 @@ details[open] .toggle-chevron {
 /* --- The Slide Content --- */
 .slides-wrapper {
     padding: 0 50px; /* Make room for arrows on left/right */
+    display: grid;   /* every slide shares one cell (below), so the tallest sets the height */
 }
 
+/* Slides are stacked in the same spot and only the active one is visible, so the
+   carousel keeps one height and the arrows and dots don't jump between projects */
 .project-slide {
-    display: none; /* Hidden by default */
-    animation: fadeEffect 0.5s; /* Smooth fade in */
+    grid-area: 1 / 1;
+    visibility: hidden; /* Hidden by default (still takes up space) */
 }
 
 .project-slide.visible {
-    display: block; /* Only the active slide shows */
+    visibility: visible; /* Only the active slide shows */
+    animation: fadeEffect 0.4s; /* Smooth fade in */
 }
 
 .slide-title {
