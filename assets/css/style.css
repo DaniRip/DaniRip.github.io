@@ -820,8 +820,15 @@ details[open] .toggle-chevron {
 }
 
 /* Images & Videos */
+/* Images fill the column up to their own size, and tall ones are capped in height
+   so they don't tower over the text */
 .slide-visual img {
-    width: 100%;
+    display: block;
+    max-width: 100%;
+    max-height: 360px;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }

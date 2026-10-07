@@ -18,7 +18,6 @@
   gallery:    
       - type: image
         url: "/assets/AIScribe.png"
-        width: "60%"   # tall image: shown smaller than the column
 
 - title: "The Homecare Provider Allocation Problem"
   category: "active"
@@ -40,6 +39,13 @@
   gallery:
       - type: image
         url: "/assets/3D_RotatingPros.webp"      
+
+- title: "Robust Direct Aperture Optimization"
+  category: "completed"
+  description: "Radiation therapy plans are usually built in stages: doses first, then the aperture shapes the machine delivers, which can cost plan quality. Robust direct aperture optimization does both at once and protects the plan against breathing motion, in a single mixed-integer model that includes the machine's deliverability rules. To make it solvable, I designed a candidate plan generation heuristic that quickly produces clinically viable plans and warm-starts the full model.<br>Published in the <a href='https://doi.org/10.1287/ijoc.2022.1167' target='_blank'>INFORMS Journal on Computing</a> (2022), with T. G. Purdie, T. C. Y. Chan and H. Mahmoudzadeh."
+  gallery:
+    - type: image
+      url: "/assets/RDAO_apertures.png"
 
 - title: "Radiation Therapy Sampling and Solution Pipeline/Add-On"
   category: "completed"
@@ -105,6 +111,10 @@
 - title: "Solvers that Learn from Search"
   category: "future"
   description: "Large healthcare models are solved again and again, while classical solvers follow the same fixed rules every time. Search can find far shorter paths than any fixed rule, and learned policies can follow them. I will extend learned pivots and warm starts to the mixed-integer and decomposition methods that healthcare models depend on, measure the gains in run time as well as iterations, and release them in open-source solvers such as HiGHS, so clinics without commercial licenses benefit too."
+
+- title: "New Formulations for Direct Aperture Optimization"
+  category: "future"
+  description: "Direct aperture optimization designs the exact shapes a treatment machine delivers, but it is hard to solve while also limiting how many apertures a plan uses, a limit that both the machines and plan quality demand. Building on joint work with Isaac Rudich (Polytechnique Montr\u00e9al), I am developing a network-based formulation built around shortest paths, with constraint-and-column generation and heuristics that rule out shapes the machine cannot deliver. I am also pursuing a new branch-and-bound approach.<br>Once these solve the basic cases quickly, the next step is adding the robust and CVaR dose constraints that clinics need."
 
 - title: "Operations for AI-Augmented Care"
   category: "future"
