@@ -905,6 +905,12 @@ details[open] .toggle-chevron {
     animation: fadeEffect 0.4s; /* Smooth fade in */
 }
 
+/* Hide a project's links at the same instant as its text: their hover transitions
+   ("transition: all") would otherwise animate the hiding and leave them behind */
+.project-slide:not(.visible) * {
+    transition: none;
+}
+
 .slide-title {
     text-align: center;
     color: var(--accent-color);
