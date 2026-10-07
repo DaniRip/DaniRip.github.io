@@ -752,6 +752,34 @@ details[open] .toggle-chevron {
     padding: 0;
 }
 
+/* --- Carousel dots: one per project, filled for the one shown --- */
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 25px;
+}
+
+.carousel-dot {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border-radius: 50%;
+    border: 2px solid var(--accent-color);
+    background: transparent;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.carousel-dot.active,
+.carousel-dot:hover {
+    background: var(--accent-color);
+}
+
+.projects-display-area.list-view .carousel-dots {
+    display: none;
+}
+
 /* --- The Carousel Area --- */
 .projects-display-area {
     position: relative;

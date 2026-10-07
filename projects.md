@@ -104,6 +104,14 @@ permalink: /projects/
                 </div>
             {% endif %}
         </div>
+
+        {% if cat_projects.size > 1 %}
+        <div class="carousel-dots">
+            {% for project in cat_projects %}
+            <button class="carousel-dot{% if forloop.first %} active{% endif %}" onclick="goToSlide({{ forloop.index0 }}, '{{ cat }}')" aria-label="Show project {{ forloop.index }} of {{ cat_projects.size }}"></button>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
     {% endfor %}
 </div>
@@ -137,9 +145,13 @@ permalink: /projects/
     };
 
     function changeSlide(n, category) {
+        goToSlide(slideIndices[category] + n, category);
+    }
+
+    // Jump straight to a slide (the arrows step by one; the dots jump)
+    function goToSlide(newIndex, category) {
         var container = document.getElementById(category);
         var slides = container.getElementsByClassName("project-slide");
-        var newIndex = slideIndices[category] + n;
         
         // STOP if trying to go out of bounds
         if (newIndex < 0 || newIndex >= slides.length) {
@@ -155,8 +167,17 @@ permalink: /projects/
         // Show new slide
         slides[slideIndices[category]].classList.add("visible");
         
-        // Update the arrow colors
+        // Update the arrow colors and the filled-in dot
         updateArrows(category);
+        updateDots(category);
+    }
+
+    // Fill in the dot for the slide being shown
+    function updateDots(category) {
+        var dots = document.getElementById(category).getElementsByClassName("carousel-dot");
+        for (var i = 0; i < dots.length; i++) {
+            dots[i].classList.toggle("active", i === slideIndices[category]);
+        }
     }
 
     // New Helper: Checks if arrows should be greyed out
