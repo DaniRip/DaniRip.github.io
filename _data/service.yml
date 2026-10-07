@@ -8,6 +8,8 @@
     - "International Transactions in Operational Research"
     - "Hawaii International Conference on System Sciences"
     - "Computers and Operations Research"
+    - "European Journal of Operational Research"
+    - "Quantitative Imaging in Medicine and Surgery"
 
 - organization: "Canadian Operations Research Society (CORS)"
   role: "National Student Councillor (2024–2025)"
@@ -22,7 +24,7 @@
 - organization: "Conference Service & Digital Design"
   role: "Designer / Volunteer"
   description: |
-    Collaborated with <a href="https://www.linkedin.com/in/kieferburgess" target="_blank">Dr. Kiefer Burgess</a> on the architectural design of the virtual "Conference Centre" for CORS 2021 using Gather Town, creating an immersive digital environment for academic exchange during the pandemic. Served as a volunteer for the <a href="https://connect.informs.org/computing/home" target="_blank">INFORMS Computing Society (ICS)</a> conference (2025).
+    Collaborated with <a href="https://www.linkedin.com/in/kieferburgess" target="_blank">Dr. Kiefer Burgess</a> on the architectural design of the virtual "Conference Centre" for CORS 2021 using Gather Town, creating an immersive digital environment for academic exchange during the pandemic. Session chair and volunteer at the <a href="https://connect.informs.org/computing/home" target="_blank">INFORMS Computing Society (ICS)</a> conference (2025; <em>Data-Driven Optimization in Healthcare</em>), and session chair at the CORS/INFORMS International Conference (2022).
   images:
     - src: "/assets/MainGatherRoom.png"
       alt: "Main Gather Room"
