@@ -735,15 +735,61 @@ details[open] .toggle-chevron {
     width: 100%;
 }
 
-/* --- The Project List (every project in the open tab is shown) --- */
-.project-slide {
-    animation: fadeEffect 0.5s; /* Smooth fade in when a tab opens */
+/* --- The Navigation Arrows --- */
+/* --- The Arrow Base --- */
+.nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(44, 62, 80, 0.1);
+    color: var(--accent-color);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    z-index: 10;
+    
+    /* 1. Only animate specific things, NEVER 'all' or 'pointer-events' */
+    transition: background-color 0.2s, color 0.2s, opacity 0.2s; 
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.project-slide + .project-slide {
-    border-top: 1px solid #eee;
-    margin-top: 40px;
-    padding-top: 40px;
+.nav-arrow:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+.nav-arrow.left { left: 0; }
+.nav-arrow.right { right: 0; }
+
+/* --- The Robust Disabled State --- */
+.nav-arrow.disabled,
+.nav-arrow.disabled:hover { /* 2. This overrides the sticky mobile hover */
+    opacity: 0.5 !important;
+    background: #f0f0f0 !important; /* A solid light grey, never transparent */
+    color: #ccc !important;
+    cursor: default;
+    pointer-events: none; /* Physically prevents clicking */
+    box-shadow: none;
+}
+
+/* --- The Slide Content --- */
+.slides-wrapper {
+    padding: 0 50px; /* Make room for arrows on left/right */
+}
+
+.project-slide {
+    display: none; /* Hidden by default */
+    animation: fadeEffect 0.5s; /* Smooth fade in */
+}
+
+.project-slide.visible {
+    display: block; /* Only the active slide shows */
 }
 
 .slide-title {
@@ -796,6 +842,16 @@ details[open] .toggle-chevron {
 @media (max-width: 768px) {
     .slide-content {
         grid-template-columns: 1fr; /* Stack vertically on phones */
+    }
+    
+    .nav-arrow {
+        width: 30px; 
+        height: 30px;
+        font-size: 1rem;
+    }
+    
+    .slides-wrapper {
+        padding: 0 35px;
     }
     
     .tab-btn {
