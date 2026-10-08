@@ -10,7 +10,7 @@
     - "European Journal of Operational Research"
     - "Quantitative Imaging in Medicine and Surgery"
 
-- organization: "Canadian Operations Research Society (CORS)"
+- organization: "Canadian Operational Research Society (CORS)"
   role: "National Student Councillor (2024–2025)"
   description: |
     Elected to represent the national student body, spearheading the post-pandemic reinvigoration of student chapters across Canada. Previously served in multiple leadership tiers, including <b>President of University of Waterloo's Student Chapter</b>. Led local membership growth by 200%, transitioned on-boarding processes, and managed digital presence over seven years.
@@ -19,6 +19,11 @@
   role: "Founder & Competition Chair"
   description: |
     Founded and directed the University of Waterloo branch of this tri-university high school outreach competition. Oversaw the end-to-end development of contest mathematics, automated validators, and administrative infrastructure. Previously served as a long-term Executive at the University of Toronto branch, designing curriculum to introduce OR concepts to secondary students, in a fun, single-day, collaborative format. Raised and distributed thousands of dollars in prize money. Led the 2018 and 2019 competitions; the 2020 competition was cancelled due to the pandemic, and the competition has been dormant since.
+
+- organization: "SPARCS Workshop, University of Waterloo"
+  role: "Invited Session Leader (2024)"
+  description: |
+    Invited by the Centre for Education in Mathematics and Computing (CEMC) to lead a session at <a href="https://cemc.uwaterloo.ca/events/sparcs.html" target="_blank">SPARCS</a>, a week-long workshop for Grade 9 and 10 students of gender identities underrepresented in computer science. Adapted the TORCH format into a two-hour introduction to operations research for 40 students: ten teams of four competed to find the best solutions to two optimization puzzles, followed by a talk connecting their strategies to real-world problems.
 
 - organization: "Conference Service & Digital Design"
   role: "Designer / Volunteer"
