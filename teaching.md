@@ -9,7 +9,7 @@ permalink: /teaching/
 {% for job in site.data.teaching.teaching_experience %}
 <div class="teaching-minimal">
     <p>
-        <strong>{{ job.course }}</strong> ({{ job.year }}) — <em>{{ job.role }}</em>
+        <strong>{{ job.course }}</strong> ({{ job.year }}), <em>{{ job.role }}</em>
         {% if job.details %}<br><small>{{ job.details }}</small>{% endif %}
     </p>
 </div>

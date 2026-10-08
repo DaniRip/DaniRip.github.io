@@ -23,7 +23,7 @@ permalink: /presentations/
 <li>
     <strong>“{{ poster.title }}”</strong><br>
     <small>{{ poster.authors }}</small><br>
-    <span class="event-details">{{ poster.event }} — {{ poster.location }} ({{ poster.date }})</span>
+    <span class="event-details">{{ poster.event }}, {{ poster.location }} ({{ poster.date }})</span>
 </li>
 {% endfor %}
 </ol>
