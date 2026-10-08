@@ -31,9 +31,9 @@
   link: "https://doi.org/10.1016/j.eswa.2015.06.028"
 
 - title: "Superior light Pareto robust optimization with application to radiation therapy"
-  status: "under_review"
+  status: "working"
   authors: "F. Rahimi, D. A. Ripsman, H. Abouee-Mehrizi, H. Mahmoudzadeh"
-  note: "<em>Manufacturing & Service Operations Management</em>. Resubmitted following a major revision; under review."
+  note: "To be submitted to <em>INFORMS Journal on Optimization</em>."
 
 - title: "A decision diagram approach to multi-period home care scheduling under uncertainty"
   status: "working"
