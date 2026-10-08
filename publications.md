@@ -4,8 +4,6 @@ title: Publications
 permalink: /publications/
 ---
 
-<p><em>Also see my <a href="https://scholar.google.com/citations?hl=en&user=29TV-goAAAAJ&view_op=list_works&sortby=pubdate" target="_blank">Google Scholar profile</a> for an updated list.</em></p>
-
 {% comment %} Each entry in _data/publications.yml has a status that puts it in one of these sections {% endcomment %}
 {% assign sections = "published|Journal Articles,under_review|Under Review,working|Working Papers" | split: "," %}
 
@@ -15,6 +13,10 @@ permalink: /publications/
 {% if pubs.size > 0 %}
 
 ### {{ parts[1] }}
+
+{% if parts[0] == "published" %}
+<p><em>Also see my <a href="https://scholar.google.com/citations?hl=en&user=29TV-goAAAAJ&view_op=list_works&sortby=pubdate" target="_blank">Google Scholar profile</a> for an updated list.</em></p>
+{% endif %}
 
 {% for pub in pubs %}
 <div class="publication-item card">
