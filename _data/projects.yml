@@ -48,6 +48,13 @@
     - type: image
       url: "https://github.com/DaniRip/RT_Sampling_Pipeline/blob/master/sampleOutputs/GUIloaded2.png?raw=true"
 
+- title: "Light Pareto Robust Optimization"
+  category: "completed"
+  description: "Robust optimization protects radiation therapy plans against breathing motion, but it plans for the worst case and pays for it in every other scenario. Light Pareto robust optimization keeps the plan robust on the tumor, then allows a small, controlled amount of extra heart dose in exchange for much better plans in typical breathing scenarios. On five left-sided breast cancer patients, each with 50 simulated breathing patterns, plans began to look deliverable with as little as 0.1 Gy of extra heart dose on average, and most patients saw diminishing returns beyond 0.2 Gy. In the figure, the robust (RO) and Pareto robust (PRO) plans overdose the target, while light Pareto robust plans fall off sharply at the prescribed dose.<br>Published in <a href='https://doi.org/10.1002/mp.16298' target='_blank'>Medical Physics</a> (2023), with F. Rahimi, H. Abouee-Mehrizi and H. Mahmoudzadeh."
+  gallery:
+    - type: image
+      url: "/assets/LPRO_DVH.png"
+
 - title: "Robust Direct Aperture Optimization"
   category: "completed"
   description: "Radiation therapy plans are usually built in stages: doses first, then the aperture shapes the machine delivers, which can cost plan quality. Robust direct aperture optimization does both at once and protects the plan against breathing motion, in a single mixed-integer model that includes the machine's deliverability rules. To make it solvable, I designed a candidate plan generation heuristic that quickly produces clinically viable plans and warm-starts the full model.<br>Published in the <a href='https://doi.org/10.1287/ijoc.2022.1167' target='_blank'>INFORMS Journal on Computing</a> (2022), with T. G. Purdie, T. C. Y. Chan and H. Mahmoudzadeh."
