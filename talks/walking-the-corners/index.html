@@ -35,17 +35,19 @@
   #whymix .wm-sys .k .faint { font-size: 17px; }
   #whymix .wm-sys .e { font-size: 25px; white-space: nowrap; }
   #whymix .wm-sys .res { font-size: 20px; color: var(--muted); margin-top: 2px; }
-  #whymix .wm-read { font-size: 20px; line-height: 1.45; padding: 10px 16px; border-radius: 10px; background: var(--panel); border-left: 4px solid var(--obj); margin-top: 14px; }
-  #whymix .wm-read.bad { border-left-color: #d64545; }
-  #whymix .wm-read .l1 { font-size: 22px; white-space: nowrap; margin: 4px 0; }
-  #whymix .dial { display: flex; align-items: center; gap: 16px; margin-top: 20px; font-size: 22px; }
-  #whymix .dial .track { position: relative; }
-  #whymix .dial input { width: 360px; accent-color: var(--obj); display: block; }
-  #whymix .dial .band { position: absolute; top: calc(100% + 3px); height: 4px; border-radius: 2px; background: var(--obj); opacity: 0.6;
-    left: calc(8px + var(--a) * (100% - 16px)); width: calc((var(--b) - var(--a)) * (100% - 16px)); }
-  #whymix .dial .bandlab { position: absolute; top: calc(100% + 10px); left: calc(8px + (var(--a) + var(--b)) / 2 * (100% - 16px)); transform: translateX(-50%);
-    font-size: 15px; color: var(--obj); white-space: nowrap; }
-  #whymix .dial .start { position: absolute; top: calc(100% + 26px); left: calc(8px + var(--at) * (100% - 16px)); transform: translateX(-50%); font-size: 13px; color: var(--ink); }
+  #whymix .wm-mats { display: flex; gap: 70px; margin-top: 6px; }
+  /* the objective row as an equation, on the label's line, centred over the matrix's top-right 0 (placed by the controller) */
+  #whymix .wm-mat { position: relative; }
+  #whymix .wm-mat .ff { position: absolute; top: 4px; font-size: 17px; color: var(--muted); white-space: nowrap; }
+  /* the reduced value sits beside its matrix without taking up width, so the matrices never move */
+  #whymix .wm-mat .mr { position: relative; }
+  #whymix .wm-mat .nt { position: absolute; left: calc(100% + 14px); top: 9px; font-size: 17px; color: var(--muted); white-space: nowrap; }
+  #whymix .wm-mat { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+  #whymix .wm-mat .k { font-size: 21px; color: var(--muted); }
+  #whymix .wm-mat .m { font-size: 23px; }
+  #whymix .wm-mat .ar { font-size: 22px; color: var(--muted); padding-left: 40px; }
+  #whymix .wm-mat .ar .faint { font-size: 17px; }
+  #whymix #wm-plot svg { cursor: pointer; }
   #sweep .dial { display: flex; align-items: center; gap: 16px; margin-top: 34px; font-size: 22px; }
   #sweep .dial .track { position: relative; }
   #sweep .dial input { width: 320px; accent-color: var(--obj); display: block; }
@@ -88,7 +90,6 @@
   #names .card h3 { margin-top: 0; }
   #names .card p { font-size: 26px; margin: 10px 0; }
   #names .katex { white-space: nowrap; }
-  #dualvars .dv-proof { font-size: 22px; margin-top: 0; width: 1040px; white-space: nowrap; }
   #dualvars .bl > li { margin-bottom: 14px; }
   #dualgeneral .fd-text { margin-top: 30px; }
   #dualgeneral .bl > li { margin-bottom: 16px; }
@@ -151,6 +152,7 @@
   #proof3d .stack { font-size: 30px; display: flex; flex-direction: column; gap: 12px; margin-top: 26px; }
   #proof3d #proof3d-scene { margin-top: 20px; }
   #proof3d .sumline { border-top: 1px solid #59607a; padding-top: 12px; }
+  #proof3d .p3-aside { font-size: 21px; line-height: 1.4; margin: 10px 0 0; }
   #rules table.t { font-size: 24px; }
   #rules table.t td, #rules table.t th { padding: 7px 14px; }
   #rules table.t td.rowh { font-size: 22px; }
@@ -624,11 +626,10 @@
       <li data-step="2">Constraint 2 would give us \(y^\top = (\FL{0}, \OV{4}, \LB{0})\): \(z \le 64\)<span data-step="3">; constraint 3, \(y^\top = (\FL{0}, \OV{0}, \LB{9})\): \(z \le 108\). So <b>64 is our best upper bound</b> so far.</span></li>
       <li data-step="4">We can also take combinations of the constraints, but they need to remain ≥ our coefficient values.</li>
     </ul>
-    <div class="rule dv-proof" data-step="5">Dual variables \(y \ge 0\) whose mix covers the profit form a <b>valid dual</b>, with bound \(\FL{10y_1} + \OV{16y_2} + \LB{12y_3}\).</div>
   </div>
   <div class="dl-pic" id="dv-pic"></div>
   <div class="dl-bar" id="dv-bar"></div>
-  <aside class="notes">Each constraint gets a multiplier y_i ≥ 0. One constraint alone needs a multiplier big enough to cover BOTH profit coefficients: flour needs max(9/2, 8/1) = 8 (bound 80, from the last slide), oven max(9/3, 8/2) = 4 (bound 64, better: the marker drops), labor max(9/1, 8/2) = 9 (bound 108, worse). Beaten bounds stay on the bar as faint ticks; the best upper bound is now 64. Mixing constraints is allowed as long as every coefficient still covers the profit's; that's the next slide. Last click: from now on a "valid dual" means exactly this: y ≥ 0 whose mix covers the profit; its bound is b·y.</aside>
+  <aside class="notes">Each constraint gets a multiplier y_i ≥ 0. One constraint alone needs a multiplier big enough to cover BOTH profit coefficients: flour needs max(9/2, 8/1) = 8 (bound 80, from the last slide), oven max(9/3, 8/2) = 4 (bound 64, better: the marker drops), labor max(9/1, 8/2) = 9 (bound 108, worse). Beaten bounds stay on the bar as faint ticks; the best upper bound is now 64. Mixing constraints is allowed as long as every coefficient still covers the profit's; that's the next slide. Worth saying aloud: a "valid dual" is any y ≥ 0 whose mix covers the profit; its bound is b·y.</aside>
 </section>
 
 <section class="slide boundgame" id="proof" data-part="2 · Strong duality">
@@ -705,47 +706,9 @@
   <aside class="notes">The formalizing slide again, in matrix notation; everything is already in place and the bullets name the moves. A is m × n (one row per constraint, one column per variable), Aᵀ is n × m. Column j of A times y must cover c_j, for every j: Aᵀy ≥ c. Each unit of y_i adds b_i to the bound, so the dual minimises bᵀy. One dual variable per primal constraint, one dual constraint per primal variable. Last bullet: weak duality is the bound game (every valid mix caps every plan); strong duality is its last preset, y = (0, 2.5, 1.5) giving 10·0 + 16·2.5 + 12·1.5 = 58 = the best plan. Strong duality needs an optimal solution to exist (not infeasible, not unbounded).</aside>
 </section>
 
-<section class="slide" id="names" data-part="2 · Strong duality">
-  <h2>Common names and interpretations for parts of the dual</h2>
-  <div class="cols">
-    <div class="col card" data-step="0">
-      <h3>Dual variable = shadow price</h3>
-      <p>\(\FL{y_1}, \OV{y_2}, \LB{y_3}\): what one more unit of each resource is worth. At the optimum, \(y = (\FL{0}, \OV{2.5}, \LB{1.5})\).</p>
-      <p class="ex" data-step="1">Best profit = best bound = \(\FL{10y_1} + \OV{16y_2} + \LB{12y_3}\), so one more oven hour adds \(\OV{y_2}\), as long as the same dual stays best: 17 hours ⇒ 58 → 60.5, that's \(+\OV{2.5}\). One more unit of flour ⇒ +0 (we already have spare).</p>
-    </div>
-    <div class="col card" data-step="2">
-      <h3>Dual slack = reduced cost</h3>
-      <p>Each product has a dual constraint: the value of the resources it uses must cover its profit (bread: \(\FL{2y_1} + \OV{3y_2} + \LB{y_3} \ge \OB{9}\)). Its slack is the product's <b>reduced cost</b>: value of the resources it uses − its profit.</p>
-      <p class="ex" data-step="3"><b>Negative ⇒ the prices undervalue it ⇒ worth making more.</b> <span class="muted">At \((0, 0)\) every price is 0, so \(d_1 = -9\) and \(d_2 = -8\): both are worth making.</span></p>
-    </div>
-  </div>
-  <aside class="notes">Convention used throughout: reduced cost d_j = y·a_j − c_j (the dual slack). Optimal ⇔ every dual slack ≥ 0 and every y ≥ 0. Negative = a violated dual constraint = a candidate to enter. Shadow-price check: with 17 oven hours the optimum moves to (2.5, 4.75), profit 60.5.</aside>
-</section>
 
-<section class="slide" id="whymix" data-part="2 · Strong duality">
-  <h2>Two readings of the same equations</h2>
-  <div class="cols">
-    <div class="col wm-left">
-      <p>The primal and the dual are <b>two readings of the same equations</b>: at the best corner, the tight constraints form one square system.</p>
-      <div class="wm-sys">
-        <div class="k">primal<br><span class="faint">by rows</span></div>
-        <div><div class="e">\(\OV{3x_1 + 2x_2 = 16}, \quad \LB{x_1 + 2x_2 = 12}\)</div><div class="res">\(\Rightarrow x = (2, 5)\): where the lines meet</div></div>
-        <div class="k">dual<br><span class="faint">by columns</span></div>
-        <div><div class="e">\(\OV{3}y_2 + \LB{1}y_3 = \OB{9}, \quad \OV{2}y_2 + \LB{2}y_3 = \OB{8}\)</div><div class="res">\(\Rightarrow y_2 = \OV{2.5},\ y_3 = \LB{1.5}\): multipliers of those lines that add up to \(\OB{c}\)</div></div>
-      </div>
-      <p data-step="1">In \(\mathbb{R}^n\), the primal finds where \(n\) constraints meet; the dual finds multipliers of those same \(n\) constraints that add up to \(c\). Same numbers, same value: \(58 = 16 \cdot 2.5 + 12 \cdot 1.5\). When an optimal solution exists the multipliers <span style="white-space: nowrap">are \(\ge 0\)</span> (the profit line only touches the region), so the two views agree exactly.</p>
-      <div class="wm-read" id="wm-read"><div class="l1"></div><div class="l2"></div></div>
-      <div class="dial">
-        <span class="muted">bread profit</span>
-        <div class="track"><input type="range" id="wm-bread" min="1" max="20" step="0.5"><span class="band" style="--a: 0.1579; --b: 0.5789"></span><span class="bandlab" style="--a: 0.1579; --b: 0.5789">(2, 5) is best</span><span class="start" style="--at: 0.4211">▲</span></div>
-        <span class="num" id="wm-val"></span>
-      </div>
-    </div>
-    <div id="wm-plot"></div>
-  </div>
-  <aside class="notes">Two readings of one square system (the constraints tight at the best corner): by rows it is the primal's question, where do these lines meet (x = (2, 5)); by columns, the same matrix transposed, it is the dual's question, which multipliers of these lines add up to c (y₂ = 2.5, y₃ = 1.5; flour isn't tight, so y₁ = 0). Same numbers, so cᵀx = (Aᵀy)ᵀx = yᵀ(Ax) = yᵀb: 58 both ways. In ℝⁿ: n tight constraints, an n × n system. Optimality is what makes the multipliers ≥ 0, i.e. a valid dual. The tool: every line through (2, 5) is a mix λ·oven + μ·labor of the two tight constraints, and because all of them pass through (2, 5), the bound λ·16 + μ·12 equals the profit there. The slider turns the profit direction (cake stays at 8, as on the ties slide): profit b·x₁ + 8x₂ = λ·oven + μ·labor with λ = (b − 4)/2, μ = 6 − b/2. Both are ≥ 0 exactly for 4 ≤ b ≤ 12 (the gold band): the line only touches the region and (2, 5) is best. Outside, a weight is negative, the line cuts into the region (red), and another corner wins (ringed). Click 1 plays a sweep from 9 to 12 and past, down to 4 and past, and back to 9. The slider works any time.</aside>
-</section>
 
+<!-- DISABLED for now (2026-10-08): slide "Properties of our system at optimality" (choppy in practice). Restore by deleting this comment's first and last lines.
 <section class="slide" id="review" data-part="2 · Strong duality">
   <h2>Properties of our system at optimality</h2>
   <div class="rv-grid">
@@ -758,6 +721,7 @@
   </div>
   <aside class="notes">Review of what the last few slides showed. Primal: n equations meet at the corner; those constraints are tight (0 slack). Dual: n multipliers (one per tight constraint) are ≥ 0, and their mix rebuilds c exactly, so the dual's constraints have 0 slack. Next: slack as a variable.</aside>
 </section>
+-->
 
 <!-- ============================ PART 3: CORNERS & TABLEAUX ============================ -->
 
@@ -782,7 +746,7 @@
         <h3>3 equations, 5 unknowns: set 2 to 0, solve for the other 3</h3>
         <div class="sv-grid" id="sv-grid"></div>
         <ul class="bl sv-bul">
-          <li data-step="4">Set 2 of them to 0 (here \(s_1 = s_2 = 0\): flour and oven are tight), then solve the 3 equations for the other 3.</li>
+          <li data-step="4">Set 2 of them to 0 (here \(s_1 = s_2 = 0\): flour and oven are tight), then solve the 3 equations for the other 3 (the <b>basic</b> variables, or the <b>basis</b>; the 2 zeros are <b>nonbasic</b>).</li>
           <li data-step="5">\(x_1 = s_2 = 0\) is a corner too, at \((0, 8)\), but solving gives \(s_3 = -4\): labor runs over. Not a <i>feasible</i> corner.</li>
           <li data-step="6">Try it yourself: hit <b>clear</b>, then click any 2 boxes to set them to 0; the other 3 get solved for. There are \(\binom{5}{2} = 10\) corners and 5 are feasible. Find them all!</li>
         </ul>
@@ -809,12 +773,33 @@
       <div class="ds-st" id="ds-x"></div>
       <div class="ds-st" id="ds-y"></div>
       <div id="ds-meters"></div>
-      <div class="ds-how muted">At each corner, \(y\) is fixed by its two tight constraints: \(y^\top = c_B^\top B^{-1}\) (\(B\): its basis, coming up with the tableau).</div>
+      <div class="ds-how muted">At each corner, \(y\) is fixed by its two tight constraints: \(y^\top = c_B^\top B^{-1}\) (\(B\): the columns of the corner's basic variables, its basis; \(c_B\): their profits).</div>
       <div class="rule" data-step="6">Inside the region the primal is valid; outside, the dual can be.<br><span class="muted small">Outside bounds: 80, 64, 108, 61.33. Only \((2, 5)\) has both: \(58 = 58\).</span></div>
     </div>
     <div id="dualslack-plot"></div>
   </div>
   <aside class="notes">Every corner (crossing of two constraint lines) has a basis, so a y = c_Bᵀ B⁻¹ (the multipliers of its two tight constraints that add up to c), whether or not the corner is feasible. The drag snaps to all ten corners; hollow dots are outside the region (not feasible). Clicks: Dantzig's route (0,0) → (5,0) → (4,2) → (2,5) (primal valid, dual not until (2,5)); then two infeasible corners: (0, 8), oven alone, dual valid with bound 64, and (2.67, 4.67), flour + labor, dual valid with bound 61.33; last click back to (2, 5). The other infeasible corners: (0, 10) flour alone → 80, (12, 0) labor alone → 108, (5.33, 0) neither valid. Inside the region the primal is valid but the dual usually isn't; outside, the primal isn't but the dual can be; only (2, 5) has both (that is optimality, and walking the infeasible corners is the dual simplex). Every product we make is covered exactly (x_j > 0 ⇒ d_j = 0): see the meters at (4,2) and (2,5). Meters: gold = how much the mix covers, white tick = the profit, hatched gold = over-cover (d > 0), hatched red = short (d < 0).</aside>
+</section>
+
+<section class="slide" id="whymix" data-part="3 · Corners &amp; tableaux">
+  <h2>Two readings of the same equations</h2>
+  <div class="cols">
+    <div class="col wm-left">
+      <p>The primal and the dual are <b>two readings of the same equations</b>: at a corner, the tight constraints form one square system. <span class="faint">Click a ringed corner.</span></p>
+      <div class="wm-sys">
+        <div class="k">primal<br><span class="faint">by rows</span></div>
+        <div><div class="e" id="wm-pe"></div><div class="res" id="wm-pr"></div></div>
+        <div class="k">dual<br><span class="faint">by columns</span></div>
+        <div><div class="e" id="wm-de"></div><div class="res" id="wm-dr"></div></div>
+      </div>
+      <div class="wm-mats">
+        <div class="wm-mat"><div class="k">primal</div><div class="ff" id="wm-pn"></div><div class="m" id="wm-pm"></div><div class="ar">⇓ <span class="faint">row-reduce</span></div><div class="mr"><div class="m" id="wm-pm2"></div><span class="nt" id="wm-pn2"></span></div></div>
+        <div class="wm-mat"><div class="k">dual</div><div class="ff" id="wm-dn"></div><div class="m" id="wm-dm"></div><div class="ar">⇓ <span class="faint">row-reduce</span></div><div class="mr"><div class="m" id="wm-dm2"></div><span class="nt" id="wm-dn2"></span></div></div>
+      </div>
+    </div>
+    <div id="wm-plot"></div>
+  </div>
+  <aside class="notes">Click a ringed corner. At a corner the two tight constraints form one square system. By rows it is the primal's question, where do these lines meet; by columns (the same matrix transposed) it is the dual's, which multipliers of these lines add up to c. The matrices show both as row reduction: the top row is the objective written as an equation, z − 9x₁ − 8x₂ = 0 (dual: w − 16y₂ − 12y₃ = 0, w for the dual's value), hence the negative coefficients; the other rows are the system. Reducing turns the top row into z = 58 (w = 58) and the rest into the solution. Each reduction uses the other side's answer as its row multipliers: −9 −8 | 0 plus 2.5·oven plus 1.5·labor gives 0 0 | 58; −16 −12 | 0 plus 2·(bread row) plus 5·(cake row) gives 0 0 | 58. This top row is the same row that becomes the tableau's bottom row later. (2, 5): x = (2, 5), y₂ = 2.5, y₃ = 1.5 (y₁ = 0, flour isn't tight), both 58: all multipliers ≥ 0, so it's optimal. (4, 2): y₁ = −6, y₂ = 7, both 52; a negative multiplier means this mix doesn't bound the profit, and the profit line through the corner (dashed) cuts into the region. (5, 0) and (0, 6): one tight constraint is a sign constraint, written like the others as −x₂ ≤ 0 (or −x₁ ≤ 0) so that a valid multiplier is again ≥ 0; its multiplier is that product's dual slack d₂ (d₁) from the previous slide: d₂ = −3.5 at (5, 0), d₁ = −5 at (0, 6), both negative, so neither corner is optimal. (0, 0): both sign constraints are tight; d₁ = −9, d₂ = −8, value 0 (the "every price is 0" start of the names slide). Why the values always agree: cᵀx = (Aᵀy)ᵀx = yᵀ(Ax) = yᵀb.</aside>
 </section>
 
 <section class="slide" id="pairs" data-part="3 · Corners &amp; tableaux">
@@ -832,7 +817,24 @@
     </div>
     <div class="col" style="flex: 0 0 520px;"><div id="pairs-plot"></div></div>
   </div>
-  <aside class="notes">The pairs line up as on the next slides' x and y vectors: x₁–d₁, x₂–d₂, s₁–y₁, s₂–y₂, s₃–y₃. At a corner, the 2 tight constraints are the primal's zeros (s_i = 0 on a resource line, x_j = 0 on an axis); the other 3 primal variables are the basis. In the dual it flips: the partners of the basis are 0, and the 2 partners of the tight constraints are solved for. They are the multipliers of the tight constraints' normals that add up to c (slide 15's "two readings"), labelled on the tight lines. So every pair has a 0 (complementary slackness), and the corner is optimal exactly when both rows are ≥ 0 (primal feasible and dual feasible). Clicks: the three bullets at (0, 0), then (5, 0), (4, 2) (y₁ = −6: not optimal), (2, 5) (both rows ≥ 0: optimal). Any corner on the plot can be clicked.</aside>
+  <aside class="notes">The pairs line up as on the next slides' x and y vectors: x₁–d₁, x₂–d₂, s₁–y₁, s₂–y₂, s₃–y₃. At a corner, the 2 tight constraints are the primal's zeros (s_i = 0 on a resource line, x_j = 0 on an axis); the other 3 primal variables are the basis. In the dual it flips: the partners of the basis are 0, and the 2 partners of the tight constraints are solved for. They are the multipliers of the tight constraints' normals that add up to c (slide 16's "two readings"), labelled on the tight lines. So every pair has a 0 (complementary slackness), and the corner is optimal exactly when both rows are ≥ 0 (primal feasible and dual feasible). Clicks: the three bullets at (0, 0), then (5, 0), (4, 2) (y₁ = −6: not optimal), (0, 6) (d₁ = −5: not optimal), (2, 5) (both rows ≥ 0: optimal). Any corner on the plot can be clicked.</aside>
+</section>
+
+<section class="slide" id="names" data-part="3 · Corners &amp; tableaux">
+  <h2>Common names and interpretations for parts of the dual</h2>
+  <div class="cols">
+    <div class="col card" data-step="0">
+      <h3>Dual variable = shadow price</h3>
+      <p>\(\FL{y_1}, \OV{y_2}, \LB{y_3}\): what one more unit of each resource is worth. At the optimum, \(y = (\FL{0}, \OV{2.5}, \LB{1.5})\).</p>
+      <p class="ex" data-step="1">Best profit = best bound = \(\FL{10y_1} + \OV{16y_2} + \LB{12y_3}\), so one more oven hour adds \(\OV{y_2}\), as long as the same dual stays best: 17 hours ⇒ 58 → 60.5, that's \(+\OV{2.5}\). One more unit of flour ⇒ +0 (we already have spare).</p>
+    </div>
+    <div class="col card" data-step="2">
+      <h3>Dual slack = reduced cost</h3>
+      <p>Each product has a dual constraint: the value of the resources it uses must cover its profit (bread: \(\FL{2y_1} + \OV{3y_2} + \LB{y_3} \ge \OB{9}\)). Its slack is the product's <b>reduced cost</b>: value of the resources it uses − its profit.</p>
+      <p class="ex" data-step="3"><b>Negative ⇒ the prices undervalue it ⇒ worth making more.</b> <span class="muted">At \((0, 0)\) every price is 0, so \(d_1 = -9\) and \(d_2 = -8\): both are worth making.</span></p>
+    </div>
+  </div>
+  <aside class="notes">Convention used throughout: reduced cost d_j = y·a_j − c_j (the dual slack). Optimal ⇔ every dual slack ≥ 0 and every y ≥ 0. Negative = a violated dual constraint = a candidate to enter. Shadow-price check: with 17 oven hours the optimum moves to (2.5, 4.75), profit 60.5.</aside>
 </section>
 
 <section class="slide" id="walk" data-part="3 · Corners &amp; tableaux">
@@ -842,15 +844,15 @@
     <div class="col">
       <ol>
         <li data-step="0">Start at a corner.</li>
-        <li data-step="1">Look along the edges. Which ones improve <span class="c-obj">profits</span>?</li>
-        <li data-step="2">Walk one to the next corner. Repeat.</li>
+        <li data-step="1">Look along the edges. Which ones improve <span class="c-obj">profits</span>? <span class="muted">(duals)</span></li>
+        <li data-step="2" style="white-space: nowrap;">Walk one to the next corner (<b>profit never goes down</b>). Repeat.</li>
         <li data-step="3">Stop when no edge improves <span class="c-obj">profits</span>.</li>
       </ol>
       <div class="callout" data-step="4" style="margin-top: 26px;">There was a shorter way (2 pivots vs. 3 pivots). <b>Which edge to take</b> is the <i>pivot rule</i>, and it's the question this talk builds up to.</div>
     </div>
     <div id="walk-plot"></div>
   </div>
-  <aside class="notes">The whole algorithm in one picture, before the bookkeeping: the next slides write it down with bases (revised simplex) and the tableau, whose bottom row shows "which edges improve" and "stop". Step 2 walks the 3-pivot route (via bread, the same corners whose profits were the lower bounds 0, 45, 52, 58); step 4 shows the 2-pivot route via cake.</aside>
+  <aside class="notes">The whole algorithm in one picture, before the bookkeeping. "(duals)" on step 2: the primal values alone don't say which edges improve profit; that is read off the whole dual: for an edge leaving an axis (an x enters) its dual slack d_j = yᵀa_j − c_j, for an edge leaving a constraint line (a slack enters) the dual variable y_i itself (negative ⇒ improving); the tableau's bottom row holds both. Step 4's "stop" is the dual becoming feasible (every d_j ≥ 0 and y_i ≥ 0). Step 3, "profit never goes down": along the chosen edge profit rises at rate |d_q|, and the ratio test picks a step t ≥ 0 that stays feasible, so each pivot changes profit by |d_q|·t ≥ 0 (0 → 45 → 52 → 58 here). It's ≥, not >: at a degenerate corner t = 0 and the pivot changes the basis without moving (where stalling and cycling, and Bland's rule, come in). The dual's bound yᵀb equals the current profit at every corner but is only a valid upper bound once the dual is feasible, at the end. the next slides write it down with bases (revised simplex) and the tableau, whose bottom row shows "which edges improve" and "stop". Step 2 walks the 3-pivot route (via bread, the same corners whose profits were the lower bounds 0, 45, 52, 58); step 4 shows the 2-pivot route via cake.</aside>
 </section>
 
 <section class="slide" id="howsimplex" data-part="3 · Corners &amp; tableaux">
@@ -978,7 +980,7 @@
       <div id="ck-view" class="smtab"></div>
     </div>
   </div>
-  <aside class="notes">Pricing out a new column with the current duals: the resources a batch of cookies uses are worth 4 at today's prices, but it earns 5. Negative reduced cost = undervalued = not optimal any more. Next click: the column it gets in the tableau is B⁻¹a₃. B⁻¹ is already in the tableau (the s₁ s₂ s₃ block, highlighted), and a₃ = (1, 1, 1), so B⁻¹a₃ is its row sums: (0, 0.5, 0.5). Meaning: per batch of cookies, keeping oven and labor used up, bread stays at 2, cake drops to 4.5, spare flour drops to 0.5 (check: 3·2 + 2·4.5 = 15, 2 + 2·4.5 = 11). Same thing as the direction u = B⁻¹a_q on slide 21. Last click: the tableau gets that new column, whose bottom entry is −1.</aside>
+  <aside class="notes">Pricing out a new column with the current duals: the resources a batch of cookies uses are worth 4 at today's prices, but it earns 5. Negative reduced cost = undervalued = not optimal any more. Next click: the column it gets in the tableau is B⁻¹a₃. B⁻¹ is already in the tableau (the s₁ s₂ s₃ block, highlighted), and a₃ = (1, 1, 1), so B⁻¹a₃ is its row sums: (0, 0.5, 0.5). Meaning: per batch of cookies, keeping oven and labor used up, bread stays at 2, cake drops to 4.5, spare flour drops to 0.5 (check: 3·2 + 2·4.5 = 15, 2 + 2·4.5 = 11). Same thing as the direction u = B⁻¹a_q on slide 20. Last click: the tableau gets that new column, whose bottom entry is −1.</aside>
 </section>
 
 <section class="slide" id="lift" data-part="5 · The third dimension">
@@ -1036,10 +1038,11 @@
       </div>
       <p data-step="3" style="margin-top: 22px;">That is exactly the profit \(\OB{9x_1 + 8x_2 + 5x_3}\), so no plan beats 60, and \((2, 4, 2)\) earns 60.</p>
       <div class="rule small" data-step="4">Three tight planes, three unknowns ⇒ one corner. The <span class="c-obj">profit arrow</span> lies inside the cone of the planes' outward directions ⇔ every multiplier ≥ 0 ⇔ optimal.</div>
+      <p class="muted p3-aside" data-step="4">(In other words, the objective direction is a nonnegative combination of the three tight constraints, so the corner is primal and dual feasible ⇔ optimal.)</p>
     </div>
     <div id="proof3d-scene"></div>
   </div>
-  <aside class="notes">The multipliers 2, 1, 2 are the new shadow prices (bottom row of the last tableau). Same story as the 2D dual, one dimension up: the corner is where the three planes used in the dual meet.</aside>
+  <aside class="notes">The multipliers 2, 1, 2 are the new shadow prices (bottom row of the last tableau). Same story as the 2D dual, one dimension up: the corner is where the three planes used in the dual meet. Why "in the cone" means optimal: each plane's outward arrow is its coefficients (flour (2, 1, 1): stepping that way uses more flour); the cone is everything you can build from the three arrows with amounts ≥ 0. The stack is 2·(2, 1, 1) + 1·(3, 2, 1) + 2·(1, 2, 1) = (9, 8, 5), the profit arrow, so "in the cone" = "a valid mix in the bound game". Walls push, they don't pull: if the profit's pull can be balanced by the walls pushing (weights ≥ 0) the point is stuck: optimal; if balancing it needs a wall to pull (a negative weight), the point slides off that wall along an edge and profit rises (slide 16's (4, 2): y₁ = −6). One line: any move Δ that stays feasible has aᵢ·Δ ≤ 0 for each tight plane, so c·Δ = 2a₁·Δ + 1a₂·Δ + 2a₃·Δ ≤ 0. "Nonnegative", not "convex": a convex combination's weights also sum to 1 (these sum to 5).</aside>
 </section>
 
 <!-- ============================ PART 6: PIVOT RULES ============================ -->
@@ -1179,7 +1182,7 @@
     <div><b>Search as a teacher</b> (like AlphaZero): in training, try pivots ahead in the solver and teach the network the best one</div>
   </div>
   <div class="callout in-pay" data-step="5"><b>The early learned <i>offline</i> policy (IQL) already ties steepest edge on the 40 × 40 LP.</b></div>
-  <aside class="notes">The default SimplexRL architecture ("transformer-gnn"), shown on the bakery in standard form (x₁, x₂, s₁, s₂, s₃). (1) The LP becomes a bipartite graph: structural and slack variable nodes, constraint nodes, an edge per nonzero A_ij carrying the coefficient (slacks link to their own row with a 1). Node features: objective coefficient and bounds for variables, row bounds for constraints. Four rounds of graph attention (GATv2) pass messages along the edges, then a transformer (8 to 10 layers) refines the variable vectors; this runs once per LP and is cached. (2) Every pivot, solver state is added to those vectors: reduced cost, dual infeasibility, the Devex/steepest-edge weight, which bound a variable sits at, basis status, the current basic values. Candidates are the variables with negative reduced cost (here x₁, d = −9, flagged as Dantzig's pick, and x₂, d = −8); row tokens carry the vector of each row's basic variable (here s₁, s₂, s₃). Transformers run over the candidates, over the rows, then over both together. (3) A policy head scores each candidate; a masked softmax turns scores into probabilities; the solver performs the pivot (our environment wraps HiGHS, but the method is not tied to it). The bars here are illustrative, not model output: the point is that a learned rule may prefer cake, the 2-pivot route, over Dantzig's bread. Training: behaviour cloning from Dantzig, Devex, steepest edge or A* routes; then RL (PPO, GRPO, DAPO) with reward −1 per pivot (phase 2 only, since the agent only controls phase 2); A*-supervised training regresses the number of pivots left on A*'s shortest route; SGSPI is search policy iteration: a best-first search over the exact solver, guided by the network, produces better targets that are distilled back into the network (expert iteration, like AlphaZero). Training LPs come from our generator SyntheticLPs.jl (50 to 2,000 variables). No results on the slide yet: that's the open "?" bar from the research-question slide.</aside>
+  <aside class="notes">Our model, on the bakery. (1) The LP becomes a graph: a node for each variable and each constraint, an edge for each nonzero coefficient. A graph neural network passes messages along the edges, so every node ends up with a vector (the coloured strip) describing its place in the whole LP. This happens once per problem. (2) At every pivot, each candidate (negative reduced cost) adds the solver's numbers, and a transformer compares the candidates with each other and with the current basis. (3) The model scores each candidate and the solver pivots on the top one. The scores here are illustrative: the point is that a learned rule can prefer cake (2 pivots) over Dantzig's bread (3). How it learns: copy a classic rule or A*; reinforcement learning, where every pivot costs −1; and search as a teacher, trying pivots ahead during training (like AlphaZero). Result so far: the early offline policy (IQL) ties steepest edge on the 40 × 40 LP, 13 pivots.</aside>
 </section>
 
 <section class="slide" id="close" data-part="">

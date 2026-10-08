@@ -386,9 +386,9 @@ Deck.register("bounds", {
 
 // ------------------------------------------------------------------ slide: understanding dual variables
 // One resource at a time: its multiplier must cover both profits (flour 8, oven 4, labor 9).
-const DV_GUESS = [null, [8, 0, 0], [0, 4, 0], [0, 0, 9], null, null];  // last click: what a proof is
+const DV_GUESS = [null, [8, 0, 0], [0, 4, 0], [0, 0, 9], null];
 Deck.register("dualvars", {
-  steps: 5,
+  steps: 4,
   init(el) {
     this.el = el;
     this.host = el.querySelector("#dv-lp");
@@ -465,62 +465,94 @@ Deck.register("dualvars", {
 // ------------------------------------------------------------------ slide: two readings of the same equations
 // The profit line through (2, 5) for profit b x1 + 8 x2 (cake fixed at 8, as on the ties slide) is
 // lambda * oven + mu * labor with lambda = (b - 4) / 2, mu = 6 - b / 2: both >= 0 exactly when 4 <= b <= 12.
+// Click a ringed corner: the two constraints tight there (two resource lines, or one and an axis), read by rows
+// (primal: where they meet) and by columns (dual: which multipliers of them add up to c), as equations and as row
+// reduction of [objective | system]. Sign constraints are written like the others, -x_j <= 0, so a valid
+// multiplier is >= 0 for every row; the multiplier on -x_j <= 0 is product j's dual slack d_j.
+const WM_CORNERS = { "2,5": ["oven", "labor"], "4,2": ["flour", "oven"], "5,0": ["flour", "x2"], "0,6": ["labor", "x1"], "0,0": ["x1", "x2"] };
 Deck.register("whymix", {
-  steps: 1,
   init(el) {
     this.el = el;
     const p = (this.plot = bakeryPlot(el.querySelector("#wm-plot"), { size: 600 }));
     setLines(p, true);
     setRegion(p, true);
     setCorners(p, true, true);
-    p.emphasize("flour", "dim");
-    for (const k of ["oven", "labor"]) p.emphasize(k, "bold");
-    p.moveLabel("vl2,5", [2, 5], -52, 24);  // below-left, clear of the profit-direction arrow
-    this.read = el.querySelector("#wm-read");
-    this.valEl = el.querySelector("#wm-val");
-    this.slider = el.querySelector("#wm-bread");
-    this.slider.addEventListener("input", () => {
-      if (this.seq) this.seq.cancel();
-      let b = parseFloat(this.slider.value);
-      for (const t of [4, 9, 12]) if (Math.abs(b - t) < 0.3) b = t;
-      this.apply(b);
-    });
-    this.seq = null;
+    p.moveLabel("vl2,5", [2, 5], -52, 24);
+    const pts = Object.keys(WM_CORNERS).map((k) => k.split(",").map(Number));
+    const near = (t) => pts.find((q) => Math.hypot(t[0] - q[0], t[1] - q[1]) < 0.75);
+    p.svg.addEventListener("pointerdown", (e) => { const q = near(p.toData(e)); if (q) this.select(q.join(",")); });
+    p.svg.addEventListener("pointermove", (e) => { p.svg.style.cursor = near(p.toData(e)) ? "pointer" : "default"; });
+    this.sel = "2,5";
   },
-  apply(b) {
-    const p = this.plot, P = [2, 5], c = [b, 8], z = Geo.dot(c, P);
-    const l = (b - 4) / 2, m = 6 - b / 2, ok = l > -1e-9 && m > -1e-9;
-    const best = CORNERS.reduce((q, r) => (Geo.dot(c, r) > Geo.dot(c, q) + 1e-9 ? r : q), P);
-    p.level("pline", c, z, { stroke: ok ? C.obj : C.muted, "stroke-width": ok ? 4.5 : 3.5, "stroke-dasharray": ok ? "" : "10 8" });
-    p.poly("cut", ok ? null : Geo.clip(Bakery2D.region, [-c[0], -c[1]], -z), { fill: "#d64545", "fill-opacity": 0.48 });
-    const u = Math.hypot(...c);
-    p.arrow("dir", P, [P[0] + (1.5 * c[0]) / u, P[1] + (1.5 * c[1]) / u], { color: ok ? C.obj : C.muted, width: 5, head: 18 });
-    for (const q of CORNERS) cornerColor(p, q, Geo.near(q, P) ? C.obj : "#fff", Geo.near(q, P) ? 9 : 7);
-    p.line("ring", ok ? null : Array.from({ length: 41 }, (_, i) => [best[0] + 0.36 * Math.cos((i * Math.PI) / 20), best[1] + 0.36 * Math.sin((i * Math.PI) / 20)]),
-      { stroke: "#d64545", "stroke-width": 3 }, "top");
-    const n1 = (v) => v.toFixed(1), n2 = (v) => v.toFixed(2);
-    const sg = (v, col) => `${v < 0 ? "-" : "+"}\\,\\textcolor{${col.slice(1)}}{${n2(Math.abs(v))}}`;
-    this.read.classList.toggle("bad", !ok);
-    Deck.tex(this.read.querySelector(".l1"),
-      `\\OB{${n1(b)}x_1 + 8x_2 - ${n1(z)}} = ${l < 0 ? "-" : ""}\\textcolor{${C.oven.slice(1)}}{${n2(Math.abs(l))}}\\,(\\OV{\\text{oven}}) ${sg(m, C.labor)}\\,(\\LB{\\text{labor}})`);
-    this.read.querySelector(".l2").innerHTML = ok
-      ? `Both weights ≥ 0: the line only touches the region, so (2,&nbsp;5) is best, and the bound is its profit, ${n1(z)}.`
-      : `A weight is negative: the line <b>cuts into</b> the region, so (2,&nbsp;5) isn't best for this profit; (${fmt(best[0])},&nbsp;${fmt(best[1])}) is.`;
-    this.slider.value = b;
-    this.valEl.textContent = n1(b);
-    this.b = b;
+  select(key) {
+    this.sel = key;
+    const p = this.plot, R = Bakery2D.res, c = Bakery2D.c;
+    const T = WM_CORNERS[key].map((k) => Bakery2D.all.find((r) => r.key === k));
+    const mult = (r) => (r.product === undefined ? `y_${R.indexOf(r) + 1}` : `d_${r.product + 1}`);
+    const x = key.split(",").map(Number), z = Geo.dot(c, x);
+    const y = Geo.solve2([[T[0].a[0], T[1].a[0]], [T[0].a[1], T[1].a[1]]], c);  // A_Tᵀ y = c
+    const ok = y.every((v) => v > -1e-9);
+    const col = (r) => r.color.slice(1), tc = (r, s) => `\\textcolor{${col(r)}}{${s}}`;
+    const yc = (i) => (y[i] < 0 ? `\\textcolor{d64545}{${fmt(y[i])}}` : tc(T[i], fmt(y[i])));
+    // a·x = v, skipping zero terms ("x_2", "-x_2", "2x_1 + x_2")
+    const lin = (a, v) => a.map((k, j) => [k, j]).filter(([k]) => k !== 0)
+      .map(([k, j], n) => `${k < 0 ? (n ? " - " : "-") : n ? " + " : ""}${Math.abs(k) === 1 ? "" : Math.abs(k)}x_${j + 1}`).join("") + ` = ${v}`;
+    // product j's column: its coefficients times the two multipliers add up to c_j (coefficients shown, zeros skipped)
+    const colEq = (j) => T.map((r) => [r, r.a[j]]).filter(([, a]) => a !== 0)
+      .map(([r, a], n) => `${a < 0 ? " - " : n ? " + " : ""}${tc(r, Math.abs(a))}${mult(r)}`).join("") + ` = \\OB{${c[j]}}`;
+    // equations
+    Deck.tex(this.el.querySelector("#wm-pe"), T.map((r) => tc(r, lin(r.a, r.b))).join(", \\quad "));
+    Deck.tex(this.el.querySelector("#wm-pr"), `\\Rightarrow x = (${x[0]}, ${x[1]})`);
+    // a tight sign constraint is written -x_j <= 0: every row stays "<=", as for maximizing
+    const hasSign = T.some((r) => r.product !== undefined);
+    this.el.querySelector("#wm-pr").insertAdjacentHTML("beforeend", `: where the lines meet${hasSign ? ". Keep constraint ≤ for maximizing." : ""}`);
+    Deck.tex(this.el.querySelector("#wm-de"), [0, 1].map(colEq).join(", \\quad "));
+    const dr = this.el.querySelector("#wm-dr");
+    Deck.tex(dr, `\\Rightarrow ${mult(T[0])} = ${yc(0)},\\ ${mult(T[1])} = ${yc(1)}`);
+    dr.insertAdjacentHTML("beforeend", ok ? ": multipliers of those lines that add up to <span class=\"c-obj\">c</span>"
+      : `: they add up to <span class="c-obj">c</span>, but ${y.every((v) => v < 0) ? "both are" : "one is"} <b style="color:#d64545">negative</b>`);
+    // matrices: [objective | 0] over the system, then its row-reduced form
+    const mat = (rows) => `\\left[\\begin{array}{rr|r} ${rows.map((r) => r.join(" & ")).join(" \\\\ ")} \\end{array}\\right]`;
+    const ob = (v) => `\\OB{${v}}`;
+    // the top row is the objective as an equation, z - 9x_1 - 8x_2 = 0 (dual: w - b·y = 0), so it reduces to z (w)
+    const neg = (v) => (v === 0 ? 0 : -v);
+    Deck.tex(this.el.querySelector("#wm-pm"), mat([[ob(neg(c[0])), ob(neg(c[1])), 0], ...T.map((r) => [tc(r, r.a[0]), tc(r, r.a[1]), tc(r, r.b)])]));
+    Deck.tex(this.el.querySelector("#wm-pm2"), mat([[0, 0, ob(fmt(z))], [1, 0, x[0]], [0, 1, x[1]]]));
+    Deck.tex(this.el.querySelector("#wm-dm"), mat([[tc(T[0], neg(T[0].b)), tc(T[1], neg(T[1].b)), 0], ...[0, 1].map((j) => [tc(T[0], T[0].a[j]), tc(T[1], T[1].a[j]), ob(c[j])])]));
+    Deck.tex(this.el.querySelector("#wm-dm2"), mat([[0, 0, ob(fmt(z))], [1, 0, yc(0)], [0, 1, yc(1)]]));
+    const minus = (terms) => terms.filter(([k]) => k !== 0).map(([k, v]) => ` - ${k}${v}`).join("");
+    Deck.tex(this.el.querySelector("#wm-pn"), `z${minus([[c[0], "x_1"], [c[1], "x_2"]])} = 0`);
+    Deck.tex(this.el.querySelector("#wm-pn2"), `z = ${fmt(z)}`);
+    Deck.tex(this.el.querySelector("#wm-dn"), `w${minus(T.map((r) => [r.b, mult(r)]))} = 0`);
+    Deck.tex(this.el.querySelector("#wm-dn2"), `w = ${fmt(z)}`);
+    this.alignEq();
+    // plot: the tight lines bold (a tight sign constraint lights its axis), the selected corner gold, the other
+    // clickable ones ringed; the profit line through the corner, dashed when it cuts into the region
+    for (const r of R) p.emphasize(r.key, WM_CORNERS[key].includes(r.key) ? "bold" : "dim");
+    for (const j of [0, 1]) {
+      const on = T.some((r) => r.product === j);
+      p.line(`signax${j}`, on ? (j === 0 ? [[0, 0], [0, 8.6]] : [[0, 0], [8.6, 0]]) : null, { stroke: "#d6d9df", "stroke-width": 6 });
+    }
+    for (const q of CORNERS) cornerColor(p, q, Geo.near(q, x) ? C.obj : "#fff", Geo.near(q, x) ? 9 : 7);
+    for (const k of Object.keys(WM_CORNERS)) {
+      const q = k.split(",").map(Number);
+      p.line(`cue${k}`, ring(q, 0.38), { stroke: C.obj, "stroke-width": 2.5, "stroke-dasharray": k === key ? "" : "5 5", opacity: k === key ? 1 : 0.7 }, "top");
+    }
+    p.level("pline", c, z, { stroke: ok ? C.obj : C.muted, "stroke-width": ok ? 4 : 3, "stroke-dasharray": ok ? "" : "10 8" });
   },
-  render(k, animate) {
-    if (this.seq) this.seq.cancel();
-    if (!(animate && k === 1)) { this.apply(9); return; }
-    // click 1: sweep the profit direction through the valid band and out each side, then back to 9
-    let b = 9;
-    const to = (t, ms) => () => { const a = b; return Anim.tween(ms, (e) => { b = lerp(a, t, e); this.apply(b); }); };
-    this.seq = new Seq();
-    this.seq.run(() => Anim.wait(600), to(12, 1600), to(15.5, 1100), () => Anim.wait(600), to(4, 3600), to(2, 800),
-      () => Anim.wait(600), to(9, 1600));
+  // centre each objective equation over its matrix's top-right 0 (measured, so it follows the font and the numbers)
+  alignEq() {
+    for (const [eq, m] of [["#wm-pn", "#wm-pm"], ["#wm-dn", "#wm-dm"]]) {
+      const f = this.el.querySelector(eq), mat = this.el.querySelector(m), box = mat.closest(".wm-mat");
+      const cols = mat.querySelectorAll("[class*='col-align']"), cell = cols[cols.length - 1].querySelector(".vlist > span");
+      const g = (cell.lastElementChild || cell).getBoundingClientRect(), b = box.getBoundingClientRect();
+      const scale = b.width / box.offsetWidth;
+      if (!scale) return;
+      f.style.left = `${(g.left + g.width / 2 - b.left) / scale - f.offsetWidth / 2}px`;
+    }
   },
-  leave() { if (this.seq) this.seq.cancel(); },
+  render() { this.select(this.sel); document.fonts.ready.then(() => this.alignEq()); },
+  enter() { this.select("2,5"); },
 });
 
 // ------------------------------------------------------------------ slide: formalizing the dual
@@ -728,12 +760,12 @@ Deck.register("dualslack", {
 // Each primal variable and its dual partner: x_j <-> d_j, s_i <-> y_i. At a corner the 2 tight constraints are the
 // primal's zeros, the other 3 its basis; the dual flips it: the basis' partners are 0, the other 2 are the multipliers
 // of the tight constraints (Bakery2D.cornerProof).
-const PR_ROUTE = [[0, 0], [0, 0], [0, 0], [5, 0], [4, 2], [2, 5]];
+const PR_ROUTE = [[0, 0], [0, 0], [0, 0], [5, 0], [4, 2], [0, 6], [2, 5]];  // every corner, the optimum last
 const PR_PRIMAL = ["x_1", "x_2", "s_1", "s_2", "s_3"], PR_DUAL = ["d_1", "d_2", "y_1", "y_2", "y_3"];
 const prCol = (j) => (j < 2 ? null : Bakery2D.res[j - 2].color);
 const prTex = (t, j) => (prCol(j) ? `\\textcolor{${prCol(j).slice(1)}}{${t}}` : t);
 Deck.register("pairs", {
-  steps: 5,
+  steps: 6,
   init(el) {
     this.el = el;
     const grid = el.querySelector("#pr-grid"), div = (cls, html = "") => { const d = document.createElement("div"); d.className = cls; d.innerHTML = html; grid.appendChild(d); return d; };
