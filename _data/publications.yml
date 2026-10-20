@@ -30,6 +30,12 @@
   year: 2015
   link: "https://doi.org/10.1016/j.eswa.2015.06.028"
 
+- title: "Learning warm starts for the simplex method from measured solver cost"
+  status: "under_review"
+  authors: "F. Parker*, D. A. Ripsman*, E. Springer, K. Ghobadi"
+  note: "Under review at the International Conference on Learning Representations (ICLR) 2027. *Co-first authors."
+  link: "https://arxiv.org/abs/2610.20892"
+
 - title: "Superior light Pareto robust optimization with application to radiation therapy"
   status: "working"
   authors: "F. Rahimi, D. A. Ripsman, H. Abouee-Mehrizi, H. Mahmoudzadeh"

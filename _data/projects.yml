@@ -7,7 +7,7 @@
 
 - title: "Learning to Pivot (SimplexRL)"
   category: "active"
-  description: "The simplex method's speed depends on which pivot it takes at each step, and classical rules choose by fixed local formulas. In this project, led by Felix Parker with Emmett Springer and Kimia Ghobadi, we model pivot selection as a sequential decision problem, use exact search to find the shortest routes, and train policies to follow them.<br>An early learned policy already ties steepest edge on a 40 x 40 test problem. See the pivot timeline in action in my <a href='/talks/walking-the-corners/' target='_blank'>Walking the Corners</a> lecture."
+  description: "The simplex method's speed depends on which pivot it takes at each step, and classical rules choose by fixed local formulas. In this project, led by Felix Parker with Emmett Springer and Kimia Ghobadi, we model pivot selection as a sequential decision problem, use exact search to find the shortest routes, and train policies to follow them.<br>An early learned policy already ties steepest edge on a 40 x 40 test problem. A companion paper on learned warm starts, with me as co-first author, is <a href='https://arxiv.org/abs/2610.20892' target='_blank'>on arXiv</a> and under review at ICLR 2027. See the pivot timeline in action in my <a href='/talks/walking-the-corners/' target='_blank'>Walking the Corners</a> lecture."
   gallery:
       - type: image
         url: "/assets/SimplexRL_timeline.jpg"
