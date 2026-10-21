@@ -113,7 +113,7 @@
 
 - title: "Learning Clinical Models from Archives"
   category: "future"
-  description: "Hospitals hold years of treatment plans, schedules and menus, many with expert ratings attached. I will scale generative inverse optimization to these archives, starting with the open OpenKBP radiation therapy dataset, so that the model behind expert decisions can be learned, read and corrected by clinicians, and I will establish when a learned model can be trusted for a new patient.<br>AI and OR are governed by the same mathematical principles, so the reverse direction matters too: the same tools could make learned AI systems explainable, and help them run more efficiently."
+  description: "Hospitals hold years of treatment plans, schedules and menus, many with expert ratings attached. I will scale generative inverse optimization to these archives, starting with open radiation therapy data from the PortPy library, so that the model behind expert decisions can be learned, read and corrected by clinicians, and I will establish when a learned model can be trusted for a new patient.<br>AI and OR are governed by the same mathematical principles, so the reverse direction matters too: the same tools could make learned AI systems explainable, and help them run more efficiently."
 
 - title: "Solvers that Learn from Search"
   category: "future"
@@ -123,9 +123,9 @@
   category: "future"
   description: "Direct aperture optimization designs the exact shapes a treatment machine delivers, but it is hard to solve while also limiting how many apertures a plan uses, a limit that both the machines and plan quality demand. Building on joint work with Isaac Rudich (Polytechnique Montr\u00e9al), I am developing a network-based formulation built around shortest paths, with constraint-and-column generation and heuristics that rule out shapes the machine cannot deliver. I am also pursuing a new branch-and-bound approach.<br>Once these solve the basic cases quickly, the next step is adding the robust and CVaR dose constraints that clinics need."
 
-- title: "Operations for AI-Augmented Care"
+- title: "Bridging AI Progress and Clinical Trust"
   category: "future"
-  description: "AI tools promise to give clinicians time back, but our study of an ambient AI scribe shows that adoption is slow and uneven across clinicians and practices. I will build capacity, scheduling and staffing models that plan for that uneven adoption, using robust optimization that holds up while the time a tool frees is still unknown."
+  description: "AI models are improving faster than clinicians can learn to trust them. I will work to close that gap through transparency and explainability, and by measuring where AI improves care operations and where it gets in the way. I plan to build these models directly from electronic health record data, so they reflect real clinical workflows and can be evaluated where clinicians use them."
 
 - title: "Novel Mixed-Modality Imaging Techniques"
   category: "future"
