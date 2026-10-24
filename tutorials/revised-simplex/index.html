@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revised Simplex & Pivot Rules: A Tutorial</title>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<style>
+  :root {
+    --bg: #fbfbfa;
+    --panel: #ffffff;
+    --ink: #1c1c1e;
+    --muted: #6b6b73;
+    --accent: #2b5fb3;
+    --accent-soft: #eaf1fb;
+    --border: #e4e4e8;
+    --code-bg: #f4f4f6;
+    --green: #2e7d49;
+    --red: #c0392b;
+    --amber: #b9770e;
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.62;
+    font-size: 17px;
+  }
+  .layout { display: flex; max-width: 1180px; margin: 0 auto; }
+  /* Sidebar */
+  nav.toc {
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    width: 260px;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 28px 20px 60px 24px;
+    border-right: 1px solid var(--border);
+    font-size: 14.5px;
+  }
+  nav.toc h2 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--muted);
+    margin: 0 0 12px;
+  }
+  nav.toc a {
+    display: block;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-bottom: 1px;
+  }
+  nav.toc a:hover { background: var(--accent-soft); color: var(--accent); }
+  nav.toc a.sub { padding-left: 22px; color: var(--muted); font-size: 13.5px; }
+  nav.toc a.sub.dual { color: #8e44ad; }
+  nav.toc a.sub.dual:hover { background: #f3e9fa; color: #5f2c80; }
+  /* Main */
+  main { flex: 1; min-width: 0; padding: 40px 52px 120px; }
+  header.hero {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+    margin-bottom: 36px;
+  }
+  header.hero h1 { font-size: 34px; line-height: 1.15; margin: 0 0 10px; letter-spacing: -0.01em; }
+  header.hero p.sub { color: var(--muted); font-size: 17px; margin: 0; max-width: 60ch; }
+  h2.section { font-size: 26px; margin: 52px 0 14px; padding-top: 8px; letter-spacing: -0.01em; }
+  h3 { font-size: 20px; margin: 30px 0 10px; }
+  h4 { font-size: 16px; margin: 20px 0 6px; color: var(--accent); }
+  p { margin: 12px 0; }
+  code { font-family: var(--mono); background: var(--code-bg); padding: 1px 6px; border-radius: 4px; font-size: 0.9em; }
+  pre {
+    background: #1e1e24; color: #e6e6ea; padding: 16px 18px; border-radius: 10px;
+    overflow-x: auto; font-family: var(--mono); font-size: 14px; line-height: 1.55;
+  }
+  pre .cm { color: #8b94a3; }
+  pre .kw { color: #c792ea; }
+  pre .fn { color: #82aaff; }
+  .panel {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px 24px; margin: 20px 0;
+  }
+  .callout {
+    border-left: 4px solid var(--accent); background: var(--accent-soft);
+    padding: 12px 18px; border-radius: 0 8px 8px 0; margin: 18px 0;
+  }
+  .callout.warn { border-color: var(--amber); background: #fdf6e8; }
+  .callout.good { border-color: var(--green); background: #eaf6ee; }
+  /* collapsible dual-simplex mirror, one per main section */
+  details.dual-mirror { border: 1px solid #e2d4ef; border-left: 4px solid #8e44ad; background: #faf6fd;
+    border-radius: 0 10px 10px 0; padding: 10px 18px; margin: 24px 0; }
+  details.dual-mirror > summary { cursor: pointer; font-weight: 600; color: #7d3ba6; font-size: 15.5px;
+    list-style: none; user-select: none; padding: 2px 0; }
+  details.dual-mirror > summary::-webkit-details-marker { display: none; }
+  details.dual-mirror > summary::before { content: "▸"; display: inline-block; width: 1.1em; transition: transform .12s; }
+  details.dual-mirror[open] > summary::before { transform: rotate(90deg); }
+  details.dual-mirror[open] > summary { border-bottom: 1px solid #e2d4ef; padding-bottom: 8px; margin-bottom: 4px; }
+  details.dual-mirror > summary:hover { color: #5f2c80; }
+  details.dual-mirror h4 { color: #7d3ba6; }
+  details.dual-mirror .panel { background: #fff; }
+  .callout p:first-child { margin-top: 0; }
+  .callout p:last-child { margin-bottom: 0; }
+  .badge {
+    display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 9px;
+    border-radius: 999px; background: var(--accent-soft); color: var(--accent);
+    vertical-align: middle; margin-left: 8px;
+  }
+  table { border-collapse: collapse; width: 100%; margin: 20px 0; font-size: 15px; }
+  th, td { border: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--code-bg); font-weight: 600; }
+  td.center, th.center { text-align: center; }
+  .cost { color: var(--muted); font-size: 14px; }
+  .pill { font-family: var(--mono); font-size: 13px; padding: 1px 6px; border-radius: 4px; }
+  .pill.cheap { background: #eaf6ee; color: var(--green); }
+  .pill.mid { background: #fdf6e8; color: var(--amber); }
+  .pill.exp { background: #fbecea; color: var(--red); }
+  .rule-card { border-top: 3px solid var(--accent); }
+  hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+  .formula-label { color: var(--muted); font-size: 14px; font-style: italic; }
+  .footnote { color: var(--muted); font-size: 14px; }
+  a.inline { color: var(--accent); }
+  .kbd { font-family: var(--mono); font-size: 13px; background:#fff; border:1px solid var(--border); border-bottom-width:2px; border-radius:5px; padding:1px 6px; }
+  @media (max-width: 880px) {
+    nav.toc { display: none; }
+    main { padding: 28px 22px 90px; }
+    header.hero h1 { font-size: 27px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+<nav class="toc">
+  <h2>Contents</h2>
+  <a href="#setup">1. The LP setup</a>
+  <a href="#why-revised">2. Why "revised"?</a>
+  <a href="#anatomy">3. Anatomy of an iteration</a>
+  <a href="#phase1" class="sub">↳ Phase 1</a>
+  <a href="#dual-anat" class="sub dual">⇄ dual mirror</a>
+  <a href="#factorization">4. Under the hood</a>
+  <a href="#lu" class="sub">4.1 LU factorization</a>
+  <a href="#eta" class="sub">4.2 The one-column swap</a>
+  <a href="#dual-hood" class="sub dual">⇄ dual mirror</a>
+  <a href="#pricing">5. Pricing: the heart</a>
+  <a href="#bounds" class="sub">↳ bound flipping</a>
+  <a href="#dual-price" class="sub dual">⇄ dual mirror</a>
+  <a href="#rules" >6. The pivot rules</a>
+  <a href="#dantzig" class="sub">6.1 Dantzig</a>
+  <a href="#greatest" class="sub">6.2 Greatest increment</a>
+  <a href="#bland" class="sub">6.3 Bland</a>
+  <a href="#devex" class="sub">6.4 Devex</a>
+  <a href="#steepest" class="sub">6.5 Steepest edge</a>
+  <a href="#dual-rules" class="sub dual">⇄ dual mirror</a>
+  <a href="#compare">7. Side-by-side</a>
+  <a href="#worked">8. Worked micro-example</a>
+  <a href="#allrules">9. Same LP, all five rules</a>
+  <a href="#dual-demo" class="sub dual">⇄ dual mirror</a>
+  <a href="#three">10. GI vs Devex vs SE</a>
+  <a href="#lp3" class="sub">↳ walk it in 3D</a>
+  <a href="#takeaways">11. Takeaways</a>
+</nav>
+
+<main>
+<header class="hero">
+  <h1>The Revised Simplex Method &amp; Its Pivot Rules</h1>
+  <p class="sub">A from-scratch tutorial on revised simplex, then a deep dive into the five pricing rules that decide <em>which variable enters the basis</em>: Dantzig, greatest increment, Bland, Devex, and steepest edge.</p>
+</header>
+
+<!-- ============================================ -->
+<h2 class="section" id="setup">1. The linear program we're solving</h2>
+<p>Everything below assumes an LP in <strong>standard (computational) form</strong>:</p>
+\[
+\max_{x}\; c^{\top} x \quad\text{subject to}\quad A x = b,\;\; x \ge 0,
+\]
+<p>where \(A \in \mathbb{R}^{m \times n}\) with \(m\) constraints and \(n \ge m\) variables (inequalities have already been turned into equalities with slack variables). We assume \(A\) has full row rank \(m\).</p>
+
+<div class="panel">
+<h4>The basis: the one object you must internalize</h4>
+<p>A <strong>basis</strong> is a choice of \(m\) columns of \(A\) that are linearly independent. Split the index set accordingly:</p>
+\[
+A = \big[\, B \mid N \,\big], \qquad x = \begin{pmatrix} x_B \\ x_N \end{pmatrix},\qquad
+c = \begin{pmatrix} c_B \\ c_N \end{pmatrix}.
+\]
+<p>\(B\) is the \(m\times m\) invertible <em>basis matrix</em>; \(N\) holds the remaining <em>nonbasic</em> columns. Set the nonbasic variables to zero, and the constraints force the rest:</p>
+\[
+x_B = B^{-1} b, \qquad x_N = 0.
+\]
+<p>This point \((x_B, x_N)\) is a <strong>basic feasible solution (BFS)</strong> whenever \(x_B \ge 0\); geometrically, it is a <em>vertex</em> of the feasible polyhedron. The simplex method walks from vertex to vertex, each step swapping one column between \(B\) and \(N\), always improving (or holding) the objective.</p>
+</div>
+
+<!-- ============================================ -->
+<h2 class="section" id="why-revised">2. Why "revised" simplex?</h2>
+<p>The textbook <em>tableau</em> simplex method stores and updates the entire augmented tableau \(\big[\,B^{-1}A \mid B^{-1}b\,\big]\) every iteration: the \(m\times n\) constraint body \(B^{-1}A\) together with the right-hand-side column \(B^{-1}b\) (the current basic values \(x_B\)). That's a lot of numbers, most of which you never look at, and the repeated row operations accumulate floating-point error.</p>
+
+<p>The <strong>revised simplex method</strong> keeps the same mathematics but stores far less. The key realization: every quantity you need in an iteration can be produced on demand from \(B^{-1}\) (or a factorization of \(B\)) plus the <em>original</em> data \(A, b, c\). You never form the full tableau.</p>
+
+<table>
+<thead><tr><th></th><th>Tableau simplex</th><th>Revised simplex</th></tr></thead>
+<tbody>
+<tr><td><strong>Stores</strong></td><td>Full tableau \(\big[\,B^{-1}A \mid B^{-1}b\,\big]\): body + RHS column</td><td>Just \(B^{-1}\) (or an LU factorization of \(B\)); gets \(x_B=B^{-1}b\) on demand</td></tr>
+<tr><td><strong>Work / iter</strong></td><td>\(O(mn)\) to update everything</td><td>\(O(m^2 + m\cdot(\text{cols priced}))\)</td></tr>
+<tr><td><strong>Memory</strong></td><td>Dense \(mn\)</td><td>Sparse \(A\) + small \(B^{-1}\) data</td></tr>
+<tr><td><strong>Numerics</strong></td><td>Error compounds in the tableau</td><td>Refactorize \(B\) periodically to reset error</td></tr>
+<tr><td><strong>Sparsity</strong></td><td>Lost (fill-in)</td><td>Exploited (\(A\) stays sparse)</td></tr>
+</tbody>
+</table>
+
+<div class="callout">
+<p><strong>The one-line summary:</strong> revised simplex is the simplex method reorganized around the factorization of \(B\), computing only the tableau entries it actually needs, which makes it the form used in every serious LP solver (HiGHS, CPLEX, Gurobi, …).</p>
+</div>
+
+<!-- ============================================ -->
+<h2 class="section" id="anatomy">3. Anatomy of one iteration</h2>
+<p>A single revised-simplex iteration has five steps. The whole game of "pivot rules" lives in <strong>Step 2</strong>.</p>
+
+<div class="panel">
+<h4>Step 1: Solve for the dual (BTRAN)</h4>
+<p>Compute the simplex multipliers \(y\) (a.k.a. the dual vector) by solving</p>
+\[
+y^{\top} B = c_B^{\top} \quad\Longleftrightarrow\quad y = B^{-\top} c_B .
+\]
+
+<h4>Step 2: Pricing: pick the entering variable <span class="badge">pivot rule lives here</span></h4>
+<p>For each nonbasic column \(a_j\), the <strong>reduced cost</strong> is</p>
+\[
+\bar c_j = c_j - y^{\top} a_j .
+\]
+<p>If \(\bar c_j \le 0\) for <em>all</em> nonbasic \(j\), the current vertex is optimal: stop. Otherwise some \(\bar c_j > 0\) tells us that increasing \(x_j\) will <em>increase</em> the objective. <strong>Which such \(j\) do we choose?</strong> That choice is the pivot rule. Call the winner \(q\).</p>
+
+<h4>Step 3: Solve for the search direction (FTRAN)</h4>
+<p>Find how the basic variables move as \(x_q\) increases:</p>
+\[
+d = B^{-1} a_q .
+\]
+
+<h4>Step 4: Ratio test: pick the leaving variable</h4>
+<p>As \(x_q\) grows by \(t\), basic variables change as \(x_B - t\,d\). Keep them \(\ge 0\):</p>
+\[
+t^{\star} = \min_{i:\, d_i > 0} \frac{(x_B)_i}{d_i}.
+\]
+<p>The minimizing row \(p\) leaves the basis. (If no \(d_i > 0\), the LP is <strong>unbounded</strong>.)</p>
+
+<h4>Step 5: Update</h4>
+<p>Swap: \(q\) enters, \(p\) leaves. Update \(B^{-1}\) (product-form / Forrest–Tomlin update) or refactorize. Loop back to Step&nbsp;1.</p>
+</div>
+
+<div class="callout good">
+<p><strong>Where the names come from:</strong> <code>BTRAN</code> ("backward transformation") is the \(B^{-\top}\) solve in Step&nbsp;1; <code>FTRAN</code> ("forward transformation") is the \(B^{-1}\) solve in Step&nbsp;3. If you've read HiGHS internals, these are the two workhorse solves per iteration.</p>
+</div>
+
+
+<h3 id="phase1">Before the loop: Phase 1</h3>
+<p>The five steps above assume you already <em>have</em> a feasible basis. Getting one is its own problem. The all-slack basis is primal-feasible for free whenever \(b \ge 0\), i.e. every "≤" row has a nonnegative right-hand side, which is the case in every demo on this page. Otherwise you run a <strong>Phase 1</strong>: add artificial variables and minimize their sum (the two-phase method), or penalize them with a large cost (big-M). Once the artificials are driven to zero you hold a feasible basis, and <strong>Phase 2</strong> optimizes the real objective with exactly the machinery above.</p>
+<div class="callout"><p>Phase 1 is just simplex run on a different objective: same anatomy, same pricing, same factorization. There is nothing new to learn, only a different \(c\). (The dual method needs a <em>different</em> kind of start; see the mirror below.)</p></div>
+
+<details class="dual-mirror" id="dual-anat">
+<summary>⇄ Dual simplex: the same iteration, mirrored</summary>
+<p><strong>Primal</strong> simplex keeps <em>primal feasibility</em> (every iterate is a real vertex) and hunts for optimality. <strong>Dual simplex</strong> (Lemke, 1954) holds the opposite fixed: it keeps <em>optimality</em> and hunts for feasibility, using the same tableau machinery run in mirror order.</p>
+<h4>Two kinds of feasibility</h4>
+<p>Every basis has two separate "health checks":</p>
+<ul>
+<li><strong>Primal feasibility:</strong> \(x_B = B^{-1}b \ge 0\): the basic variables are nonnegative, i.e. you're sitting on an actual vertex of the feasible region.</li>
+<li><strong>Dual feasibility (= optimality):</strong> the reduced costs \(\bar c\) all have their optimal sign (for a <em>min</em>, \(\bar c_j \ge 0\) for every nonbasic \(j\); for a <em>max</em>, \(\bar c_j \le 0\)). This is exactly the "no improving column" stopping test.</li>
+</ul>
+<p>A basis is optimal when it has <strong>both</strong>. The two methods hold one fixed and chase the other:</p>
+<div class="callout">
+<p><strong>Primal simplex</strong> keeps <em>primal feasibility</em> (every iterate is a real vertex) and works toward optimality. <strong>Dual simplex</strong> keeps <em>dual feasibility / optimality</em> (every iterate has optimal-signed reduced costs but sits <em>outside</em> the feasible region, with some \(x_B < 0\)) and works toward primal feasibility. They approach the same optimal vertex from opposite sides: primal <em>feasible-but-not-yet-optimal</em>, dual <em>optimal-cost-but-not-yet-feasible</em>.</p>
+</div>
+
+<h4>The mirror, step by step</h4>
+<p>The two selection choices swap order. Primal prices columns to pick who <em>enters</em>, then a ratio test over rows decides who <em>leaves</em>. Dual picks an infeasible basic variable to <em>leave</em>, then a ratio test over the pivot row decides who <em>enters</em>.</p>
+<table>
+<thead><tr><th></th><th>Primal simplex</th><th>Dual simplex</th></tr></thead>
+<tbody>
+<tr><td><strong>Maintains</strong></td><td>primal feasibility \(x_B \ge 0\)</td><td>dual feasibility (\(\bar c\) optimal sign)</td></tr>
+<tr><td><strong>Seeks</strong></td><td>optimality (\(\bar c\) sign)</td><td>primal feasibility \(x_B \ge 0\)</td></tr>
+<tr><td><strong>Starts from</strong></td><td>a feasible vertex</td><td>an optimal-but-infeasible basis</td></tr>
+<tr><td><strong>Picks 1st</strong></td><td><strong>entering</strong>: price nonbasic \(\bar c_j\) (Dantzig/Devex/…)</td><td><strong>leaving</strong>: a basic var with \((x_B)_i < 0\) (most-infeasible / dual pricing)</td></tr>
+<tr><td><strong>Picks 2nd</strong></td><td><strong>leaving</strong>: min-ratio \(\dfrac{(x_B)_i}{d_i}\) over rows \(d_i>0\)</td><td><strong>entering</strong>: min-ratio \(\left|\dfrac{\bar c_j}{\alpha_{rj}}\right|\) over pivot-row entries of the right sign</td></tr>
+<tr><td><strong>Ratio test over</strong></td><td>the FTRAN column \(d = B^{-1}a_q\)</td><td>the pivot row \(r\) of \(B^{-1}A\)</td></tr>
+<tr><td><strong>Failure detects</strong></td><td>no leaving row → <em>unbounded</em></td><td>no eligible entering col → <em>infeasible</em></td></tr>
+<tr><td><strong>Best pivot rules</strong></td><td>Devex, (primal) steepest edge</td><td><strong>dual</strong> steepest edge, dual Devex</td></tr>
+</tbody>
+</table>
+<p>Note both still run BTRAN and FTRAN each iteration; the linear algebra (LU of \(B\), the eta updates) is identical. Only the <em>selection policy</em> flips.</p>
+
+<h4 >Anatomy of a dual iteration</h4>
+<p>Set this beside the primal five steps of §3: it's the same skeleton with the two choices swapped:</p>
+<div class="panel">
+<h4>Step 1: Pick the leaving variable (the primal-infeasibility test)</h4>
+<p>Compute \(x_B = B^{-1}b\) (an <strong>FTRAN</strong>). If \(x_B \ge 0\) you're primal-feasible, hence <em>optimal</em>: stop. Otherwise choose a row \(p\) with \((x_B)_p < 0\): the "most infeasible" one, or one chosen by dual steepest-edge pricing. That basic variable <strong>leaves</strong>.</p>
+<h4>Step 2: Compute the pivot row (BTRAN)</h4>
+<p>Extract row \(p\) of \(B^{-1}A\): first \(\rho = e_p^{\top}B^{-1}\) (a <strong>BTRAN</strong> with the unit vector \(e_p\)), then the row entries \(\alpha_{pj} = \rho\cdot a_j\) for each nonbasic \(j\). (Primal Step 1's BTRAN produced the price vector \(y\); here the BTRAN produces a <em>row</em> of the tableau.)</p>
+<h4>Step 3: Dual ratio test (pick the entering variable)</h4>
+<p>As the leaving variable is dragged back to its bound, every reduced cost shifts. To keep them all at their optimal sign, only nonbasic columns with \(\alpha_{pj}\) of the right sign are eligible; among those pick \(q = \arg\min_j \left|\dfrac{\bar c_j}{\alpha_{pj}}\right|\). That column <strong>enters</strong>. If none are eligible, no basis can repair this row → the LP is <strong>primal-infeasible</strong> (stop).</p>
+<h4>Step 4: Ratio → step length, update the reduced costs</h4>
+<p>The minimizing ratio is exactly how far the reduced costs can move before one would flip sign; take that step. \(q\) enters, \(p\) leaves.</p>
+<h4>Step 5: Update \(B^{-1}\) / LU</h4>
+<p>Identical to primal: FTRAN the entering column, append the eta / patch the LU, and loop.</p>
+</div>
+<div class="callout">
+<p><strong>The symmetry in one line:</strong> primal <em>prices columns</em> (BTRAN → \(y\)) to choose who <em>enters</em>, then ratio-tests a <em>column</em> to choose who leaves. Dual <em>prices a row</em> (BTRAN → a row of \(B^{-1}\)) to choose who <em>leaves</em>, then ratio-tests that <em>row</em> to choose who enters. Each does one BTRAN and one FTRAN per iteration, just wired in the opposite order.</p>
+</div>
+
+
+<h4>Where the dual starts (its Phase 1)</h4>
+<p>Primal needs a primal-feasible basis; <strong>dual needs a dual-feasible one</strong>: reduced costs already at their optimal sign. That is free whenever the costs start with the right sign (e.g. minimizing with \(c \ge 0\)); otherwise you need a <strong>dual Phase 1</strong> (a cost-shifting / composite subproblem). The two Phase-1s are themselves duals: making the primal feasible is, in dual space, making the dual optimal.</p>
+<h4>Why dual simplex is the workhorse</h4>
+<p>Its superpower is <strong>warm-starting</strong>. In branch-and-bound and cutting-plane methods you solve an LP, then <em>add a constraint</em> (a branching bound, or a cut). Adding a constraint can make the old optimal basis <em>primal-infeasible</em> (the previous solution now violates the new row), but it stays <em>dual-feasible</em>, because the reduced costs keep their sign. That is exactly the dual simplex's starting state, so a handful of dual pivots restore optimality instead of re-solving from scratch. The same is true when you only change the right-hand side \(b\). This is why <strong>dual (steepest-edge) simplex is the default LP method for the node solves inside virtually every MILP solver</strong>, and often the overall default.</p>
+
+<pre><span class="cm"># DUAL simplex iteration (max cᵀx; dual-feasible start with some x_B &lt; 0)</span>
+<span class="kw">loop</span>:
+    x_B = B⁻¹b
+    <span class="kw">if</span> x_B ≥ 0:  <span class="kw">return</span> OPTIMAL              <span class="cm"># primal feasibility reached</span>
+    p = argmin_i (x_B)_i                        <span class="cm"># leaving var = most infeasible (BTRAN-priced)</span>
+    ρ = row p of B⁻¹A                           <span class="cm"># the pivot row (one BTRAN + spread)</span>
+    <span class="kw">if</span> ρ_j ≥ 0 for all nonbasic j:  <span class="kw">return</span> INFEASIBLE
+    q = argmin over {j : ρ_j &lt; 0} of |c̄_j / ρ_j|   <span class="cm"># dual ratio test → entering</span>
+    pivot(q in, p out); update B⁻¹ / LU          <span class="cm"># same FTRAN + eta update as primal</span>
+</pre>
+
+
+</details>
+
+<!-- ============================================ -->
+<h2 class="section" id="factorization">4. Under the hood: factorization &amp; the one-column update</h2>
+<p>In §2 we claimed revised simplex stores "just \(B^{-1}\) (or an LU factorization)" and updates it cheaply, costing only \(\sim O(m^2)\) per iteration instead of \(O(m^3)\). Those two claims rest on two tricks, and they're the real source of the method's speed:</p>
+<ol>
+<li><strong>Factorize \(B\), never invert it.</strong> (§4.1)</li>
+<li><strong>Update instead of refactorizing from scratch, because only one column changed.</strong> (§4.2)</li>
+</ol>
+
+<h3 id="lu">4.1 Factorize, don't invert (LU)</h3>
+<p>Look back at the iteration. Steps 1 and 3 <em>never actually need the matrix \(B^{-1}\) itself</em>; they need to <strong>solve linear systems</strong> whose coefficient matrix is \(B\):</p>
+\[
+\text{FTRAN: } B\,d = a_q, \qquad\qquad \text{BTRAN: } B^{\top} y = c_B .
+\]
+<p>An explicit inverse is the wrong tool for solving systems:</p>
+<ul>
+<li>Forming \(B^{-1}\) costs \(O(m^3)\).</li>
+<li>\(B^{-1}\) is <strong>dense even when \(B\) is sparse</strong>: catastrophic fill-in for large problems.</li>
+<li>Multiplying by an explicit inverse amplifies rounding error.</li>
+</ul>
+<p>So instead we compute, <em>once</em>, an <strong>LU factorization</strong></p>
+\[
+B = L\,U \qquad (\text{plus row/column permutations for stability and sparsity}),
+\]
+<p>with \(L\) lower-triangular and \(U\) upper-triangular. Triangular systems solve by plain <em>substitution</em>, in time proportional to the number of nonzeros:</p>
+\[
+\underbrace{B\,d = a_q}_{\text{FTRAN}}:\;\; L\,w = a_q \;\text{(forward subst)},\;\; U\,d = w \;\text{(back subst)};
+\]
+\[
+\underbrace{B^{\top} y = c_B}_{\text{BTRAN}}:\;\; (LU)^{\top}= U^{\top}L^{\top}\Rightarrow\; U^{\top} z = c_B,\;\; L^{\top} y = z .
+\]
+<p>With a good fill-reducing ordering, \(L\) and \(U\) stay nearly as sparse as \(B\), so each solve is cheap and numerically far more stable than hitting a dense inverse.</p>
+<div class="callout">
+<p><strong>Mental image:</strong> \(B^{-1}\) is a dense wall of \(m^2\) numbers. Its LU factorization is two <em>sparse triangles</em> you slide a substitution sweep through: same answer, a fraction of the work, and much better numerics. That's why no serious solver ever stores the inverse.</p>
+</div>
+
+<h3 id="eta">4.2 The one-column swap → a rank-one update</h3>
+<p>Here's the part that makes <em>simplex specifically</em> so efficient. From one iteration to the next, the basis changes in <strong>exactly one column</strong>: the entering column \(a_q\) replaces the leaving column (the \(p\)-th column of \(B\)). Everything else is byte-for-byte identical. Refactorizing the whole new basis \(\bar B\) from scratch each iteration would throw that structure away.</p>
+<p>Algebraically, the new basis is a <strong>rank-one modification</strong> of the old one:</p>
+\[
+\bar B = B + (a_q - B e_p)\,e_p^{\top},
+\]
+<p>where \(e_p\) is the \(p\)-th unit vector. By the Sherman–Morrison formula, its inverse is a rank-one update of \(B^{-1}\), and it takes a beautifully simple form built entirely from the FTRAN vector <strong>you already computed in Step&nbsp;3</strong>:</p>
+\[
+d = B^{-1} a_q \qquad\Longrightarrow\qquad \bar B^{-1} = E\,B^{-1},
+\]
+<p>where \(E\) is an <strong>eta matrix</strong>: the identity, with its \(p\)-th column replaced by</p>
+\[
+\eta = \Big(\,-\tfrac{d_1}{d_p},\ \dots,\ \tfrac{1}{d_p},\ \dots,\ -\tfrac{d_m}{d_p}\,\Big)^{\!\top},
+\qquad \tfrac{1}{d_p}\ \text{sits in row } p .
+\]
+<p>Concretely, for \(m=4\) and a pivot in row \(p=2\), \(E\) is just the identity with one special column:</p>
+\[
+E=\begin{pmatrix}
+1 & -d_1/d_2 & 0 & 0\\[2pt]
+0 & \ \ 1/d_2 & 0 & 0\\[2pt]
+0 & -d_3/d_2 & 1 & 0\\[2pt]
+0 & -d_4/d_2 & 0 & 1
+\end{pmatrix}
+\quad\begin{array}{l}\\[-2pt]\leftarrow\ \text{only column } p=2\\ \quad\ \text{differs from } I\end{array}
+\]
+<div class="callout good">
+<p><strong>The punchline:</strong> a pivot's update is essentially <em>free</em>: \(\eta\) is built entirely from \(d\), which the iteration already computed for the ratio test. The "swap one column" geometry becomes "append one vector" algebra.</p>
+</div>
+
+<h4>Product form of the inverse (PFI)</h4>
+<p>Apply this repeatedly. Starting from a factorized basis \(B_0\), after \(k\) pivots:</p>
+\[
+B_k^{-1} = E_k\,E_{k-1}\cdots E_1\, B_0^{-1}.
+\]
+<p>So the solver keeps the original LU of \(B_0\) <em>plus a growing list of eta vectors</em>, one per pivot. FTRAN and BTRAN become: do the base triangular solves, then apply each eta in turn, and each eta application is just \(O(m)\) (really \(O(\text{nnz}(\eta))\)).</p>
+
+<h4>Why you still refactorize periodically</h4>
+<p>Two things grow with the eta list, which is why §2 said "refactorize \(B\) periodically":</p>
+<ol>
+<li><strong>Time:</strong> after \(k\) pivots, every solve must apply \(k\) etas, so solves get steadily slower the longer you go.</li>
+<li><strong>Error:</strong> each rank-one update compounds a little floating-point error.</li>
+</ol>
+<p>So every \(\sim\)50–100 iterations (or once the list gets long / accuracy drifts), the solver <strong>reinverts</strong>: it recomputes a fresh sparse LU of the current basis and discards the eta list. This caps both the per-solve cost and the accumulated error, and it is exactly why the amortized work is \(\sim O(m^2)\) per iteration rather than a full \(O(m^3)\) refactorization every time.</p>
+<div class="callout">
+<p><strong>What real solvers do:</strong> naive PFI just appends eta vectors, which slowly destroys sparsity. The <strong>Bartels–Golub</strong> and <strong>Forrest–Tomlin</strong> updates are smarter: instead of tacking on an eta, they <em>surgically modify the LU factors</em> (patch up \(U\)) when a column is replaced, preserving sparsity far better. That's what HiGHS / CPLEX / Gurobi actually run, but the eta-vector picture above is the right mental model for <em>why</em> a pivot is cheap.</p>
+</div>
+
+
+<details class="dual-mirror" id="dual-hood">
+<summary>⇄ Dual simplex: identical linear algebra, different right-hand sides</summary>
+<p>Nothing in this section changes for the dual method. It factorizes the same \(B\) as \(PB = LU\), solves with the same forward/back substitutions, and updates with the same eta / Forrest–Tomlin machinery. The only difference is <em>what the two solves are asked for</em>:</p>
+<table>
+<thead><tr><th>Solve</th><th>Primal uses it for…</th><th>Dual uses it for…</th></tr></thead>
+<tbody>
+<tr><td><strong>FTRAN</strong> \(B\,\square = \text{rhs}\)</td><td>\(d = B^{-1}a_q\): the direction of the entering column</td><td>\(x_B = B^{-1}b\): which basic variable is infeasible</td></tr>
+<tr><td><strong>BTRAN</strong> \(B^{\top}\square = \text{rhs}\)</td><td>\(y = B^{-\top}c_B\): the prices, to get reduced costs</td><td>\(\rho = B^{-\top}e_p\): row \(p\) of \(B^{-1}\), i.e. the pivot row</td></tr>
+</tbody>
+</table>
+<p>So the dual's BTRAN is solved with the unit vector \(e_p\) in place of \(c_B\): it extracts <em>row \(p\)</em> of \(B^{-1}\), which then spreads across the nonbasic columns to give the pivot row \(\alpha_{pj} = \rho \cdot a_j\). Same triangular solves, same factors, different right-hand side, which is exactly why one factorization serves both methods.</p>
+</details>
+
+<!-- ============================================ -->
+<h2 class="section" id="pricing">5. Pricing is the heart of the method</h2>
+<p>Steps 1, 3, 4, 5 are fixed linear algebra. <strong>Step 2 is a policy decision.</strong> Usually many reduced costs are positive, so many columns are <em>eligible</em> to enter. The pivot rule is the tie-breaker, and it has an outsized effect:</p>
+<ul>
+<li><strong>Iteration count.</strong> A good rule reaches the optimum in fewer vertices. Cheap-per-step rules can take exponentially many steps on adversarial inputs (Klee–Minty).</li>
+<li><strong>Cost per iteration.</strong> A "smarter" rule that inspects more information per column costs more <em>per</em> iteration. The art is trading per-step cost against step count.</li>
+<li><strong>Termination.</strong> Under <em>degeneracy</em> (a basic variable already at zero, so \(t^\star = 0\)), naive rules can <strong>cycle</strong> forever. Some rules guarantee they can't.</li>
+</ul>
+
+<p>The five rules below sit on a clear spectrum from "cheap and dumb" to "expensive and sharp":</p>
+
+<table>
+<thead><tr><th>Rule</th><th>What it measures</th><th class="center">Per-iter cost</th><th class="center">Anti-cycling?</th></tr></thead>
+<tbody>
+<tr><td><strong>Bland</strong></td><td>Smallest index with \(\bar c_j>0\)</td><td class="center"><span class="pill cheap">cheapest</span></td><td class="center" style="color:var(--green)">✓ guaranteed</td></tr>
+<tr><td><strong>Dantzig</strong></td><td>Most positive \(\bar c_j\) (best <em>rate</em>)</td><td class="center"><span class="pill cheap">cheap</span></td><td class="center" style="color:var(--red)">✗ can cycle</td></tr>
+<tr><td><strong>Greatest increment</strong></td><td>Largest <em>actual</em> gain \(\bar c_j\cdot t^\star_j\) (rate × feasible step)</td><td class="center"><span class="pill exp">very expensive</span></td><td class="center" style="color:var(--red)">✗ can cycle</td></tr>
+<tr><td><strong>Devex</strong></td><td>\(\bar c_j\) scaled by an <em>approximate</em> edge norm</td><td class="center"><span class="pill mid">moderate</span></td><td class="center" style="color:var(--muted)">~ in practice</td></tr>
+<tr><td><strong>Steepest edge</strong></td><td>\(\bar c_j\) scaled by the <em>true</em> edge norm</td><td class="center"><span class="pill exp">expensive</span></td><td class="center" style="color:var(--muted)">~ in practice</td></tr>
+</tbody>
+</table>
+
+<h3 id="bounds">Bound flipping: the free long step</h3>
+<p>Production solvers use the <strong>bounded-variable</strong> form \(l \le x \le u\), where a nonbasic variable rests at <em>either</em> its lower or its upper bound (not just 0). That unlocks a move with no basis change at all:</p>
+<p>A <strong>bound flip</strong> sends a nonbasic variable straight from one bound to the other. The basic variables just slide by \((\text{bound change}) \times (\text{its column direction } B^{-1}a_j)\); \(B\), \(B^{-1}\), and the LU are untouched: <em>no pivot, no refactorization</em>. It's a genuinely free step that can move the solution a long way.</p>
+<ul>
+<li><strong>Primal:</strong> if the entering variable would reach its <em>own</em> opposite bound before any basic variable hits a bound, it simply flips (the <em>bound-flipping ratio test</em>) and no variable leaves the basis.</li>
+<li><strong>Dual:</strong> the <strong>long-step (bound-flipping) dual ratio test</strong> (Maros; Koberstein &amp; Suhl) lets the entering choice pass <em>through</em> several breakpoints, flipping the intervening nonbasic variables between their bounds as it goes, and taking a much larger dual step per iteration. It's one of the biggest practical speedups in modern dual simplex.</li>
+</ul>
+<p>The takeaway: not every "step" of simplex is a pivot. Bound flips let both methods make progress while keeping the same basis factorization: cheap mileage between the expensive basis changes.</p>
+
+
+<details class="dual-mirror" id="dual-price">
+<summary>⇄ Dual simplex: pricing rows instead of columns</summary>
+<p>Primal pricing scans nonbasic <em>columns</em> looking for an improving reduced cost. Dual pricing scans basic <em>rows</em> looking for an infeasibility, and the two choices happen in the opposite order:</p>
+<ul>
+<li><strong>Pick the leaving variable first.</strong> Among rows with \((x_B)_i < 0\), choose one. "Most infeasible" (\(\min_i (x_B)_i\)) is the direct analogue of Dantzig's rule, and it carries the same flaw: it is a raw magnitude, blind to the geometry. Better weightings exist (see the dual mirror in §6).</li>
+<li><strong>Then the dual ratio test picks the entering column.</strong> Among nonbasic \(j\) whose pivot-row entry \(\alpha_{pj}\) has the sign that preserves optimality, take \(q = \arg\min_j \left|\bar c_j / \alpha_{pj}\right|\), the first reduced cost that would flip sign as the step is taken. If nothing is eligible, no basis can repair that row and the LP is <strong>primal-infeasible</strong>.</li>
+</ul>
+<div class="callout"><p><strong>The failure modes mirror too:</strong> a primal ratio test that finds no leaving row means <em>unbounded</em>; a dual ratio test that finds no entering column means <em>infeasible</em>.</p></div>
+<p>Bound flipping mirrors as well: the dual's <strong>long-step ratio test</strong> (above) is precisely this dual ratio test allowed to walk <em>past</em> several breakpoints, flipping the intervening nonbasic variables between their bounds as it goes.</p>
+</details>
+
+<!-- ============================================ -->
+<h2 class="section" id="rules">6. The pivot rules</h2>
+
+<!-- DANTZIG -->
+<div class="panel rule-card" id="dantzig">
+<h3>6.1 Dantzig's rule<span class="cost">: "most positive reduced cost"</span></h3>
+<p>The original rule (Dantzig, 1947). Pick the entering variable with the steepest <em>per-unit</em> improvement in the objective:</p>
+\[
+q = \arg\max_{j\,:\,\bar c_j > 0}\ \bar c_j .
+\]
+<h4>Intuition</h4>
+<p>\(\bar c_j\) is the rate at which the objective rises per unit increase of \(x_j\). Dantzig greedily grabs the column promising the fastest climb. Simple, and free once you've priced all columns.</p>
+<h4>The flaw</h4>
+<p>The <em>rate</em> says nothing about <em>how far</em> you can actually move. A column with a hugely positive \(\bar c_j\) might hit a constraint almost immediately (ratio test gives tiny \(t^\star\)), yielding negligible actual progress. Dantzig is fooled by units and scaling: multiply one column's data by 1000 and its reduced cost changes, so the rule is <strong>not scale-invariant</strong>.</p>
+<div class="callout warn">
+<p><strong>Worst case:</strong> Klee &amp; Minty (1972) built a "squashed cube" LP with \(n\) variables where Dantzig's rule visits all \(2^n\) vertices, which takes exponential time. And under degeneracy Dantzig can cycle. In practice it's still decent and very cheap, but it's rarely the default in modern solvers.</p>
+</div>
+</div>
+
+<!-- GREATEST INCREMENT -->
+<div class="panel rule-card" id="greatest">
+<h3>6.2 Greatest increment<span class="cost">: "largest actual objective gain"</span></h3>
+<p>Also called the <em>largest-increase</em> or <em>greatest-improvement</em> rule. Where Dantzig maximizes the <em>rate</em> of improvement (\(\bar c_j\), the gain <em>per unit</em> of \(x_j\)), greatest increment maximizes the <strong>actual gain realized on the step</strong>, the rate multiplied by how far the ratio test lets you travel:</p>
+\[
+q = \arg\max_{j\,:\,\bar c_j>0}\ \bar c_j\cdot t^\star_j,
+\qquad
+t^\star_j = \min_{i:\,(d_j)_i>0}\frac{(x_B)_i}{(d_j)_i},\quad d_j = B^{-1}a_j .
+\]
+<h4>Intuition</h4>
+<p>Dantzig is fooled when a steep column slams into a constraint immediately (tiny \(t^\star\)). Greatest increment refuses to be fooled: it looks ahead to where you would actually stop and scores the genuine objective increase. On a per-step basis it makes the most progress of any rule here.</p>
+<h4>The cost, and why there's no cheap version</h4>
+<p>To score a column you need its direction \(d_j = B^{-1}a_j\) (an <strong>FTRAN</strong>) <em>and</em> a full ratio test, <em>for every eligible column</em>. That's roughly tableau-level work per iteration, making it the most expensive rule on this page. Unlike Devex (which cheaply approximates steepest edge via a weight recurrence), greatest increment has <strong>no analogous cheap approximation</strong>: \(t^\star_j\) depends on the entire current \(x_B\) and changes structurally every pivot, so there's nothing to carry forward. The practical proxy is a <strong>Dantzig pre-screen</strong>: shortlist the top-\(k\) most-positive reduced costs, then run the full greatest-increment ratio-test scoring only on that shortlist (a form of partial / multiple pricing).</p>
+<div class="callout warn">
+<p><strong>Two weaknesses:</strong> (1) <em>Degeneracy</em> blinds it: if any \((x_B)_i=0\) with \((d_j)_i>0\) then \(t^\star_j=0\) and the score collapses to \(0\), so it can't tell good directions apart at a degenerate vertex (steepest edge, being purely geometric, has no such problem). (2) <em>Worst case</em> is still exponential (Jeroslow, 1973). Biggest per-step progress ≠ fewest steps overall.</p>
+</div>
+</div>
+
+<!-- BLAND -->
+<div class="panel rule-card" id="bland">
+<h3>6.3 Bland's rule<span class="cost">: "smallest index"</span></h3>
+<p>Among all eligible columns, pick the one with the <strong>smallest index</strong>, and use the same smallest-index tie-break in the ratio test for the leaving variable:</p>
+\[
+q = \min\{\, j : \bar c_j > 0 \,\}.
+\]
+<h4>Why anyone would use such a dumb rule</h4>
+<p>Bland's rule (1977) makes no attempt to pick a <em>good</em> column, only a <em>consistent</em> one. Its entire value is a theorem:</p>
+<div class="callout good">
+<p><strong>Bland's theorem.</strong> With smallest-index selection for <em>both</em> the entering and leaving variable, the simplex method <strong>cannot cycle</strong> and is guaranteed to terminate, even under degeneracy.</p>
+</div>
+<p>The intuition: a consistent total order on indices prevents the method from ever revisiting a basis it has seen before in a degenerate stall.</p>
+<h4>How it's actually used</h4>
+<p>Nobody runs Bland from the start; it's slow (it ignores objective magnitude entirely and tends to crawl). Instead it's a <strong>fallback</strong>: solvers run Dantzig/Devex/steepest-edge for speed, and only switch to Bland (or use a perturbation/lexicographic scheme) when they detect a degenerate stall, to guarantee escape. Think of it as the cycle-breaking safety net.</p>
+</div>
+
+<!-- DEVEX -->
+<div class="panel rule-card" id="devex">
+<h3>6.4 Devex<span class="cost">: "approximate steepest edge"</span></h3>
+<p>Devex (Paula Harris, 1973) fixes Dantzig's scaling flaw without paying steepest-edge prices. Instead of the raw \(\bar c_j\), it scores each column by reduced cost divided by an <em>approximate</em> column norm:</p>
+\[
+q = \arg\max_{j\,:\,\bar c_j>0}\ \frac{\bar c_j^{\,2}}{\gamma_j},
+\]
+<p>where \(\gamma_j\) is a <strong>reference weight</strong> approximating \(\|B^{-1}a_j\|^2\), the squared length of the step direction.</p>
+<h4>The trick: a reference frame</h4>
+<p>Computing the true norm \(\|B^{-1}a_j\|^2\) every iteration is what makes steepest edge expensive. Devex instead:</p>
+<ol>
+<li>Fixes a <strong>reference framework</strong> (a snapshot of the current set of nonbasic variables), initializing all weights \(\gamma_j = 1\).</li>
+<li>Measures lengths <em>relative to that reference frame</em>, not the full space, which is much cheaper.</li>
+<li><strong>Updates the weights cheaply</strong> after each pivot using a recurrence, never recomputing from scratch.</li>
+<li>Periodically <strong>resets</strong> the reference frame when the approximation drifts too far from reality.</li>
+</ol>
+<h4>Why it wins</h4>
+<p>Devex is approximately scale-invariant and captures the "how far can I move" information Dantzig ignores, at a fraction of steepest-edge cost. It is the <strong>default primal pricing rule in many solvers</strong> (it's what most people run in practice): an excellent cost/quality sweet spot.</p>
+</div>
+
+<!-- STEEPEST EDGE -->
+<div class="panel rule-card" id="steepest">
+<h3>6.5 Steepest edge<span class="cost">: "true steepest ascent along an edge"</span></h3>
+<p>Goldfarb &amp; Reid (1977). The most principled rule: each candidate entering variable corresponds to an <strong>edge</strong> of the polyhedron leaving the current vertex. Steepest edge picks the edge along which the objective increases fastest <em>per unit distance actually travelled in \(x\)-space</em>: true steepest ascent, not just per-unit-of-\(x_j\).</p>
+\[
+q = \arg\max_{j\,:\,\bar c_j>0}\ \frac{\bar c_j^{\,2}}{\gamma_j},
+\qquad
+\gamma_j = \big\| \, B^{-1} a_j \,\big\|^2 + 1 .
+\]
+<h4>The distinction from Dantzig, geometrically</h4>
+<p>Dantzig measures ascent per unit change in the single coordinate \(x_j\). But moving along that edge changes <em>all</em> the basic variables too, by \(d = B^{-1}a_j\). The true distance moved in the full space scales with \(\|(d, 1)\|\). Steepest edge normalizes by exactly this length, so it is <strong>perfectly scale-invariant</strong> and picks the genuinely best direction.</p>
+<h4>The cost</h4>
+<p>The exact weights \(\gamma_j\) are expensive: computing \(\|B^{-1}a_j\|^2\) for every column is roughly another full tableau's worth of work. The Goldfarb–Reid contribution is a <strong>recurrence that updates all \(\gamma_j\) exactly</strong> after a pivot for only \(O(m)\)-ish extra work per iteration, instead of recomputing from scratch. This is what makes it viable at all.</p>
+<div class="callout">
+<p><strong>The trade-off in one sentence:</strong> steepest edge usually takes the <em>fewest</em> iterations of any rule here, but each iteration costs more, so it wins on large, hard LPs where iteration count dominates, and the dual variant (<em>dual steepest edge</em>) is the workhorse default for many solvers' dual simplex.</p>
+</div>
+<p class="footnote">Note Devex and steepest edge share the <em>same scoring formula</em> \(\bar c_j^2/\gamma_j\); the only difference is whether \(\gamma_j\) is the exact edge norm (steepest edge) or a cheap running approximation of it (Devex). That's the cleanest way to remember the relationship.</p>
+</div>
+
+
+<details class="dual-mirror" id="dual-rules">
+<summary>⇄ Dual simplex: the same five rules, applied to rows</summary>
+<p>Every rule above has a dual counterpart. They score <em>rows</em> (candidate leaving variables) rather than columns, but the ideas map one-for-one:</p>
+<table>
+<thead><tr><th>Primal (choose the entering column)</th><th>Dual (choose the leaving row)</th></tr></thead>
+<tbody>
+<tr><td><strong>Dantzig</strong>: largest \(\bar c_j\)</td><td><strong>Most infeasible</strong>: most negative \((x_B)_i\). Same greed, same blindness to geometry.</td></tr>
+<tr><td><strong>Greatest increment</strong>: largest \(|\bar c_j|\,t^\star_j\)</td><td>Largest actual <em>dual</em> objective gain: same idea, same prohibitive cost.</td></tr>
+<tr><td><strong>Steepest edge</strong>: \(\bar c_j^2/\|B^{-1}a_j\|^2\)</td><td><strong>Dual steepest edge (DSE)</strong>: infeasibility scaled by the row norm \(\|e_p^{\top}B^{-1}\|^2\).</td></tr>
+<tr><td><strong>Devex</strong>: cheap running weights</td><td><strong>Dual Devex</strong>: the same recurrence, on rows.</td></tr>
+<tr><td><strong>Bland</strong>: smallest index</td><td>Smallest-index leaving row: the same anti-cycling safety net.</td></tr>
+</tbody>
+</table>
+<div class="callout good"><p><strong>The one that matters:</strong> <strong>dual steepest edge</strong> is the default pricing rule for dual simplex in essentially every serious solver, and, paired with the dual method, the default LP algorithm for the node solves inside MILP. The reason is the same as in the primal (normalizing by the norm makes the choice scale-invariant); the payoff is bigger simply because dual simplex is run so much more often.</p></div>
+</details>
+
+<!-- ============================================ -->
+<h2 class="section" id="compare">7. Side-by-side comparison</h2>
+<table>
+<thead>
+<tr><th>Rule</th><th>Selection score</th><th>Scale-invariant?</th><th>Iterations</th><th>Cost / iter</th><th>Best use</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Bland</strong></td>
+  <td>min index \(j\) with \(\bar c_j>0\)</td>
+  <td class="center">n/a</td>
+  <td class="center">many</td>
+  <td class="center"><span class="pill cheap">trivial</span></td>
+  <td>Anti-cycling fallback only</td>
+</tr>
+<tr>
+  <td><strong>Dantzig</strong></td>
+  <td>\(\max_j \bar c_j\)</td>
+  <td class="center" style="color:var(--red)">no</td>
+  <td class="center">many–medium</td>
+  <td class="center"><span class="pill cheap">cheap</span></td>
+  <td>Small/easy LPs, teaching</td>
+</tr>
+<tr>
+  <td><strong>Greatest increment</strong></td>
+  <td>\(\max_j |\bar c_j|\,t^\star_j\)</td>
+  <td class="center" style="color:var(--red)">no</td>
+  <td class="center">few–medium</td>
+  <td class="center"><span class="pill exp">very expensive</span></td>
+  <td>Rarely used directly (ratio test per column); pre-screen hybrid</td>
+</tr>
+<tr>
+  <td><strong>Devex</strong></td>
+  <td>\(\max_j \bar c_j^2/\gamma_j\), \(\gamma\) approx.</td>
+  <td class="center" style="color:var(--amber)">≈ yes</td>
+  <td class="center">few–medium</td>
+  <td class="center"><span class="pill mid">moderate</span></td>
+  <td>Excellent general default</td>
+</tr>
+<tr>
+  <td><strong>Steepest edge</strong></td>
+  <td>\(\max_j \bar c_j^2/\gamma_j\), \(\gamma\) exact</td>
+  <td class="center" style="color:var(--green)">yes</td>
+  <td class="center">fewest</td>
+  <td class="center"><span class="pill exp">expensive</span></td>
+  <td>Large/hard LPs (esp. dual)</td>
+</tr>
+</tbody>
+</table>
+
+<div class="callout">
+<p><strong>The mental model:</strong> all four answer the same question ("of the columns that would improve the objective, which one?") and differ only in how much they normalize the raw reduced cost by the true geometry of the step. Bland ignores the objective entirely (pick by index); Dantzig uses raw rate; Devex uses an approximate norm; steepest edge uses the exact norm.</p>
+</div>
+
+<!-- ============================================ -->
+<h2 class="section" id="worked">8. Worked micro-example: Dantzig vs. the rest</h2>
+<p>Suppose at some vertex we've priced three eligible nonbasic columns and computed the direction norms:</p>
+<table>
+<thead><tr><th>Column \(j\)</th><th class="center">\(\bar c_j\)</th><th class="center">\(\gamma_j=\|B^{-1}a_j\|^2+1\)</th><th class="center">Dantzig score \(\bar c_j\)</th><th class="center">Devex/SE score \(\bar c_j^2/\gamma_j\)</th></tr></thead>
+<tbody>
+<tr><td>\(x_3\)</td><td class="center">\(12\)</td><td class="center">\(400\)</td><td class="center"><strong>12</strong> ← Dantzig picks</td><td class="center">\(0.36\)</td></tr>
+<tr><td>\(x_5\)</td><td class="center">\(5\)</td><td class="center">\(2\)</td><td class="center">5</td><td class="center"><strong>12.5</strong> ← steepest edge picks</td></tr>
+<tr><td>\(x_7\)</td><td class="center">\(8\)</td><td class="center">\(50\)</td><td class="center">8</td><td class="center">\(1.28\)</td></tr>
+</tbody>
+</table>
+<p>Dantzig grabs \(x_3\) for its huge \(12\) reduced cost, but \(\gamma_3=400\) means that edge is nearly flat and you'll barely move before hitting a constraint. Steepest edge sees through this: \(x_5\) has a smaller rate but a <em>short, productive</em> edge (\(\gamma_5=2\)), giving the best objective gain per unit distance actually travelled. This is exactly the trap Klee–Minty exploits against Dantzig, and exactly why norm-scaled rules dominate on hard problems.</p>
+
+<!-- ============================================ -->
+<h2 class="section" id="allrules">9. The same LP under all five rules</h2>
+<p>The micro-example in §8 was hypothetical. Here we take a <em>complete</em> LP and run it to optimality, watching exactly which column each rule chooses at every step. We solve</p>
+\[
+\max\; 2x_1 + 3x_2 \quad\text{s.t.}\quad x_1 + x_2 \le 4,\;\; x_1 + 2x_2 \le 6,\;\; x \ge 0,
+\]
+<p>which in standard form adds slacks \(s_1, s_2\). Index the variables \(x_1{=}1,\ x_2{=}2,\ s_1{=}3,\ s_2{=}4\); the data is</p>
+\[
+A=\begin{pmatrix}1&1&1&0\\1&2&0&1\end{pmatrix},\quad b=\begin{pmatrix}4\\6\end{pmatrix},\quad c=(2,3,0,0).
+\]
+<p>Start at the origin with basis \(\{s_1,s_2\}\). Because the pivot rule only touches <strong>Step&nbsp;2</strong>, and because every step <em>after the first</em> in this LP has only one eligible column, <strong>iteration 1 is the only place the rules disagree.</strong></p>
+
+<h3>The decision point: iteration 1</h3>
+<p>At the origin \(B^{-1}=I\) and \(y=0\), so reduced costs equal the raw objective coefficients: \(\bar c_1=2\) and \(\bar c_2=3\). Both eligible. Each rule scores them differently:</p>
+<table>
+<thead><tr><th>Rule</th><th>What it computes</th><th class="center">Score \(x_1\)</th><th class="center">Score \(x_2\)</th><th class="center">Picks</th></tr></thead>
+<tbody>
+<tr><td><strong>Dantzig</strong></td><td>most positive \(\bar c_j\)</td><td class="center">\(2\)</td><td class="center"><strong>\(3\)</strong></td><td class="center">\(x_2\)</td></tr>
+<tr><td><strong>Greatest increment</strong></td><td>\(\bar c_j\cdot t^\star_j\) (\(x_B=(4,6)\))</td><td class="center">\(2\cdot4=8\)</td><td class="center"><strong>\(3\cdot3=9\)</strong></td><td class="center">\(x_2\)</td></tr>
+<tr><td><strong>Bland</strong></td><td>smallest eligible index</td><td class="center"><strong>index 1</strong></td><td class="center">index 2</td><td class="center">\(x_1\)</td></tr>
+<tr><td><strong>Steepest edge</strong></td><td>\(\bar c_j^2/(\|B^{-1}a_j\|^2+1)\)</td><td class="center">\(\tfrac{4}{3}\approx1.33\)</td><td class="center"><strong>\(\tfrac{9}{6}=1.5\)</strong></td><td class="center">\(x_2\)</td></tr>
+<tr><td><strong>Devex</strong></td><td>\(\bar c_j^2/\gamma_j\), \(\gamma_j{=}1\) at reference frame</td><td class="center">\(4\)</td><td class="center"><strong>\(9\)</strong></td><td class="center">\(x_2\)</td></tr>
+</tbody>
+</table>
+<p>The steepest-edge / Devex arithmetic in full (since \(B^{-1}=I\), \(B^{-1}a_j=a_j\)):</p>
+\[
+x_1:\ a_1=(1,1)\Rightarrow\|a_1\|^2=2\Rightarrow\gamma_1=3\Rightarrow \tfrac{2^2}{3}=1.33,\qquad
+x_2:\ a_2=(1,2)\Rightarrow\|a_2\|^2=5\Rightarrow\gamma_2=6\Rightarrow \tfrac{3^2}{6}=1.5 .
+\]
+<div class="callout warn">
+<p><strong>The interesting near-miss:</strong> steepest edge <em>penalizes</em> \(x_2\): its reduced cost is bigger \((3)\) but its edge is longer \((\gamma=6\) vs \(3)\), so the margin nearly closes (1.50 vs 1.33). A slightly flatter objective on \(x_2\) would flip steepest edge to \(x_1\) while Dantzig still chose \(x_2\). That's scale-sensitivity made concrete. <strong>Bland alone picks \(x_1\)</strong>, purely because \(1<2\); it never looks at a score.</p>
+</div>
+
+<h3>The two resulting paths</h3>
+<p>So the rules split. Both routes reach the optimum \((2,2)\), \(z=10\), in two pivots, but along <em>opposite edges</em> of the feasible region.</p>
+
+<svg viewBox="0 0 380 300" width="380" height="300" xmlns="http://www.w3.org/2000/svg" style="max-width:440px;width:100%;height:auto;display:block;margin:16px auto;">
+  <!-- axes -->
+  <line x1="40" y1="260" x2="320" y2="260" stroke="#6b6b73" stroke-width="1.2"/>
+  <line x1="40" y1="260" x2="40"  y2="30"  stroke="#6b6b73" stroke-width="1.2"/>
+  <text x="324" y="264" font-size="12" fill="#6b6b73">x₁</text>
+  <text x="30"  y="28"  font-size="12" fill="#6b6b73">x₂</text>
+  <!-- feasible polygon: (0,0)(4,0)(2,2)(0,3) -->
+  <polygon points="40,260 280,260 160,120 40,50" fill="#eaf1fb" stroke="#e4e4e8" stroke-width="1"/>
+  <!-- Path B (Bland): (0,0)->(4,0)->(2,2) , orange -->
+  <polyline points="40,260 280,260 160,120" fill="none" stroke="#d4791e" stroke-width="3" stroke-linejoin="round" marker-end="url(#arrO)"/>
+  <!-- Path A (Dantzig/Greatest-incr/Devex/SE): (0,0)->(0,3)->(2,2) , blue -->
+  <polyline points="40,260 40,50 160,120" fill="none" stroke="#2b5fb3" stroke-width="3" stroke-linejoin="round" marker-end="url(#arrB)"/>
+  <defs>
+    <marker id="arrB" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#2b5fb3"/></marker>
+    <marker id="arrO" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#d4791e"/></marker>
+  </defs>
+  <!-- vertices -->
+  <circle cx="40"  cy="260" r="4.5" fill="#1c1c1e"/>
+  <circle cx="280" cy="260" r="4.5" fill="#d4791e"/>
+  <circle cx="40"  cy="50"  r="4.5" fill="#2b5fb3"/>
+  <circle cx="160" cy="120" r="6"   fill="#2e7d49"/>
+  <text x="20"  y="278" font-size="12" fill="#1c1c1e">(0,0)</text>
+  <text x="264" y="278" font-size="12" fill="#d4791e">(4,0)</text>
+  <text x="48"  y="48"  font-size="12" fill="#2b5fb3">(0,3)</text>
+  <text x="168" y="116" font-size="12" font-weight="700" fill="#2e7d49">(2,2) ★ optimum</text>
+</svg>
+
+<h4>Path A: Dantzig / Greatest increment / Devex / Steepest edge (\(x_2\) enters first)</h4>
+<table>
+<thead><tr><th class="center">Iter</th><th>Vertex</th><th>Eligible candidates</th><th>Choice</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td class="center">1</td><td>(0, 0)</td><td>\(x_1\,(2)\), \(x_2\,(3)\)</td><td><strong>\(x_2\)</strong></td><td>all four score \(x_2\) highest</td></tr>
+<tr><td class="center">2</td><td>(0, 3)</td><td><em>only</em> \(x_1\) \((\bar c_1{=}{+}0.5;\ \bar c_4{=}{-}1.5\) ✗)</td><td><strong>\(x_1\)</strong></td><td>forced: one candidate</td></tr>
+<tr><td class="center">3</td><td>(2, 2)</td><td>none \((\bar c_3{=}\bar c_4{=}{-}1)\)</td><td>none</td><td><strong>optimal, \(z=10\)</strong></td></tr>
+</tbody>
+</table>
+<p class="footnote">Route: (0,0) → (0,3) → (2,2).</p>
+
+<h4>Path B: Bland (\(x_1\) enters first)</h4>
+<table>
+<thead><tr><th class="center">Iter</th><th>Vertex</th><th>Eligible candidates</th><th>Choice</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td class="center">1</td><td>(0, 0)</td><td>\(x_1\,(2)\), \(x_2\,(3)\)</td><td><strong>\(x_1\)</strong></td><td>smallest index</td></tr>
+<tr><td class="center">2</td><td>(4, 0)</td><td><em>only</em> \(x_2\) \((\bar c_2{=}{+}1;\ \bar c_3{=}{-}2\) ✗)</td><td><strong>\(x_2\)</strong></td><td>forced: one candidate</td></tr>
+<tr><td class="center">3</td><td>(2, 2)</td><td>none \((\bar c_3{=}\bar c_4{=}{-}1)\)</td><td>none</td><td><strong>optimal, \(z=10\)</strong></td></tr>
+</tbody>
+</table>
+<p class="footnote">Route: (0,0) → (4,0) → (2,2). Iteration-2 detail: basis \(\{x_1,s_2\}\), \(B^{-1}=\big[\begin{smallmatrix}1&0\\-1&1\end{smallmatrix}\big]\), \(y=(2,0)\), so \(\bar c_2=3-2=1\).</p>
+
+<div class="callout good">
+<p><strong>The lesson:</strong> pivot rules diverge <em>only at a vertex with two or more eligible columns</em>. Once a vertex offers a single eligible candidate, all five rules agree by necessity. So a rule's "personality" shows up precisely at the branching vertices, which is exactly where the shortest-pivot-path question lives. (Note this gentle LP doesn't separate Dantzig, greatest increment, Devex and steepest edge, which all pick \(x_2\). The next section builds a vertex where they split.)</p>
+</div>
+
+
+<details class="dual-mirror" id="dual-demo">
+<summary>⇄ Dual simplex: how it would attack a demo problem</summary>
+<p>First, an honest observation about the demos on this page: their all-slack basis has \(b \ge 0\), so it is <strong>primal-feasible but not dual-feasible</strong> (for a max with \(c > 0\), every \(\bar c_j = c_j > 0\)). Primal simplex can start immediately; the dual would need a dual Phase 1 first. <strong>These LPs are primal's home turf</strong>, and that is the point: you pick the method whose feasibility you already have.</p>
+<p>So here is a small LP built the other way round, where the slack basis is already optimal in cost and merely infeasible, i.e. tailor-made for the dual:</p>
+<h4>Worked example: two dual pivots</h4>
+<p>A problem tailor-made for the dual: the all-slack start is already optimal in cost, just infeasible.</p>
+\[
+\min\; 2x_1 + 3x_2 \quad\text{s.t.}\quad x_1 + x_2 \ge 4,\;\; x_1 + 3x_2 \ge 6,\;\; x \ge 0.
+\]
+<p>Flip the \(\ge\) rows to \(\le\) (multiply by \(-1\)) and add slacks, so \(A=\big[\begin{smallmatrix}-1&-1&1&0\\-1&-3&0&1\end{smallmatrix}\big]\), \(b=(-4,-6)\). Start with the slack basis \(\{s_1,s_2\}\): the reduced costs are \((2,3,0,0)\ge 0\), so the basis is <strong>dual feasible</strong>, but \(x_B=(-4,-6)<0\), so it is <strong>primal infeasible</strong>. Perfect dual start.</p>
+<table>
+<thead><tr><th class="center">Iter</th><th>Basis</th><th>\(x_B\)</th><th>Leaving (most&nbsp;neg.)</th><th>Dual ratio test \(|\bar c_j/\alpha_{rj}|\)</th><th>Entering</th></tr></thead>
+<tbody>
+<tr><td class="center">1</td><td>\(\{s_1,s_2\}\)</td><td>\((-4,-6)\)</td><td>\(s_2\) \((-6)\)</td><td>\(x_1\!:\tfrac{2}{1}{=}2\), \(x_2\!:\tfrac{3}{3}{=}1\) ←</td><td>\(x_2\)</td></tr>
+<tr><td class="center">2</td><td>\(\{s_1,x_2\}\)</td><td>\((-2,\ 2)\)</td><td>\(s_1\) \((-2)\)</td><td>\(x_1\!:\tfrac{1}{2/3}{=}1.5\) ←, \(s_2\!:\tfrac{1}{1/3}{=}3\)</td><td>\(x_1\)</td></tr>
+<tr><td class="center">3</td><td>\(\{x_1,x_2\}\)</td><td>\((3,\ 1)\)</td><td>none \(<0\)</td><td>n/a</td><td><strong>optimal, \(z=9\)</strong></td></tr>
+</tbody>
+</table>
+<p>In \((x_1,x_2)\) the dual iterates are \((0,0)\to(0,2)\to(3,1)\): the first two lie <em>outside</em> the feasible region (their cost is optimal for the current basis, but they violate the constraints), and the method tightens onto the optimal vertex \((3,1)\) from below. A primal solve of the same LP would instead crawl <em>along</em> the feasible boundary. Both land on \((3,1)\), \(z=9\).</p>
+
+<svg viewBox="0 0 380 300" width="380" height="300" xmlns="http://www.w3.org/2000/svg" style="max-width:440px;width:100%;height:auto;display:block;margin:16px auto;">
+  <defs><marker id="darr" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#8e44ad"/></marker></defs>
+  <!-- feasible region (≥, above both lines), clipped to the box -->
+  <polygon points="318,260 180,211.2 42,64.8 42,16 364,16 364,260" fill="#eaf1fb" stroke="none"/>
+  <!-- axes -->
+  <line x1="42" y1="260" x2="368" y2="260" stroke="#6b6b73" stroke-width="1.2"/>
+  <line x1="42" y1="260" x2="42" y2="14" stroke="#6b6b73" stroke-width="1.2"/>
+  <text x="366" y="274" font-size="11" fill="#6b6b73" text-anchor="end">x₁</text>
+  <text x="32" y="20" font-size="11" fill="#6b6b73">x₂</text>
+  <!-- constraint lines -->
+  <line x1="226" y1="260" x2="42" y2="64.8" stroke="#2b5fb3" stroke-width="1.6"/>
+  <text x="150" y="150" font-size="10.5" fill="#2b5fb3">x₁+x₂=4</text>
+  <line x1="318" y1="260" x2="42" y2="162.4" stroke="#2b5fb3" stroke-width="1.6"/>
+  <text x="256" y="212" font-size="10.5" fill="#2b5fb3">x₁+3x₂=6</text>
+  <text x="250" y="90" font-size="11" fill="#3a6fc4">feasible region (≥)</text>
+  <!-- dual path (0,0)->(0,2)->(3,1), from outside -->
+  <polyline points="42,260 42,162.4 180,211.2" fill="none" stroke="#8e44ad" stroke-width="3" stroke-linejoin="round" marker-end="url(#darr)"/>
+  <circle cx="42" cy="260" r="4" fill="#8e44ad"/>
+  <circle cx="42" cy="162.4" r="4" fill="#8e44ad"/>
+  <circle cx="180" cy="211.2" r="6" fill="#2e7d49"/>
+  <text x="26" y="274" font-size="10.5" fill="#8e44ad">(0,0)</text>
+  <text x="8" y="160" font-size="10.5" fill="#8e44ad">(0,2)</text>
+  <text x="188" y="210" font-size="10.5" font-weight="700" fill="#2e7d49">(3,1) ★ optimum</text>
+  <text x="60" y="292" font-size="10.5" fill="#8e44ad">dual iterates approach the optimum from the infeasible side</text>
+</svg>
+
+
+</details>
+
+<!-- ============================================ -->
+<h2 class="section" id="three">10. Distinguishing greatest increment, Devex &amp; steepest edge</h2>
+<p>These three rules all look like "Dantzig but smarter," which is why they're easy to confuse. The fix is to see that they answer <strong>three different questions</strong>:</p>
+<table>
+<thead><tr><th>Rule</th><th>Question it answers</th><th>Score</th><th>Uses</th></tr></thead>
+<tbody>
+<tr><td><strong>Greatest increment</strong></td><td>"Biggest <em>actual</em> gain this step?"</td><td>\(\max\ \bar c_j\cdot t^\star_j\)</td><td>the <strong>feasibility-limited</strong> step: ratio test, depends on \(x_B\), only <em>positive</em> entries of \(d_j\) bind</td></tr>
+<tr><td><strong>Steepest edge</strong></td><td>"Steepest ascent <em>per unit distance</em>?"</td><td>\(\max\ \bar c_j^2/(\|d_j\|^2+1)\)</td><td>the <strong>geometric</strong> edge length: full norm, <em>all</em> entries of \(d_j\)</td></tr>
+<tr><td><strong>Devex</strong></td><td>(cheap approximation of steepest edge)</td><td>\(\max\ \bar c_j^2/\tilde\gamma_j\)</td><td>approximate edge length \(\tilde\gamma_j\approx\|d_j\|^2\) via reference weights</td></tr>
+</tbody>
+</table>
+<div class="callout">
+<p><strong>The lever that splits greatest increment from steepest edge:</strong> the ratio test only sees <em>positive</em> components of \(d_j\) (those bind), but the edge norm includes <em>all</em> components. So a direction with a big <em>negative</em> component is <em>geometrically long</em> (steepest edge hates it) yet <em>doesn't hit a wall early</em> (greatest increment loves the long feasible step). That one fact makes them disagree.</p>
+</div>
+
+<h3>Demo: one vertex, three different winners</h3>
+<p>Current basic values \(x_B=(12,12)\). Three eligible candidates A, B, C, each with reduced cost \(\bar c\) and direction \(d=B^{-1}a\):</p>
+<table>
+<thead><tr>
+  <th>Cand.</th><th class="center">\(\bar c\)</th><th class="center">\(d=B^{-1}a\)</th>
+  <th class="center">Dantzig \(\bar c\)</th>
+  <th class="center">Ratio test \(t^\star\)</th>
+  <th class="center">Greatest incr. \(\bar c\,t^\star\)</th>
+  <th class="center">\(\|d\|^2{+}1\)</th>
+  <th class="center">Steepest edge \(\bar c^2/\gamma\)</th>
+</tr></thead>
+<tbody>
+<tr>
+  <td><strong>A</strong></td><td class="center">\(2\)</td><td class="center">\((2,\ 0)\)</td>
+  <td class="center">\(2\)</td><td class="center">\(12/2=6\)</td><td class="center">\(2\cdot6=12\)</td>
+  <td class="center">\(5\)</td><td class="center"><strong>\(4/5=0.80\)</strong> ←</td>
+</tr>
+<tr>
+  <td><strong>B</strong></td><td class="center">\(3\)</td><td class="center">\((3,\ 3)\)</td>
+  <td class="center"><strong>\(3\)</strong> ←</td><td class="center">\(\min(4,4)=4\)</td><td class="center">\(3\cdot4=12\)</td>
+  <td class="center">\(19\)</td><td class="center">\(9/19=0.47\)</td>
+</tr>
+<tr>
+  <td><strong>C</strong></td><td class="center">\(1\)</td><td class="center">\((0.5,\ -4)\)</td>
+  <td class="center">\(1\)</td><td class="center">\(12/0.5=24\)</td><td class="center"><strong>\(1\cdot24=24\)</strong> ←</td>
+  <td class="center">\(17.25\)</td><td class="center">\(1/17.25=0.06\)</td>
+</tr>
+</tbody>
+</table>
+<p>On the very same data, three different columns win:</p>
+<ul>
+<li><strong>Dantzig → B.</strong> Steepest per-unit rate \((3)\), but blind: B slams into a constraint at \(t^\star=4\).</li>
+<li><strong>Greatest increment → C.</strong> Its rate is feeble \((1)\), but its negative component \((-4)\) never binds and its positive component is tiny, so it travels a <em>huge</em> feasible distance \((t^\star=24)\) → the biggest actual gain \((24)\).</li>
+<li><strong>Steepest edge → A.</strong> Per unit of Euclidean distance, A climbs fastest. C's big negative component makes its edge geometrically long \((\|d\|^2=16.25)\), so its slope is shallow. Steepest edge rejects exactly the direction greatest increment loved.</li>
+</ul>
+<p><strong>Devex</strong> cheaply approximates the steepest-edge norms. Right after a reference-frame reset its weights equal the exact norms, so it reproduces steepest edge and <strong>also picks A</strong>; as it drifts it stays close. (E.g. approximate weights \(\tilde\gamma=(4,16,12)\) give scores \(1.00 / 0.56 / 0.08\) → still A.)</p>
+<div class="callout good">
+<p><strong>The one-sentence separation:</strong> <em>greatest increment</em> maximizes <em>how far × how steep</em> (realized gain); <em>steepest edge</em> maximizes <em>how steep per unit distance</em> (slope), ignoring how far feasibility lets you travel; <em>Devex</em> is just a cheap stand-in for steepest edge.</p>
+</div>
+
+<h3>Try it yourself: walk the simplex path</h3>
+<p>This is a real 2-variable, 2-constraint LP. Pick a rule, then click <strong>Step ▶</strong> to pivot to the next corner that rule chooses; keep stepping until it reaches the optimum. At every vertex the engine does the full revised-simplex iteration (build \(B^{-1}\), price the nonbasic columns, ratio test), so it works at <em>any</em> corner, not just the origin. The badges on the graph show what <em>each</em> rule would choose from the current corner, so you can see exactly where the methods part ways.</p>
+
+<div class="lp-eq" id="lp-eq">
+  <div class="lp-eq-lines" id="lp-eq-lines" style="grid-template-columns:auto auto auto auto auto auto"></div>
+  <div class="eqA" id="lp-eq-A"></div>
+</div>
+
+<style>
+  #lp-widget .lp-controls { display:flex; flex-wrap:wrap; gap:18px; margin-bottom:16px; }
+  #lp-widget .ctrl-row { display:flex; align-items:center; gap:8px; font-size:13px; margin:7px 0; }
+  #lp-widget .ctrl-row label { width:26px; font-family:var(--mono); color:var(--muted); }
+  #lp-widget .ctrl-row input[type=range] { width:120px; accent-color:var(--accent); }
+  #lp-widget .ctrl-row .val { width:34px; text-align:right; font-family:var(--mono); }
+  #lp-widget .ctrl-card { border:1px solid var(--border); border-radius:10px; padding:10px 14px; background:var(--bg); }
+  #lp-widget .lp-flex { display:flex; flex-wrap:wrap; gap:22px; align-items:flex-start; }
+  #lp-widget .lp-graph { flex:0 0 auto; }
+  #lp-widget .lp-panel { flex:1 1 280px; min-width:260px; }
+  #lp-widget table { margin:0; font-size:13.5px; }
+  #lp-widget td.win, #lp-widget .win { background:#fdf3d0; font-weight:700; box-shadow: inset 0 0 0 2px var(--amber); }
+  #lp-widget .status { margin:0 0 12px; font-size:15px; padding:9px 13px; border-radius:8px; background:var(--accent-soft); border-left:4px solid var(--accent); }
+  #lp-widget .status.done { background:#eaf6ee; border-color:var(--green); }
+  #lp-widget .legend { font-size:12.5px; color:var(--muted); margin-top:8px; }
+  #lp-widget .mats { display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin-bottom:12px; font-size:12.5px; }
+  #lp-widget .matgrp { display:flex; align-items:center; gap:6px; }
+  #lp-widget .matlabel { color:var(--muted); font-family:var(--mono); }
+  #lp-widget .mat { position:relative; display:inline-grid; grid-template-columns:repeat(2,minmax(17px,auto)); gap:1px 6px; padding:2px 7px; font-family:var(--mono); font-size:11.5px; line-height:1.35; }
+  #lp-widget .mat>span { text-align:right; }
+  #lp-widget .mat::before, #lp-widget .mat::after { content:""; position:absolute; top:0; bottom:0; width:4px; border:1.2px solid currentColor; }
+  #lp-widget .mat::before { left:0; border-right:none; }
+  #lp-widget .mat::after { right:0; border-left:none; }
+  #lp-widget .gamma-cap { line-height:1.7; }
+  #lp-widget .tab-wrap { margin-top:16px; overflow-x:auto; }
+  #lp-widget .tab-wrap .matlabel { display:block; margin-bottom:5px; }
+  #lp-widget .tab { font-family:var(--mono); font-size:12.5px; border-collapse:collapse; }
+  #lp-widget .tab th, #lp-widget .tab td { border:1px solid var(--border); padding:2px 9px; text-align:right; }
+  #lp-widget .tab th { color:var(--muted); font-weight:600; }
+  #lp-widget .tab .bcol { background:var(--accent-soft); }
+  #lp-widget .tab .rlab { color:var(--muted); font-weight:600; text-align:left; }
+  #lp-widget .tab .zrow td { border-bottom:2px solid var(--muted); font-style:italic; }
+  #lp-widget .tabsec { margin-top:13px; }
+  #lp-widget .eqrow { display:inline-flex; align-items:center; gap:5px; margin:4px 20px 4px 0; vertical-align:middle; }
+  #lp-widget .eqrow .op { font-family:var(--mono); color:var(--muted); font-size:15px; }
+  #lp-widget .eqrow .eqlab { font-size:12.5px; color:var(--muted); min-width:150px; }
+  #lp-widget .eqnote { font-size:12.5px; color:var(--muted); margin:4px 0 0; }
+  #lp-widget .sublab { font-family:var(--mono); font-size:11px; color:var(--muted); white-space:nowrap; }
+  #lp-widget .tip { position:relative; cursor:help; border-bottom:1px dotted var(--muted); outline:none; }
+  #lp-widget .tip:hover::after, #lp-widget .tip:focus::after {
+    content:attr(data-tip); position:absolute; left:50%; transform:translateX(-50%); bottom:calc(100% + 9px);
+    width:300px; white-space:pre-wrap; text-align:left; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    font-weight:400; font-size:12px; line-height:1.55; background:var(--ink); color:#fff;
+    padding:9px 11px; border-radius:8px; z-index:30; box-shadow:0 5px 16px rgba(0,0,0,.28);
+  }
+  #lp-widget .tip:hover::before, #lp-widget .tip:focus::before {
+    content:""; position:absolute; left:50%; transform:translateX(-50%); bottom:calc(100% + 3px);
+    border:6px solid transparent; border-top-color:var(--ink); z-index:30;
+  }
+  #lp-widget .chip { display:inline-block; padding:1px 8px; border-radius:6px; font-weight:700; font-family:var(--mono); color:#fff; font-size:12.5px; }
+  #lp-widget button { font:inherit; font-size:14px; padding:7px 16px; border:1px solid var(--border); border-radius:8px; background:var(--panel); cursor:pointer; }
+  #lp-widget button:hover:not(:disabled) { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  #lp-widget button:disabled { opacity:0.45; cursor:default; }
+  #lp-widget button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  #lp-widget button.primary:hover:not(:disabled) { filter:brightness(1.08); color:#fff; }
+  #lp-widget select { font:inherit; font-size:14px; padding:6px 10px; border:1px solid var(--border); border-radius:8px; background:var(--panel); }
+  #lp-widget .runbar { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:14px; }
+  .lp-eq { font-family:var(--mono); font-size:14px; background:var(--code-bg); padding:12px 16px; border-radius:8px; margin:14px 0;
+           display:flex; gap:30px; align-items:center; flex-wrap:wrap; }
+  .lp-eq-lines { display:grid; gap:4px 8px; align-items:center; }
+  .lp-eq-lines .eqkw { color:var(--muted); }
+  .lp-eq-lines .rel { white-space:nowrap; }
+  .lp-eq { justify-content:space-between; }
+  .lp-eq .eqA { display:flex; align-items:center; gap:8px; }
+  .lp-eq .eqA .matlabel { color:var(--muted); font-family:var(--mono); }
+  .lp-eq .mat { position:relative; display:inline-grid; gap:1px 7px; padding:3px 8px; font-family:var(--mono); font-size:12px; line-height:1.4; }
+  .lp-eq .mat>span { text-align:right; }
+  .lp-eq .mat::before, .lp-eq .mat::after { content:""; position:absolute; top:0; bottom:0; width:4px; border:1.2px solid currentColor; }
+  .lp-eq .mat::before { left:0; border-right:none; }
+  .lp-eq .mat::after { right:0; border-left:none; }
+</style>
+
+<div class="panel" id="lp-widget">
+  <div class="lp-controls">
+    <div class="ctrl-card">
+      <strong style="font-size:14px">Objective</strong>
+      <div class="ctrl-row"><label>c₁</label><input type="range" id="lp_c1" min="1" max="10" step="0.5" value="3"><span class="val" id="lp_c1_v"></span></div>
+      <div class="ctrl-row"><label>c₂</label><input type="range" id="lp_c2" min="1" max="10" step="0.5" value="4"><span class="val" id="lp_c2_v"></span></div>
+    </div>
+    <div class="ctrl-card">
+      <strong style="font-size:14px">Right-hand sides</strong>
+      <div class="ctrl-row"><label>b₁</label><input type="range" id="lp_b1" min="6" max="24" step="1" value="16"><span class="val" id="lp_b1_v"></span></div>
+      <div class="ctrl-row"><label>b₂</label><input type="range" id="lp_b2" min="6" max="24" step="1" value="18"><span class="val" id="lp_b2_v"></span></div>
+    </div>
+    <div class="ctrl-card">
+      <strong style="font-size:14px">Geometry</strong>
+      <div class="ctrl-row"><label>a</label><input type="range" id="lp_a" min="1" max="6" step="0.5" value="4"><span class="val" id="lp_a_v"></span></div>
+      <div class="legend" style="margin-top:8px">Changing any slider resets the walk.</div>
+    </div>
+  </div>
+
+  <div class="runbar">
+    <label style="font-size:14px">Rule: <select id="lp_rule">
+      <option value="dant">Dantzig</option>
+      <option value="gi">Greatest increment</option>
+      <option value="se">Steepest edge</option>
+      <option value="dv">Devex</option>
+      <option value="bland">Bland</option>
+    </select></label>
+    <button id="lp_back">◀ Back</button>
+    <button class="primary" id="lp_step">Step ▶</button>
+    <button id="lp_resetpath">↺ Reset walk</button>
+  </div>
+
+  <div class="status" id="lp-status"></div>
+
+  <div class="lp-flex">
+    <div class="lp-graph" id="lp-graph"></div>
+    <div class="lp-panel">
+      <div id="lp-formulas"></div>
+      <div class="legend">Hover (or tap) any column heading for its definition. Badges = which rule would pick that edge from the current corner: <strong>D</strong> Dantzig · <strong>G</strong> Greatest increment · <strong>S</strong> Steepest edge · <strong>V</strong> Devex · <strong>B</strong> Bland. The thick green line is the path walked so far; ★ marks the LP optimum.</div>
+    </div>
+  </div>
+  <div id="lp-tableau" class="tab-wrap"></div>
+  <div id="lp-matrices" class="mats"></div>
+  <div id="lp-solves" class="tab-wrap"></div>
+</div>
+
+<script>
+(function(){
+  var W = document.getElementById('lp-widget');
+  if (!W) return;
+  var COL = {ACC:'#2b5fb3', ACCS:'#eaf1fb', BORD:'#e4e4e8', MUT:'#6b6b73', INK:'#1c1c1e', GRN:'#2e7d49', ORG:'#d4791e', PATH:'#1a7a3a'};
+  var NAME = ['x₁','x₂','s₁','s₂'];
+  var RULES = ['dant','gi','se','dv','bland'];
+  var RLAB = {dant:'Dantzig', gi:'Greatest increment', se:'Steepest edge', dv:'Devex', bland:'Bland'};
+  var RBADGE = {dant:'D', gi:'G', se:'S', dv:'V', bland:'B'};
+  var TOL = 1e-7;
+
+  // mutable problem + walk state
+  var P = {};               // {c1,c2,b1,b2,a}
+  var basis = [2,3];        // current basis variable indices (start: slacks)
+  var path = [[0,0]];       // vertices visited in (x1,x2)
+  var gw = {};              // Devex reference weights, keyed by nonbasic variable index
+  var hist = [];            // snapshots for the Back button
+  var etas = [];            // product-form eta matrices, one per pivot (B_k^{-1} = E_k···E_1)
+  function copyGw(g){ var o={}; for(var kk in g) o[kk]=g[kk]; return o; }
+  function copyEtas(es){ return es.map(function(m){ return m.map(function(row){ return row.slice(); }); }); }
+
+  function $(id){ return document.getElementById(id); }
+  function f(v){ if(!isFinite(v)) return '∞'; if(Math.abs(v)>=100) return v.toFixed(0); return (Math.round(v*100)/100).toString(); }
+  function matHTML(m){ return '<span class="mat"><span>'+f(m[0][0])+'</span><span>'+f(m[0][1])+'</span><span>'+f(m[1][0])+'</span><span>'+f(m[1][1])+'</span></span>'; }
+  // LU with partial pivoting:  P·B = L·U  (L unit lower-triangular, U upper-triangular)
+  function ludecomp(Ain){
+    var n=Ain.length,i,j,k, U=Ain.map(function(r){return r.slice();}), L=[], P=[];
+    for(i=0;i<n;i++){ L.push([]); P.push([]); for(j=0;j<n;j++){ L[i].push(i===j?1:0); P[i].push(i===j?1:0);} }
+    for(k=0;k<n;k++){
+      var p=k, mx=Math.abs(U[k][k]);
+      for(i=k+1;i<n;i++){ if(Math.abs(U[i][k])>mx){ mx=Math.abs(U[i][k]); p=i; } }
+      if(p!==k){ var tu=U[k];U[k]=U[p];U[p]=tu; var tp=P[k];P[k]=P[p];P[p]=tp;
+        for(j=0;j<k;j++){ var tl=L[k][j];L[k][j]=L[p][j];L[p][j]=tl; } }
+      for(i=k+1;i<n;i++){ var m=(U[k][k]!==0)?U[i][k]/U[k][k]:0; L[i][k]=m; for(j=k;j<n;j++) U[i][j]-=m*U[k][j]; }
+    }
+    return {P:P,L:L,U:U};
+  }
+  function tblHTML(M, names, bs){
+    var n=names.length, m=M.length, r, j, s='<table class="tab"><thead><tr>';
+    for(j=0;j<n;j++) s+='<th'+(bs.indexOf(j)>=0?' class="bcol"':'')+'>'+names[j]+'</th>';
+    s+='</tr></thead><tbody>';
+    for(r=0;r<m;r++){ s+='<tr>'; for(j=0;j<n;j++) s+='<td'+(bs.indexOf(j)>=0?' class="bcol"':'')+'>'+f(M[r][j])+'</td>'; s+='</tr>'; }
+    return s+'</tbody></table>';
+  }
+  // generic bracketed matrix / vector boxes (any dims), and small linear-algebra helpers
+  function matBox(M, col){ var rows=M.length, cols=M[0].length, r, c, s='<span class="mat" style="grid-template-columns:repeat('+cols+',minmax(15px,auto))'+(col?';color:'+col+';font-weight:700':'')+'">'; for(r=0;r<rows;r++)for(c=0;c<cols;c++) s+='<span>'+f(M[r][c])+'</span>'; return s+'</span>'; }
+  function colBox(v, col){ return matBox(v.map(function(x){return [x];}), col); }
+  function rowBox(v, col){ return matBox([v], col); }
+  function eye(n){ var M=[],i,j; for(i=0;i<n;i++){ M.push([]); for(j=0;j<n;j++) M[i].push(i===j?1:0); } return M; }
+  function matmul(Aa,Bb){ var n=Aa.length,r,c,k,C=[]; for(r=0;r<n;r++){ C.push([]); for(c=0;c<n;c++){ var s=0; for(k=0;k<n;k++) s+=Aa[r][k]*Bb[k][c]; C[r].push(s); } } return C; }
+  function transp(M){ var n=M.length,m=M[0].length,T=[],r,c; for(r=0;r<m;r++){ T.push([]); for(c=0;c<n;c++) T[r].push(M[c][r]); } return T; }
+  function matVec(M,v){ var out=[],r,c; for(r=0;r<M.length;r++){ var s=0; for(c=0;c<v.length;c++) s+=M[r][c]*v[c]; out.push(s); } return out; }
+  function fsub(M,b){ var n=b.length,x=[],i,j; for(i=0;i<n;i++){ var s=b[i]; for(j=0;j<i;j++) s-=M[i][j]*x[j]; x.push(M[i][i]!==0? s/M[i][i] : 0); } return x; }   // lower-triangular
+  function bsub(M,b){ var n=b.length,x=new Array(n),i,j; for(i=n-1;i>=0;i--){ var s=b[i]; for(j=i+1;j<n;j++) s-=M[i][j]*x[j]; x[i]=(M[i][i]!==0? s/M[i][i] : 0); } return x; } // upper-triangular
+  function solveRow(lab, M, x, rhs, xc, rc){ return '<div class="eqrow"><span class="sublab">'+lab+'</span>'+matBox(M)+'<span class="op">·</span>'+colBox(x,xc)+'<span class="op">=</span>'+colBox(rhs,rc)+'</div>'; }
+  function fullTableau(TAB, xB, cbar, z, names, bs){
+    var n=names.length, m=TAB.length, j, r, s='<table class="tab"><thead><tr><th></th>';
+    for(j=0;j<n;j++) s+='<th'+(bs.indexOf(j)>=0?' class="bcol"':'')+'>'+names[j]+'</th>';
+    s+='<th>RHS</th></tr></thead><tbody>';
+    s+='<tr class="zrow"><td class="rlab">c̄</td>';
+    for(j=0;j<n;j++) s+='<td'+(bs.indexOf(j)>=0?' class="bcol"':'')+'>'+f(cbar[j])+'</td>';
+    s+='<td>z='+f(z)+'</td></tr>';
+    for(r=0;r<m;r++){ s+='<tr><td class="rlab">'+names[bs[r]]+'</td>';
+      for(j=0;j<n;j++) s+='<td'+(bs.indexOf(j)>=0?' class="bcol"':'')+'>'+f(TAB[r][j])+'</td>';
+      s+='<td>'+f(xB[r])+'</td></tr>'; }
+    return s+'</tbody></table>';
+  }
+
+  function readP(){ P={c1:+$('lp_c1').value,c2:+$('lp_c2').value,b1:+$('lp_b1').value,b2:+$('lp_b2').value,a:+$('lp_a').value};
+    ['c1','c2','b1','b2','a'].forEach(function(k){ $('lp_'+k+'_v').textContent=$('lp_'+k).value; });
+    function n(v){ return '<b style="color:'+COL.ACC+'">'+v+'</b>'; }
+    var g='';
+    g+='<span class="eqkw">maximize</span><span>z =</span><span>'+n(P.c1)+'·x₁</span><span>+</span><span>'+n(P.c2)+'·x₂</span><span></span>';
+    g+='<span class="eqkw">s.t.</span><span></span><span>1·x₁</span><span>+</span><span>'+n(P.a)+'·x₂</span><span class="rel">≤ '+n(P.b1)+'</span>';
+    g+='<span class="eqkw"></span><span></span><span>3·x₁</span><span>+</span><span>2·x₂</span><span class="rel">≤ '+n(P.b2)+'</span>';
+    g+='<span class="eqkw"></span><span></span><span style="grid-column:span 4">x₁, x₂ ≥ 0</span>';
+    $('lp-eq-lines').innerHTML=g;
+    $('lp-eq-A').innerHTML='<span class="matlabel">A =</span>'+matBox([[1,P.a,1,0],[3,2,0,1]]); }
+
+  // variable column in the 2-row constraint matrix
+  function col(k){ if(k===0)return [1,3]; if(k===1)return [P.a,2]; if(k===2)return [1,0]; return [0,1]; }
+  function cost(k){ return k===0?P.c1 : k===1?P.c2 : 0; }
+
+  // full revised-simplex state at the current basis
+  function state(){
+    var B = [col(basis[0]), col(basis[1])];                 // columns
+    var det = B[0][0]*B[1][1] - B[1][0]*B[0][1];
+    var Bi = [[ B[1][1]/det, -B[1][0]/det],[ -B[0][1]/det, B[0][0]/det]]; // rows of B^{-1}
+    function mul(M,v){ return [M[0][0]*v[0]+M[0][1]*v[1], M[1][0]*v[0]+M[1][1]*v[1]]; }
+    var xB = mul(Bi,[P.b1,P.b2]);
+    var pt = [0,0]; if(basis[0]<2)pt[basis[0]]=xB[0]; if(basis[1]<2)pt[basis[1]]=xB[1];
+    var cB = [cost(basis[0]), cost(basis[1])];
+    var y = [cB[0]*Bi[0][0]+cB[1]*Bi[1][0], cB[0]*Bi[0][1]+cB[1]*Bi[1][1]];  // y = cB^T B^{-1}
+    var cand = [];
+    for(var k=0;k<4;k++){
+      if(k===basis[0]||k===basis[1]) continue;
+      var ak=col(k);
+      var cbar = cost(k) - (y[0]*ak[0]+y[1]*ak[1]);          // reduced cost (max: improving if >0)
+      if(cbar<=TOL) continue;
+      var d = mul(Bi,ak);
+      var t=Infinity, leavePos=-1;
+      for(var i=0;i<2;i++){ if(d[i]>TOL){ var r=xB[i]/d[i]; if(r<t-1e-12){ t=r; leavePos=i; } } }
+      var gamma=d[0]*d[0]+d[1]*d[1]+1;
+      // adjacent vertex (only need x1,x2)
+      var nx=[0,0];
+      if(k<2) nx[k]=t;
+      var keep = leavePos===0?1:0;
+      var kv = basis[keep]; if(kv<2) nx[kv]=xB[keep]-t*d[keep];
+      var gj = (gw[k]||1);                                   // Devex reference weight (default 1)
+      cand.push({k:k, cbar:cbar, t:t, leavePos:leavePos, leaveVar:(leavePos>=0?basis[leavePos]:-1), gamma:gamma,
+                 dant:cbar, gi:(isFinite(t)?cbar*t:Infinity), se:cbar*cbar/gamma, dv:cbar*cbar/gj, adj:nx});
+    }
+    return {pt:pt, xB:xB, cand:cand, Bi:Bi, mul:mul, y:y, cB:cB};
+  }
+
+  // which candidate index a rule picks (returns -1 if none / not improving)
+  function chooseIdx(cand, rule){
+    if(!cand.length) return -1;
+    if(rule==='bland'){ var bi=0; for(var i=1;i<cand.length;i++) if(cand[i].k<cand[bi].k) bi=i; return bi; }
+    var key = rule, bi2=0;
+    for(var j=1;j<cand.length;j++){ if(cand[j][key] > cand[bi2][key] + 1e-12 ||
+        (Math.abs(cand[j][key]-cand[bi2][key])<1e-12 && cand[j].k<cand[bi2].k)) bi2=j; }
+    return bi2;
+  }
+
+  // LP optimum (scan polygon vertices), for the ★
+  function polygon(){
+    var a=P.a,b1=P.b1,b2=P.b2, L=[[1,0,0],[0,1,0],[1,a,b1],[3,2,b2]], pts=[];
+    for(var i=0;i<4;i++)for(var j=i+1;j<4;j++){ var Q=L[i],R=L[j],det=Q[0]*R[1]-R[0]*Q[1]; if(Math.abs(det)<1e-9)continue;
+      var x=(Q[2]*R[1]-R[2]*Q[1])/det, y=(Q[0]*R[2]-R[0]*Q[2])/det;
+      if(x<-1e-6||y<-1e-6)continue; if(x+a*y>b1+1e-6||3*x+2*y>b2+1e-6)continue; pts.push([x,y]); }
+    var u=[]; pts.forEach(function(p){ if(!u.some(function(q){return Math.abs(q[0]-p[0])<1e-6&&Math.abs(q[1]-p[1])<1e-6;}))u.push(p); });
+    var cx=0,cy=0; u.forEach(function(p){cx+=p[0];cy+=p[1];}); cx/=u.length; cy/=u.length;
+    u.sort(function(p,q){return Math.atan2(p[1]-cy,p[0]-cx)-Math.atan2(q[1]-cy,q[0]-cx);});
+    return u;
+  }
+
+  function render(){
+    var S = state();
+    var poly = polygon();
+    var rule = $('lp_rule').value;
+    var pickedByRule = {}; RULES.forEach(function(r){ var ci=chooseIdx(S.cand,r); pickedByRule[r]= ci<0?-1:S.cand[ci].k; });
+    var optimal = S.cand.length===0;
+    $('lp_step').disabled = optimal;
+    $('lp_back').disabled = hist.length===0;
+
+    // ----- status -----
+    var iter = path.length-1;
+    var zc = P.c1*S.pt[0]+P.c2*S.pt[1];
+    var st = $('lp-status');
+    if(optimal){ st.className='status done';
+      st.innerHTML='<strong>Optimal.</strong> After '+iter+' pivot'+(iter===1?'':'s')+' at corner ('+f(S.pt[0])+', '+f(S.pt[1])+'), z = '+f(zc)+'. No improving column remains.'; }
+    else { st.className='status';
+      var ci=chooseIdx(S.cand,rule), pc=S.cand[ci];
+      st.innerHTML='Iteration '+iter+' · at corner <strong>('+f(S.pt[0])+', '+f(S.pt[1])+')</strong>, z = '+f(zc)
+        +'. <strong>'+RLAB[rule]+'</strong> would enter <strong>'+NAME[pc.k]+'</strong>'
+        +(pc.leaveVar>=0?', '+NAME[pc.leaveVar]+' leaves':'')+' → next corner ('+f(pc.adj[0])+', '+f(pc.adj[1])+').'; }
+
+    // ----- B, B^{-1}, and the LU factorisation P·B = L·U -----
+    var Bc0=col(basis[0]), Bc1=col(basis[1]);
+    var Bmat=[[Bc0[0],Bc1[0]],[Bc0[1],Bc1[1]]];
+    var lu=ludecomp(Bmat);
+    // ===== ① complete tableau (top) =====
+    var TAB=[[0,0,0,0],[0,0,0,0]];
+    for(var tk=0;tk<4;tk++){ var ck=col(tk); for(var tr=0;tr<2;tr++) TAB[tr][tk]=S.Bi[tr][0]*ck[0]+S.Bi[tr][1]*ck[1]; }
+    var cbarAll=[]; for(var jj=0;jj<4;jj++){ var cj=col(jj); cbarAll.push(cost(jj)-(S.y[0]*cj[0]+S.y[1]*cj[1])); }
+    var zval=P.c1*S.pt[0]+P.c2*S.pt[1];
+    $('lp-tableau').innerHTML='<div class="tabsec"><span class="matlabel">Complete simplex tableau at this corner &nbsp;(z-row = reduced costs c̄; body = B⁻¹A; last column = B⁻¹b = current basic values):</span>'
+      + fullTableau(TAB, S.xB, cbarAll, zval, NAME, basis) + '</div>';
+
+    // ===== ② the static matrices (below the tableau) =====
+    $('lp-matrices').innerHTML =
+        '<span class="matgrp"><span class="matlabel">basis ['+NAME[basis[0]]+', '+NAME[basis[1]]+']</span></span>'
+      + '<span class="matgrp"><span class="matlabel">B =</span>'+matHTML(Bmat)+'</span>'
+      + '<span class="matgrp"><span class="matlabel">P =</span>'+matHTML(lu.P)+'</span>'
+      + '<span class="matgrp"><span class="matlabel">L =</span>'+matHTML(lu.L)+'</span>'
+      + '<span class="matgrp"><span class="matlabel">U =</span>'+matHTML(lu.U)+'</span>'
+      + '<span class="matgrp"><span class="matlabel">(B⁻¹ =</span>'+matHTML(S.Bi)+'<span class="matlabel">, shown for reference only; the algorithm never forms it)</span></span>';
+
+    // ===== ③ every solve of the iteration, worked through L and U =====
+    var Lm=lu.L, Um=lu.U, Pm=lu.P, Ut=transp(Um), Lt=transp(Lm), Pt=transp(Pm);
+    var NEW='#8e44ad';   // the one unknown being solved for on each row; everything already known stays black
+    var out='<div class="tabsec"><span class="matlabel">Every solve below goes through the triangular factors by substitution; B⁻¹ is never used. (P·B = L·U from the matrices above.)</span>'
+      + '<p class="eqnote">On every row exactly one vector is <b style="color:'+NEW+'">unknown and being solved for</b>, shown in purple. Everything else on that row is already known and stays black. '
+      + 'Note the asymmetry: in <strong>FTRAN</strong> the permutation only hits the right-hand side, so the answer x<sub>B</sub> (and d) comes out already in the original order, with no unpermuting. In <strong>BTRAN</strong> the intermediate really is permuted (u = P·y), so the last row unpermutes it.</p></div>';
+    out+='<div class="tabsec"><span class="matlabel">⓪ The factorization of the current basis. Everything below is solved with these factors:</span>'
+      + '<div class="eqrow"><span class="sublab">P·B</span>'+matBox(matmul(Pm,Bmat))+'<span class="op">=</span>'+matBox(matmul(Lm,Um))+'<span class="sublab" style="min-width:0">= L·U ✓</span></div></div>';
+    // (a) basic values  B x_B = b
+    var bv=[P.b1,P.b2], Pb=matVec(Pm,bv), w1=fsub(Lm,Pb), xBlu=bsub(Um,w1);
+    out+='<div class="tabsec"><span class="matlabel">① FTRAN (basic values): solve B·x<sub>B</sub> = b &nbsp;(⇔ L·U·x<sub>B</sub> = P·b)</span>'
+      + solveRow('forward   L·w = P·b', Lm, w1, Pb, NEW)
+      + solveRow('back   U·x_B = w', Um, xBlu, w1, NEW)
+      + '<p class="eqnote">→ x<sub>B</sub> = ('+xBlu.map(f).join(', ')+'): the RHS column of the tableau, and the corner you are standing on.</p></div>';
+    // (b) prices  B^T y = c_B
+    var v1=fsub(Ut,S.cB), u1=bsub(Lt,v1), ylu=matVec(Pt,u1);
+    out+='<div class="tabsec"><span class="matlabel">② BTRAN (prices): solve Bᵀ·y = c<sub>B</sub> &nbsp;(⇔ Uᵀ·Lᵀ·P·y = c<sub>B</sub>)</span>'
+      + solveRow('forward   Uᵀ·v = c_B', Ut, v1, S.cB, NEW)
+      + solveRow('back   Lᵀ·u = v   (u = P·y)', Lt, u1, v1, NEW)
+      + '<div class="eqrow"><span class="sublab">unpermute  y = Pᵀ·u</span>'+colBox(ylu,NEW)+'<span class="op">=</span>'+matBox(Pt)+'<span class="op">·</span>'+colBox(u1)+'</div></div>';
+    // (c) pricing
+    out+='<div class="tabsec"><span class="matlabel">③ Price every nonbasic column: c̄ⱼ = cⱼ − yᵀaⱼ &nbsp;(this fills the z-row of the tableau)</span>';
+    for(var pk=0;pk<NAME.length;pk++){
+      if(basis.indexOf(pk)>=0) continue;
+      var ak2=col(pk), ya2=0, yi; for(yi=0;yi<ylu.length;yi++) ya2+=ylu[yi]*ak2[yi];
+      var cb2=cost(pk)-ya2, good=cb2>1e-7;
+      out+='<div class="eqrow"><span class="sublab">c̄('+NAME[pk]+')</span>'+rowBox(ylu)+'<span class="op">·</span>'+colBox(ak2)
+        +'<span class="op">=</span><span class="sublab" style="min-width:0">'+f(ya2)+'</span>'
+        +'<span class="op">→</span><span class="sublab" style="min-width:0">'+f(cost(pk))+' − '+f(ya2)+' = <b style="color:'+(good?NEW:'#6b6b73')+'">'+f(cb2)+'</b>'
+        +(good?' ✓ can improve':' ✗ cannot')+'</span></div>';
+    }
+    out+='<p class="eqnote">'+(optimal? 'Every c̄ ≤ 0 → <strong>optimal</strong>: no column can improve, so the iteration stops here.'
+        : RLAB[rule]+' picks <strong>'+NAME[S.cand[chooseIdx(S.cand,rule)].k]+'</strong> to enter (see the rule table above for how each rule scores these).')+'</p></div>';
+    if(!optimal){
+      var pc2=S.cand[chooseIdx(S.cand,rule)], qq=pc2.k, aq=col(qq), LP=(pc2.lp!==undefined?pc2.lp:pc2.leavePos);
+      var Paq=matVec(Pm,aq), w2=fsub(Lm,Paq), dlu=bsub(Um,w2);
+      out+='<div class="tabsec"><span class="matlabel">④ FTRAN (direction): solve B·d = a<sub>'+NAME[qq]+'</sub> &nbsp;(⇔ L·U·d = P·a)</span>'
+        + solveRow('forward   L·w = P·a', Lm, w2, Paq, NEW)
+        + solveRow('back   U·d = w', Um, dlu, w2, NEW) + '</div>';
+      var rt=[]; for(var ri=0;ri<S.xB.length;ri++){ if(dlu[ri]>1e-9) rt.push(NAME[basis[ri]]+': '+f(S.xB[ri])+'/'+f(dlu[ri])+' = '+f(S.xB[ri]/dlu[ri])); }
+      out+='<div class="tabsec"><span class="matlabel">⑤ Ratio test: t★ = min over rows with dᵢ &gt; 0 of (x<sub>B</sub>)ᵢ / dᵢ</span>'
+        +'<p class="eqnote">'+(rt.length?rt.join(' &nbsp;·&nbsp; '):'no positive dᵢ → unbounded')
+        +' &nbsp;→&nbsp; <strong>t★ = '+f(pc2.t)+'</strong>, so <strong>'+NAME[pc2.leaveVar]+'</strong> leaves (row '+(LP+1)+').</p></div>';
+      var dr2=dlu[LP], nn=S.xB.length, ei2;
+      var eta=[]; for(ei2=0;ei2<nn;ei2++) eta.push(ei2===LP? 1/dr2 : -dlu[ei2]/dr2);
+      var Enew=eye(nn); for(ei2=0;ei2<nn;ei2++) Enew[ei2][LP]=eta[ei2];
+      var acc=eye(nn); etas.forEach(function(E){ acc=matmul(E,acc); });
+      out+='<div class="tabsec"><span class="matlabel">⑥ Update: the eta this pivot will apply (pivot row '+(LP+1)+', pivot element dᵣ = '+f(dr2)+'):</span>'
+        + '<div class="eqrow"><span class="sublab">ηᵣ = 1/dᵣ,  ηᵢ = −dᵢ/dᵣ</span>'+colBox(eta,NEW)
+        + '<span class="op">→</span><span class="sublab" style="min-width:0">E = I with column '+(LP+1)+' replaced by η</span>'+matBox(Enew,NEW)+'</div>'
+        + '<div class="eqrow"><span class="sublab">so far: Eₖ···E₁</span>'+matBox(acc)+'<span class="op">=</span><span class="sublab" style="min-width:0">B⁻¹ (the current one); next iteration it becomes E·B⁻¹</span></div>'
+        + '<p class="eqnote">Press <strong>Step ▶</strong> and this E is applied: the basis changes, and the P, L, U at the top become the factors of the <em>new</em> B. (This widget refactorizes from scratch each iteration for clarity; a real solver patches the existing L·U in place (Forrest–Tomlin) and only refactorizes periodically, see §4.2.)</p></div>';
+    }
+    $('lp-solves').innerHTML=out;
+
+    // ----- formula table (column headings carry hover/tap definitions) -----
+    function th(lab,tip){ return '<th class="center"><span class="tip" tabindex="0" data-tip="'+tip+'">'+lab+'</span></th>'; }
+    var html='<table><thead><tr><th>Enter</th>'
+      + th('c̄','Reduced cost.  c̄ⱼ = cⱼ − yᵀaⱼ, the rate the objective improves per unit increase of xⱼ. Only columns with c̄ⱼ > 0 can improve this max problem.')
+      + th('t★','Ratio-test step length.  t★ = min over rows with dᵢ > 0 of (x_B)ᵢ / dᵢ: how far xⱼ can rise before a basic variable is driven to 0.')
+      + th('Dantzig c̄','Dantzig: pick the largest reduced cost c̄ⱼ. Greedy on RATE, blind to how far you can actually move. Cheapest to compute, but scale-sensitive and exponential in the worst case.')
+      + th('Gt.incr c̄·t★','Greatest increment: pick the largest ACTUAL objective gain, c̄ⱼ · t★ⱼ  (rate × feasible step). Needs a ratio test per candidate, so it is the most expensive rule here.')
+      + th('Steep. c̄²/γ','Steepest edge: pick the largest c̄ⱼ²/γⱼ using the EXACT edge weight γⱼ = ‖B⁻¹aⱼ‖² + 1, the squared length of the move direction dⱼ = B⁻¹aⱼ, plus 1 for the entering variable own unit step. This scores ascent per unit distance actually travelled, so it is scale-invariant.')
+      + th('Devex c̄²/γ̃','Devex: same formula c̄ⱼ²/γ̃ⱼ but with a CHEAP running approximation γ̃ⱼ ≈ γⱼ. Reset to 1 at each reference frame; after a pivot (entering q, leaving row r, pivot element αᵣ = (B⁻¹a_q)ᵣ) it updates by  γ̃ⱼ ← max(γ̃ⱼ, (αᵣⱼ/αᵣ)² γ̃_q)  for each remaining nonbasic j, and the leaving variable becomes nonbasic with  γ̃ ← max(γ̃_q/αᵣ², 1).')
+      + '</tr></thead><tbody>';
+    if(optimal){ html+='<tr><td colspan="7" class="center" style="color:var(--green);font-weight:700">all c̄ ≤ 0: optimal</td></tr>'; }
+    else {
+      var wD=chooseIdx(S.cand,'dant'), wG=chooseIdx(S.cand,'gi'), wS=chooseIdx(S.cand,'se'), wV=chooseIdx(S.cand,'dv');
+      S.cand.forEach(function(c,i){
+        html+='<tr><td><strong>'+NAME[c.k]+'</strong></td><td class="center">'+f(c.cbar)+'</td><td class="center">'+f(c.t)+'</td>'
+          +'<td class="center'+(i===wD?' win':'')+'">'+f(c.dant)+'</td>'
+          +'<td class="center'+(i===wG?' win':'')+'">'+f(c.gi)+'</td>'
+          +'<td class="center'+(i===wS?' win':'')+'">'+f(c.se)+'</td>'
+          +'<td class="center'+(i===wV?' win':'')+'">'+f(c.dv)+'</td></tr>';
+      });
+    }
+    html+='</tbody></table>';
+    $('lp-formulas').innerHTML=html;
+
+    // ----- graph -----
+    var verts = poly.concat(path).concat(S.cand.map(function(c){return c.adj;}));
+    var xmax=1e-6,ymax=1e-6; verts.forEach(function(p){ xmax=Math.max(xmax,p[0]); ymax=Math.max(ymax,p[1]); });
+    var Wd=340,Hd=300,padL=40,padB=38,padT=16,padR=16, s=Math.min((Wd-padL-padR)/xmax,(Hd-padB-padT)/ymax);
+    function X(x){return padL+x*s;} function Y(y){return Hd-padB-y*s;}
+    var best=poly[0], bz=-1e18; poly.forEach(function(p){var z=P.c1*p[0]+P.c2*p[1]; if(z>bz){bz=z;best=p;}});
+    var g=[];
+    g.push('<svg viewBox="0 0 '+Wd+' '+Hd+'" width="'+Wd+'" height="'+Hd+'" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;display:block;">');
+    g.push('<defs><marker id="lpar2" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#888"/></marker></defs>');
+    g.push('<polygon points="'+poly.map(function(p){return X(p[0])+','+Y(p[1]);}).join(' ')+'" fill="'+COL.ACCS+'" stroke="'+COL.BORD+'" stroke-width="1"/>');
+    g.push('<line x1="'+padL+'" y1="'+Y(0)+'" x2="'+(Wd-padR)+'" y2="'+Y(0)+'" stroke="'+COL.MUT+'" stroke-width="1.2"/>');
+    g.push('<line x1="'+X(0)+'" y1="'+Y(0)+'" x2="'+X(0)+'" y2="'+padT+'" stroke="'+COL.MUT+'" stroke-width="1.2"/>');
+    g.push('<text x="'+(Wd-padR)+'" y="'+(Y(0)+15)+'" font-size="11" fill="'+COL.MUT+'" text-anchor="end">x₁</text>');
+    g.push('<text x="'+(X(0)-6)+'" y="'+(padT+4)+'" font-size="11" fill="'+COL.MUT+'" text-anchor="end">x₂</text>');
+    // gradient
+    var gl=Math.sqrt(P.c1*P.c1+P.c2*P.c2), glen=0.40*Math.min(xmax,ymax);
+    g.push('<line x1="'+X(0)+'" y1="'+Y(0)+'" x2="'+X(P.c1/gl*glen)+'" y2="'+Y(P.c2/gl*glen)+'" stroke="#aaa" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#lpar2)"/>');
+    g.push('<text x="'+(X(P.c1/gl*glen)+4)+'" y="'+(Y(P.c2/gl*glen)-2)+'" font-size="10.5" fill="#999">∇z</text>');
+    // path so far
+    if(path.length>1) g.push('<polyline points="'+path.map(function(p){return X(p[0])+','+Y(p[1]);}).join(' ')+'" fill="none" stroke="'+COL.PATH+'" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>');
+    path.forEach(function(p){ g.push('<circle cx="'+X(p[0])+'" cy="'+Y(p[1])+'" r="3.5" fill="'+COL.PATH+'"/>'); });
+    // candidate edges (dashed) + badges
+    S.cand.forEach(function(c){
+      g.push('<line x1="'+X(S.pt[0])+'" y1="'+Y(S.pt[1])+'" x2="'+X(c.adj[0])+'" y2="'+Y(c.adj[1])+'" stroke="'+COL.ORG+'" stroke-width="2" stroke-dasharray="5 3"/>');
+      var bad=''; RULES.forEach(function(r){ if(pickedByRule[r]===c.k) bad+=RBADGE[r]; });
+      var mx=(S.pt[0]+c.adj[0])/2, my=(S.pt[1]+c.adj[1])/2;
+      g.push('<text x="'+X(mx)+'" y="'+(Y(my)-5)+'" font-size="12" font-weight="700" fill="'+COL.ORG+'" text-anchor="middle">'+bad+'</text>');
+    });
+    // optimum + current corner
+    g.push('<text x="'+X(best[0])+'" y="'+(Y(best[1])-7)+'" font-size="16" fill="'+COL.GRN+'" text-anchor="middle">★</text>');
+    g.push('<circle cx="'+X(S.pt[0])+'" cy="'+Y(S.pt[1])+'" r="6" fill="none" stroke="'+COL.INK+'" stroke-width="2"/>');
+    g.push('<text x="'+(X(S.pt[0])+9)+'" y="'+(Y(S.pt[1])+4)+'" font-size="10.5" fill="'+COL.INK+'">('+f(S.pt[0])+','+f(S.pt[1])+')</text>');
+    g.push('</svg>');
+    $('lp-graph').innerHTML=g.join('');
+  }
+
+  function step(){
+    var S=state(); if(!S.cand.length) return;
+    var ci=chooseIdx(S.cand, $('lp_rule').value); var c=S.cand[ci];
+    if(c.leavePos<0) return;                       // unbounded guard
+    hist.push({basis:basis.slice(), gw:copyGw(gw), path:path.map(function(p){return p.slice();}), etas:copyEtas(etas)});  // snapshot for Back
+    var r=c.leavePos, q=c.k, L=basis[r];           // pivot row, entering, leaving
+    var dq=S.mul(S.Bi, col(q)), dr=dq[r], gq=(gw[q]||1);
+    // --- product-form eta:  B_new^{-1} = E · B_old^{-1};  E = I with column r replaced by η ---
+    var E=eye(2); for(var ei=0;ei<2;ei++) E[ei][r]=(ei===r? 1/dr : -dq[ei]/dr);
+    etas.push(E);
+    // --- Devex reference-weight update (runs on every pivot, not just when Devex is the active rule) ---
+    var o=-1; for(var k=0;k<4;k++){ if(k!==q && k!==basis[0] && k!==basis[1]) o=k; } // the other nonbasic var
+    if(o>=0){ var rho=S.mul(S.Bi, col(o))[r]; gw[o]=Math.max(gw[o]||1, (rho/dr)*(rho/dr)*gq); }
+    gw[L]=Math.max(gq/(dr*dr), 1);                 // leaving var becomes nonbasic
+    delete gw[q];                                  // entering var leaves the nonbasic set
+    // --- pivot ---
+    basis[r]=q;
+    path.push(c.adj.slice());
+    render();
+  }
+  function back(){ if(!hist.length) return; var h=hist.pop(); basis=h.basis; gw=h.gw; path=h.path; etas=h.etas; render(); }
+  function resetWalk(){ basis=[2,3]; path=[[0,0]]; gw={0:1,1:1,2:1,3:1}; hist=[]; etas=[]; render(); }
+
+  $('lp_step').addEventListener('click', step);
+  $('lp_back').addEventListener('click', back);
+  $('lp_resetpath').addEventListener('click', resetWalk);
+  $('lp_rule').addEventListener('change', render);   // change rule mid-walk → preview new choice
+  W.querySelectorAll('input[type=range]').forEach(function(el){ el.addEventListener('input', function(){ readP(); resetWalk(); }); });
+
+  readP(); resetWalk();
+})();
+</script>
+
+<h3 id="lp3">Now in 3D: a polyhedron you can rotate</h3>
+<p>The same ideas in three variables. Here the feasible region is a real <strong>polyhedron</strong>, and the simplex method crawls along its <em>edges</em> from corner to corner. Pick a rule and click <strong>Step ▶</strong>; <strong>drag the picture to rotate it</strong> (or use the rotate/tilt sliders). The engine runs full revised simplex with 3×3 \(B^{-1}\), so it works at every corner.</p>
+
+<div class="lp-eq" id="lp3-eq">
+  <div class="lp-eq-lines" id="lp3-eq-lines" style="grid-template-columns:auto auto auto auto auto auto auto auto"></div>
+  <div class="eqA" id="lp3-eq-A"></div>
+</div>
+
+<style>
+  #lp3-widget .lp-controls { display:flex; flex-wrap:wrap; gap:18px; margin-bottom:14px; }
+  #lp3-widget .ctrl-row { display:flex; align-items:center; gap:8px; font-size:13px; margin:7px 0; }
+  #lp3-widget .ctrl-row label { width:30px; font-family:var(--mono); color:var(--muted); }
+  #lp3-widget .ctrl-row input[type=range] { width:120px; accent-color:var(--accent); }
+  #lp3-widget .ctrl-row .val { width:34px; text-align:right; font-family:var(--mono); }
+  #lp3-widget .ctrl-card { border:1px solid var(--border); border-radius:10px; padding:10px 14px; background:var(--bg); }
+  #lp3-widget .lp-flex { display:flex; flex-wrap:wrap; gap:22px; align-items:flex-start; }
+  #lp3-widget .lp-graph { flex:0 0 auto; }
+  #lp3-widget .lp-panel { flex:1 1 280px; min-width:260px; }
+  #lp3-widget table { margin:0; font-size:13px; }
+  #lp3-widget td.win, #lp3-widget .win { background:#fdf3d0; font-weight:700; box-shadow: inset 0 0 0 2px var(--amber); }
+  #lp3-widget .status { margin:0 0 12px; font-size:15px; padding:9px 13px; border-radius:8px; background:var(--accent-soft); border-left:4px solid var(--accent); }
+  #lp3-widget .status.done { background:#eaf6ee; border-color:var(--green); }
+  #lp3-widget .legend { font-size:12.5px; color:var(--muted); margin-top:8px; line-height:1.7; }
+  #lp3-widget button { font:inherit; font-size:14px; padding:7px 16px; border:1px solid var(--border); border-radius:8px; background:var(--panel); cursor:pointer; }
+  #lp3-widget button:hover:not(:disabled) { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  #lp3-widget button:disabled { opacity:0.45; cursor:default; }
+  #lp3-widget button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  #lp3-widget button.primary:hover:not(:disabled) { filter:brightness(1.08); color:#fff; }
+  #lp3-widget select { font:inherit; font-size:14px; padding:6px 10px; border:1px solid var(--border); border-radius:8px; background:var(--panel); }
+  #lp3-widget .runbar { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:14px; }
+  #lp3-widget .mats { display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin-bottom:12px; font-size:12.5px; }
+  #lp3-widget .matgrp { display:flex; align-items:center; gap:6px; }
+  #lp3-widget .matlabel { color:var(--muted); font-family:var(--mono); }
+  #lp3-widget .mat { position:relative; display:inline-grid; grid-template-columns:repeat(3,minmax(17px,auto)); gap:1px 6px; padding:2px 7px; font-family:var(--mono); font-size:11.5px; line-height:1.35; }
+  #lp3-widget .mat>span { text-align:right; }
+  #lp3-widget .mat::before, #lp3-widget .mat::after { content:""; position:absolute; top:0; bottom:0; width:4px; border:1.2px solid currentColor; }
+  #lp3-widget .mat::before { left:0; border-right:none; }
+  #lp3-widget .mat::after { right:0; border-left:none; }
+  #lp3-widget #lp3-graph { touch-action:none; cursor:grab; user-select:none; }
+  #lp3-widget #lp3-graph:active { cursor:grabbing; }
+  #lp3-widget .tab-wrap { margin-top:16px; overflow-x:auto; }
+  #lp3-widget .tab-wrap .matlabel { display:block; margin-bottom:5px; }
+  #lp3-widget .tab { font-family:var(--mono); font-size:12.5px; border-collapse:collapse; }
+  #lp3-widget .tab th, #lp3-widget .tab td { border:1px solid var(--border); padding:2px 9px; text-align:right; }
+  #lp3-widget .tab th { color:var(--muted); font-weight:600; }
+  #lp3-widget .tab .bcol { background:var(--accent-soft); }
+  #lp3-widget .tab .rlab { color:var(--muted); font-weight:600; text-align:left; }
+  #lp3-widget .tab .zrow td { border-bottom:2px solid var(--muted); font-style:italic; }
+  #lp3-widget .tabsec { margin-top:13px; }
+  #lp3-widget .eqrow { display:inline-flex; align-items:center; gap:5px; margin:4px 20px 4px 0; vertical-align:middle; }
+  #lp3-widget .eqrow .op { font-family:var(--mono); color:var(--muted); font-size:15px; }
+  #lp3-widget .eqrow .eqlab { font-size:12.5px; color:var(--muted); min-width:150px; }
+  #lp3-widget .eqnote { font-size:12.5px; color:var(--muted); margin:4px 0 0; }
+  #lp3-widget .sublab { font-family:var(--mono); font-size:11px; color:var(--muted); white-space:nowrap; }
+  #lp3-widget .tip { position:relative; cursor:help; border-bottom:1px dotted var(--muted); outline:none; }
+  #lp3-widget .tip:hover::after, #lp3-widget .tip:focus::after {
+    content:attr(data-tip); position:absolute; left:50%; transform:translateX(-50%); bottom:calc(100% + 9px);
+    width:300px; white-space:pre-wrap; text-align:left; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    font-weight:400; font-size:12px; line-height:1.55; background:var(--ink); color:#fff;
+    padding:9px 11px; border-radius:8px; z-index:30; box-shadow:0 5px 16px rgba(0,0,0,.28);
+  }
+  #lp3-widget .tip:hover::before, #lp3-widget .tip:focus::before {
+    content:""; position:absolute; left:50%; transform:translateX(-50%); bottom:calc(100% + 3px);
+    border:6px solid transparent; border-top-color:var(--ink); z-index:30;
+  }
+</style>
+
+<div class="panel" id="lp3-widget">
+  <div class="lp-controls">
+    <div class="ctrl-card">
+      <strong style="font-size:14px">Objective</strong>
+      <div class="ctrl-row"><label>c₁</label><input type="range" id="lp3_c1" min="1" max="10" step="0.5" value="5"><span class="val" id="lp3_c1_v"></span></div>
+      <div class="ctrl-row"><label>c₂</label><input type="range" id="lp3_c2" min="1" max="10" step="0.5" value="4"><span class="val" id="lp3_c2_v"></span></div>
+      <div class="ctrl-row"><label>c₃</label><input type="range" id="lp3_c3" min="1" max="10" step="0.5" value="3"><span class="val" id="lp3_c3_v"></span></div>
+    </div>
+    <div class="ctrl-card">
+      <strong style="font-size:14px">View</strong>
+      <div class="ctrl-row"><label>rotate</label><input type="range" id="lp3_az" min="-3.14" max="3.14" step="0.02" value="0.7"></div>
+      <div class="ctrl-row"><label>tilt</label><input type="range" id="lp3_el" min="-0.2" max="1.4" step="0.02" value="0.5"></div>
+      <div class="legend" style="margin-top:6px">Objective changes reset the walk.</div>
+    </div>
+  </div>
+
+  <div class="runbar">
+    <label style="font-size:14px">Rule: <select id="lp3_rule">
+      <option value="dant">Dantzig</option>
+      <option value="gi">Greatest increment</option>
+      <option value="se">Steepest edge</option>
+      <option value="dv">Devex</option>
+      <option value="bland">Bland</option>
+    </select></label>
+    <button id="lp3_back">◀ Back</button>
+    <button class="primary" id="lp3_step">Step ▶</button>
+    <button id="lp3_resetpath">↺ Reset walk</button>
+  </div>
+
+  <div class="status" id="lp3-status"></div>
+
+  <div class="lp-flex">
+    <div class="lp-graph" id="lp3-graph"></div>
+    <div class="lp-panel">
+      <div id="lp3-formulas"></div>
+      <div class="legend">Hover (or tap) any column heading for its definition. Edge badges: <strong>D</strong> Dantzig · <strong>G</strong> Greatest increment · <strong>S</strong> Steepest edge · <strong>V</strong> Devex · <strong>B</strong> Bland. Grey wireframe = the polyhedron (faded edges are farther away); thick green = path walked; dashed orange = candidate edges from the current corner; ★ = optimum.</div>
+    </div>
+  </div>
+  <div id="lp3-tableau" class="tab-wrap"></div>
+  <div id="lp3-matrices" class="mats"></div>
+  <div id="lp3-solves" class="tab-wrap"></div>
+</div>
+
+<script>
+(function(){
+  var W=document.getElementById('lp3-widget'); if(!W) return;
+  var COL={ACC:'#2b5fb3', ACCS:'#eaf1fb', BORD:'#e4e4e8', MUT:'#6b6b73', INK:'#1c1c1e', GRN:'#2e7d49', ORG:'#d4791e', PATH:'#1a7a3a', WIRE:'#5a6b85'};
+  var NAME=['x₁','x₂','x₃','s₁','s₂','s₃'];
+  var RULES=['dant','gi','se','dv','bland'];
+  var RLAB={dant:'Dantzig',gi:'Greatest increment',se:'Steepest edge',dv:'Devex',bland:'Bland'};
+  var RBADGE={dant:'D',gi:'G',se:'S',dv:'V',bland:'B'};
+  var TOL=1e-7;
+  // fixed LP:  max c·x  s.t. Ax ≤ b, x ≥ 0    (3 constraints, vars x1 x2 x3 s1 s2 s3)
+  var A=[[2,3,1,1,0,0],[4,1,2,0,1,0],[3,4,2,0,0,1]];
+  var bvec=[5,11,8];
+  var CON=[[2,3,1,5],[4,1,2,11],[3,4,2,8]];     // [a,b,c,rhs]
+
+  var P={};                      // objective
+  var basis=[3,4,5];             // slacks → origin
+  var path=[[0,0,0]];
+  var gw={};
+  var hist=[];                   // snapshots for the Back button
+  var etas=[];                   // product-form eta matrices (B_k^{-1} = E_k···E_1)
+  function copyGw(g){ var o={}; for(var kk in g) o[kk]=g[kk]; return o; }
+  function copyEtas(es){ return es.map(function(m){ return m.map(function(row){ return row.slice(); }); }); }
+  var az=0.7, el=0.5;
+
+  function $(id){return document.getElementById(id);}
+  function f(v){ if(!isFinite(v)) return '∞'; if(Math.abs(v)>=100) return v.toFixed(0); return (Math.round(v*100)/100).toString(); }
+  function col(k){ return [A[0][k],A[1][k],A[2][k]]; }
+  function cost(k){ return k===0?P.c1 : k===1?P.c2 : k===2?P.c3 : 0; }
+
+  function inv3(M){
+    var a=M[0][0],b=M[0][1],c=M[0][2],d=M[1][0],e=M[1][1],ff=M[1][2],g=M[2][0],h=M[2][1],i=M[2][2];
+    var A0=(e*i-ff*h), B0=(ff*g-d*i), C0=(d*h-e*g);
+    var det=a*A0+b*B0+c*C0;
+    if(Math.abs(det)<1e-12) return null;
+    var id=1/det;
+    return [[A0*id,(c*h-b*i)*id,(b*ff-c*e)*id],
+            [B0*id,(a*i-c*g)*id,(c*d-a*ff)*id],
+            [C0*id,(b*g-a*h)*id,(a*e-b*d)*id]];
+  }
+  function mv(M,v){ return [M[0][0]*v[0]+M[0][1]*v[1]+M[0][2]*v[2], M[1][0]*v[0]+M[1][1]*v[1]+M[1][2]*v[2], M[2][0]*v[0]+M[2][1]*v[1]+M[2][2]*v[2]]; }
+  function buildBi(){ var B=[[0,0,0],[0,0,0],[0,0,0]]; for(var c=0;c<3;c++){var cc=col(basis[c]); for(var r=0;r<3;r++)B[r][c]=cc[r];} return inv3(B); }
+
+  function state(){
+    var Bi=buildBi();
+    var xB=mv(Bi,bvec);
+    var cB=[cost(basis[0]),cost(basis[1]),cost(basis[2])];
+    var y=[0,0,0]; for(var c=0;c<3;c++) y[c]=cB[0]*Bi[0][c]+cB[1]*Bi[1][c]+cB[2]*Bi[2][c];
+    var pt=[0,0,0]; for(var i=0;i<3;i++){ if(basis[i]<3) pt[basis[i]]=xB[i]; }
+    var cand=[];
+    for(var k=0;k<6;k++){
+      if(basis.indexOf(k)>=0) continue;
+      var ak=col(k); var cbar=cost(k)-(y[0]*ak[0]+y[1]*ak[1]+y[2]*ak[2]);
+      if(cbar<=TOL) continue;
+      var d=mv(Bi,ak); var t=Infinity, lp=-1;
+      for(var r=0;r<3;r++){ if(d[r]>TOL){ var ratio=xB[r]/d[r]; if(ratio<t-1e-12){ t=ratio; lp=r; } } }
+      var gamma=d[0]*d[0]+d[1]*d[1]+d[2]*d[2]+1;
+      var nx=[0,0,0];
+      if(k<3) nx[k]=t;
+      for(var i2=0;i2<3;i2++){ if(i2!==lp){ var v=basis[i2]; if(v<3) nx[v]=xB[i2]-t*d[i2]; } }
+      var gj=gw[k]||1;
+      cand.push({k:k,cbar:cbar,t:t,lp:lp,leaveVar:(lp>=0?basis[lp]:-1),gamma:gamma,
+                 dant:cbar, gi:(isFinite(t)?cbar*t:Infinity), se:cbar*cbar/gamma, dv:cbar*cbar/gj, adj:nx});
+    }
+    return {pt:pt,xB:xB,Bi:Bi,cand:cand,y:y,cB:cB};
+  }
+  function chooseIdx(cand,rule){
+    if(!cand.length) return -1;
+    if(rule==='bland'){ var bi=0; for(var i=1;i<cand.length;i++) if(cand[i].k<cand[bi].k) bi=i; return bi; }
+    var bi2=0;
+    for(var j=1;j<cand.length;j++){ if(cand[j][rule]>cand[bi2][rule]+1e-12 || (Math.abs(cand[j][rule]-cand[bi2][rule])<1e-12 && cand[j].k<cand[bi2].k)) bi2=j; }
+    return bi2;
+  }
+
+  // ----- polytope geometry (fixed; computed once) -----
+  var VERTS=[], EDGES=[], C3=[0,0,0], SCALE=1, Wd=360, Hd=320;
+  function buildGeom(){
+    var planes=[[1,0,0,0],[0,1,0,0],[0,0,1,0]].concat(CON);
+    var pts=[];
+    for(var i=0;i<6;i++)for(var j=i+1;j<6;j++)for(var k=j+1;k<6;k++){
+      var Mi=inv3([planes[i].slice(0,3),planes[j].slice(0,3),planes[k].slice(0,3)]);
+      if(!Mi) continue;
+      var x=mv(Mi,[planes[i][3],planes[j][3],planes[k][3]]);
+      if(x[0]<-1e-6||x[1]<-1e-6||x[2]<-1e-6) continue;
+      var ok=true; CON.forEach(function(cn){ if(cn[0]*x[0]+cn[1]*x[1]+cn[2]*x[2]>cn[3]+1e-6) ok=false; });
+      if(ok) pts.push(x);
+    }
+    VERTS=[]; pts.forEach(function(p){ if(!VERTS.some(function(q){return Math.abs(q[0]-p[0])<1e-6&&Math.abs(q[1]-p[1])<1e-6&&Math.abs(q[2]-p[2])<1e-6;})) VERTS.push(p); });
+    function tight(p){ var s=[]; planes.forEach(function(pl,idx){ if(Math.abs(pl[0]*p[0]+pl[1]*p[1]+pl[2]*p[2]-pl[3])<1e-6) s.push(idx); }); return s; }
+    var T=VERTS.map(tight);
+    EDGES=[];
+    for(var a=0;a<VERTS.length;a++)for(var b=a+1;b<VERTS.length;b++){
+      var common=T[a].filter(function(x){return T[b].indexOf(x)>=0;}).length;
+      if(common>=2) EDGES.push([a,b]);
+    }
+    C3=[0,0,0]; VERTS.forEach(function(p){C3[0]+=p[0];C3[1]+=p[1];C3[2]+=p[2];});
+    C3=[C3[0]/VERTS.length,C3[1]/VERTS.length,C3[2]/VERTS.length];
+    var rad=0; VERTS.forEach(function(p){ var dx=p[0]-C3[0],dy=p[1]-C3[1],dz=p[2]-C3[2]; rad=Math.max(rad,Math.sqrt(dx*dx+dy*dy+dz*dz)); });
+    SCALE=0.40*Math.min(Wd,Hd)/Math.max(rad,1e-6);
+  }
+  function proj(p){
+    var rx0=p[0]-C3[0], ry0=p[1]-C3[1], rz0=p[2]-C3[2];
+    var ca=Math.cos(az),sa=Math.sin(az),ce=Math.cos(el),se=Math.sin(el);
+    var rx=rx0*ca-ry0*sa, ry=rx0*sa+ry0*ca, rz=rz0;
+    return { x: Wd/2 + SCALE*rx, y: Hd/2 - SCALE*(rz*ce - ry*se), depth: ry*ce+rz*se };
+  }
+  function mat3HTML(m){ var s='<span class="mat">'; for(var r=0;r<3;r++)for(var c=0;c<3;c++) s+='<span>'+f(m[r][c])+'</span>'; return s+'</span>'; }
+  // LU with partial pivoting:  P·B = L·U
+  function ludecomp(Ain){
+    var n=Ain.length,i,j,k, U=Ain.map(function(r){return r.slice();}), L=[], P=[];
+    for(i=0;i<n;i++){ L.push([]); P.push([]); for(j=0;j<n;j++){ L[i].push(i===j?1:0); P[i].push(i===j?1:0);} }
+    for(k=0;k<n;k++){
+      var p=k, mx=Math.abs(U[k][k]);
+      for(i=k+1;i<n;i++){ if(Math.abs(U[i][k])>mx){ mx=Math.abs(U[i][k]); p=i; } }
+      if(p!==k){ var tu=U[k];U[k]=U[p];U[p]=tu; var tp=P[k];P[k]=P[p];P[p]=tp;
+        for(j=0;j<k;j++){ var tl=L[k][j];L[k][j]=L[p][j];L[p][j]=tl; } }
+      for(i=k+1;i<n;i++){ var m=(U[k][k]!==0)?U[i][k]/U[k][k]:0; L[i][k]=m; for(j=k;j<n;j++) U[i][j]-=m*U[k][j]; }
+    }
+    return {P:P,L:L,U:U};
+  }
+  function tblHTML(M, names, bs){
+    var n=names.length, m=M.length, r, j, s='<table class="tab"><thead><tr>';
+    for(j=0;j<n;j++) s+='<th'+(bs.indexOf(j)>=0?' class="bcol"':'')+'>'+names[j]+'</th>';
+    s+='</tr></thead><tbody>';
+    for(r=0;r<m;r++){ s+='<tr>'; for(j=0;j<n;j++) s+='<td'+(bs.indexOf(j)>=0?' class="bcol"':'')+'>'+f(M[r][j])+'</td>'; s+='</tr>'; }
+    return s+'</tbody></table>';
+  }
+  function matBox(M, col){ var rows=M.length, cols=M[0].length, r, c, s='<span class="mat" style="grid-template-columns:repeat('+cols+',minmax(15px,auto))'+(col?';color:'+col+';font-weight:700':'')+'">'; for(r=0;r<rows;r++)for(c=0;c<cols;c++) s+='<span>'+f(M[r][c])+'</span>'; return s+'</span>'; }
+  function colBox(v, col){ return matBox(v.map(function(x){return [x];}), col); }
+  function rowBox(v, col){ return matBox([v], col); }
+  function eye(n){ var M=[],i,j; for(i=0;i<n;i++){ M.push([]); for(j=0;j<n;j++) M[i].push(i===j?1:0); } return M; }
+  function matmul(Aa,Bb){ var n=Aa.length,r,c,k,C=[]; for(r=0;r<n;r++){ C.push([]); for(c=0;c<n;c++){ var s=0; for(k=0;k<n;k++) s+=Aa[r][k]*Bb[k][c]; C[r].push(s); } } return C; }
+  function transp(M){ var n=M.length,m=M[0].length,T=[],r,c; for(r=0;r<m;r++){ T.push([]); for(c=0;c<n;c++) T[r].push(M[c][r]); } return T; }
+  function matVec(M,v){ var out=[],r,c; for(r=0;r<M.length;r++){ var s=0; for(c=0;c<v.length;c++) s+=M[r][c]*v[c]; out.push(s); } return out; }
+  function fsub(M,b){ var n=b.length,x=[],i,j; for(i=0;i<n;i++){ var s=b[i]; for(j=0;j<i;j++) s-=M[i][j]*x[j]; x.push(M[i][i]!==0? s/M[i][i] : 0); } return x; }   // lower-triangular
+  function bsub(M,b){ var n=b.length,x=new Array(n),i,j; for(i=n-1;i>=0;i--){ var s=b[i]; for(j=i+1;j<n;j++) s-=M[i][j]*x[j]; x[i]=(M[i][i]!==0? s/M[i][i] : 0); } return x; } // upper-triangular
+  function solveRow(lab, M, x, rhs, xc, rc){ return '<div class="eqrow"><span class="sublab">'+lab+'</span>'+matBox(M)+'<span class="op">·</span>'+colBox(x,xc)+'<span class="op">=</span>'+colBox(rhs,rc)+'</div>'; }
+  function fullTableau(TAB, xB, cbar, z, names, bs){
+    var n=names.length, m=TAB.length, j, r, s='<table class="tab"><thead><tr><th></th>';
+    for(j=0;j<n;j++) s+='<th'+(bs.indexOf(j)>=0?' class="bcol"':'')+'>'+names[j]+'</th>';
+    s+='<th>RHS</th></tr></thead><tbody>';
+    s+='<tr class="zrow"><td class="rlab">c̄</td>';
+    for(j=0;j<n;j++) s+='<td'+(bs.indexOf(j)>=0?' class="bcol"':'')+'>'+f(cbar[j])+'</td>';
+    s+='<td>z='+f(z)+'</td></tr>';
+    for(r=0;r<m;r++){ s+='<tr><td class="rlab">'+names[bs[r]]+'</td>';
+      for(j=0;j<n;j++) s+='<td'+(bs.indexOf(j)>=0?' class="bcol"':'')+'>'+f(TAB[r][j])+'</td>';
+      s+='<td>'+f(xB[r])+'</td></tr>'; }
+    return s+'</tbody></table>';
+  }
+
+  function render(){
+    var S=state();
+    var rule=$('lp3_rule').value;
+    var pickedByRule={}; RULES.forEach(function(rr){var ci=chooseIdx(S.cand,rr); pickedByRule[rr]=ci<0?-1:S.cand[ci].k;});
+    var optimal=S.cand.length===0;
+    $('lp3_step').disabled=optimal;
+    $('lp3_back').disabled=hist.length===0;
+    var iter=path.length-1;
+    var zc=P.c1*S.pt[0]+P.c2*S.pt[1]+P.c3*S.pt[2];
+    var st=$('lp3-status');
+    if(optimal){ st.className='status done';
+      st.innerHTML='<strong>Optimal.</strong> After '+iter+' pivot'+(iter===1?'':'s')+' at <strong>('+f(S.pt[0])+', '+f(S.pt[1])+', '+f(S.pt[2])+')</strong>, z = '+f(zc)+'.'; }
+    else { var ci=chooseIdx(S.cand,rule), pc=S.cand[ci]; st.className='status';
+      st.innerHTML='Iteration '+iter+' · at <strong>('+f(S.pt[0])+', '+f(S.pt[1])+', '+f(S.pt[2])+')</strong>, z = '+f(zc)
+        +'. <strong>'+RLAB[rule]+'</strong> enters <strong>'+NAME[pc.k]+'</strong>'+(pc.leaveVar>=0?', '+NAME[pc.leaveVar]+' leaves':'')
+        +' → ('+f(pc.adj[0])+', '+f(pc.adj[1])+', '+f(pc.adj[2])+').'; }
+
+    var Bmat=[[0,0,0],[0,0,0],[0,0,0]]; for(var bc=0;bc<3;bc++){ var cc=col(basis[bc]); for(var br=0;br<3;br++) Bmat[br][bc]=cc[br]; }
+    var lu=ludecomp(Bmat);
+    // ===== ① complete tableau (top) =====
+    var TAB=[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]];
+    for(var tk=0;tk<6;tk++){ var ck=col(tk); var bcol=mv(S.Bi,ck); for(var tr=0;tr<3;tr++) TAB[tr][tk]=bcol[tr]; }
+    var cbarAll=[]; for(var jj=0;jj<6;jj++){ var cj=col(jj); cbarAll.push(cost(jj)-(S.y[0]*cj[0]+S.y[1]*cj[1]+S.y[2]*cj[2])); }
+    var zval=P.c1*S.pt[0]+P.c2*S.pt[1]+P.c3*S.pt[2];
+    $('lp3-tableau').innerHTML='<div class="tabsec"><span class="matlabel">Complete simplex tableau at this corner &nbsp;(z-row = reduced costs c̄; body = B⁻¹A; last column = B⁻¹b = current basic values):</span>'
+      + fullTableau(TAB, S.xB, cbarAll, zval, NAME, basis) + '</div>';
+
+    // ===== ② the static matrices (below the tableau) =====
+    $('lp3-matrices').innerHTML='<span class="matgrp"><span class="matlabel">basis ['+basis.map(function(v){return NAME[v];}).join(', ')+']</span></span>'
+      +'<span class="matgrp"><span class="matlabel">B =</span>'+mat3HTML(Bmat)+'</span>'
+      +'<span class="matgrp"><span class="matlabel">P =</span>'+mat3HTML(lu.P)+'</span>'
+      +'<span class="matgrp"><span class="matlabel">L =</span>'+mat3HTML(lu.L)+'</span>'
+      +'<span class="matgrp"><span class="matlabel">U =</span>'+mat3HTML(lu.U)+'</span>'
+      +'<span class="matgrp"><span class="matlabel">(B⁻¹ =</span>'+mat3HTML(S.Bi)+'<span class="matlabel">, for reference only; the algorithm never forms it)</span></span>';
+
+    // ===== ③ every solve of the iteration, worked through L and U =====
+    var Lm=lu.L, Um=lu.U, Pm=lu.P, Ut=transp(Um), Lt=transp(Lm), Pt=transp(Pm);
+    var NEW='#8e44ad';   // the one unknown being solved for on each row; everything already known stays black
+    var out='<div class="tabsec"><span class="matlabel">Every solve below goes through the triangular factors by substitution; B⁻¹ is never used. (P·B = L·U from the matrices above.)</span>'
+      + '<p class="eqnote">On every row exactly one vector is <b style="color:'+NEW+'">unknown and being solved for</b>, shown in purple. Everything else on that row is already known and stays black. '
+      + 'Note the asymmetry: in <strong>FTRAN</strong> the permutation only hits the right-hand side, so the answer x<sub>B</sub> (and d) comes out already in the original order, with no unpermuting. In <strong>BTRAN</strong> the intermediate really is permuted (u = P·y), so the last row unpermutes it.</p></div>';
+    out+='<div class="tabsec"><span class="matlabel">⓪ The factorization of the current basis. Everything below is solved with these factors:</span>'
+      + '<div class="eqrow"><span class="sublab">P·B</span>'+matBox(matmul(Pm,Bmat))+'<span class="op">=</span>'+matBox(matmul(Lm,Um))+'<span class="sublab" style="min-width:0">= L·U ✓</span></div></div>';
+    var Pb=matVec(Pm,bvec), w1=fsub(Lm,Pb), xBlu=bsub(Um,w1);
+    out+='<div class="tabsec"><span class="matlabel">① FTRAN (basic values): solve B·x<sub>B</sub> = b &nbsp;(⇔ L·U·x<sub>B</sub> = P·b)</span>'
+      + solveRow('forward   L·w = P·b', Lm, w1, Pb, NEW)
+      + solveRow('back   U·x_B = w', Um, xBlu, w1, NEW)
+      + '<p class="eqnote">→ x<sub>B</sub> = ('+xBlu.map(f).join(', ')+'): the RHS column of the tableau, and the corner you are standing on.</p></div>';
+    var v1=fsub(Ut,S.cB), u1=bsub(Lt,v1), ylu=matVec(Pt,u1);
+    out+='<div class="tabsec"><span class="matlabel">② BTRAN (prices): solve Bᵀ·y = c<sub>B</sub> &nbsp;(⇔ Uᵀ·Lᵀ·P·y = c<sub>B</sub>)</span>'
+      + solveRow('forward   Uᵀ·v = c_B', Ut, v1, S.cB, NEW)
+      + solveRow('back   Lᵀ·u = v   (u = P·y)', Lt, u1, v1, NEW)
+      + '<div class="eqrow"><span class="sublab">unpermute  y = Pᵀ·u</span>'+colBox(ylu,NEW)+'<span class="op">=</span>'+matBox(Pt)+'<span class="op">·</span>'+colBox(u1)+'</div></div>';
+    out+='<div class="tabsec"><span class="matlabel">③ Price every nonbasic column: c̄ⱼ = cⱼ − yᵀaⱼ &nbsp;(this fills the z-row of the tableau)</span>';
+    for(var pk=0;pk<NAME.length;pk++){
+      if(basis.indexOf(pk)>=0) continue;
+      var ak2=col(pk), ya2=0, yi; for(yi=0;yi<ylu.length;yi++) ya2+=ylu[yi]*ak2[yi];
+      var cb2=cost(pk)-ya2, good=cb2>1e-7;
+      out+='<div class="eqrow"><span class="sublab">c̄('+NAME[pk]+')</span>'+rowBox(ylu)+'<span class="op">·</span>'+colBox(ak2)
+        +'<span class="op">=</span><span class="sublab" style="min-width:0">'+f(ya2)+'</span>'
+        +'<span class="op">→</span><span class="sublab" style="min-width:0">'+f(cost(pk))+' − '+f(ya2)+' = <b style="color:'+(good?NEW:'#6b6b73')+'">'+f(cb2)+'</b>'
+        +(good?' ✓ can improve':' ✗ cannot')+'</span></div>';
+    }
+    out+='<p class="eqnote">'+(optimal? 'Every c̄ ≤ 0 → <strong>optimal</strong>: no column can improve, so the iteration stops here.'
+        : RLAB[rule]+' picks <strong>'+NAME[S.cand[chooseIdx(S.cand,rule)].k]+'</strong> to enter (see the rule table above for how each rule scores these).')+'</p></div>';
+    if(!optimal){
+      var pc2=S.cand[chooseIdx(S.cand,rule)], qq=pc2.k, aq=col(qq), LP=(pc2.lp!==undefined?pc2.lp:pc2.leavePos);
+      var Paq=matVec(Pm,aq), w2=fsub(Lm,Paq), dlu=bsub(Um,w2);
+      out+='<div class="tabsec"><span class="matlabel">④ FTRAN (direction): solve B·d = a<sub>'+NAME[qq]+'</sub> &nbsp;(⇔ L·U·d = P·a)</span>'
+        + solveRow('forward   L·w = P·a', Lm, w2, Paq, NEW)
+        + solveRow('back   U·d = w', Um, dlu, w2, NEW) + '</div>';
+      var rt=[]; for(var ri=0;ri<S.xB.length;ri++){ if(dlu[ri]>1e-9) rt.push(NAME[basis[ri]]+': '+f(S.xB[ri])+'/'+f(dlu[ri])+' = '+f(S.xB[ri]/dlu[ri])); }
+      out+='<div class="tabsec"><span class="matlabel">⑤ Ratio test: t★ = min over rows with dᵢ &gt; 0 of (x<sub>B</sub>)ᵢ / dᵢ</span>'
+        +'<p class="eqnote">'+(rt.length?rt.join(' &nbsp;·&nbsp; '):'no positive dᵢ → unbounded')
+        +' &nbsp;→&nbsp; <strong>t★ = '+f(pc2.t)+'</strong>, so <strong>'+NAME[pc2.leaveVar]+'</strong> leaves (row '+(LP+1)+').</p></div>';
+      var dr2=dlu[LP], nn=S.xB.length, ei2;
+      var eta=[]; for(ei2=0;ei2<nn;ei2++) eta.push(ei2===LP? 1/dr2 : -dlu[ei2]/dr2);
+      var Enew=eye(nn); for(ei2=0;ei2<nn;ei2++) Enew[ei2][LP]=eta[ei2];
+      var acc=eye(nn); etas.forEach(function(E){ acc=matmul(E,acc); });
+      out+='<div class="tabsec"><span class="matlabel">⑥ Update: the eta this pivot will apply (pivot row '+(LP+1)+', pivot element dᵣ = '+f(dr2)+'):</span>'
+        + '<div class="eqrow"><span class="sublab">ηᵣ = 1/dᵣ,  ηᵢ = −dᵢ/dᵣ</span>'+colBox(eta,NEW)
+        + '<span class="op">→</span><span class="sublab" style="min-width:0">E = I with column '+(LP+1)+' replaced by η</span>'+matBox(Enew,NEW)+'</div>'
+        + '<div class="eqrow"><span class="sublab">so far: Eₖ···E₁</span>'+matBox(acc)+'<span class="op">=</span><span class="sublab" style="min-width:0">B⁻¹ (the current one); next iteration it becomes E·B⁻¹</span></div>'
+        + '<p class="eqnote">Press <strong>Step ▶</strong> and this E is applied: the basis changes, and the P, L, U at the top become the factors of the <em>new</em> B. (This widget refactorizes from scratch each iteration for clarity; a real solver patches the existing L·U in place (Forrest–Tomlin) and only refactorizes periodically, see §4.2.)</p></div>';
+    }
+    $('lp3-solves').innerHTML=out;
+
+    // formula table (column headings carry hover/tap definitions)
+    function th(lab,tip){ return '<th class="center"><span class="tip" tabindex="0" data-tip="'+tip+'">'+lab+'</span></th>'; }
+    var html='<table><thead><tr><th>Enter</th>'
+      + th('c̄','Reduced cost.  c̄ⱼ = cⱼ − yᵀaⱼ, the rate the objective improves per unit increase of xⱼ. Only columns with c̄ⱼ > 0 can improve this max problem.')
+      + th('t★','Ratio-test step length.  t★ = min over rows with dᵢ > 0 of (x_B)ᵢ / dᵢ: how far xⱼ can rise before a basic variable is driven to 0.')
+      + th('Dantzig c̄','Dantzig: pick the largest reduced cost c̄ⱼ. Greedy on RATE, blind to how far you can actually move. Cheapest to compute, but scale-sensitive and exponential in the worst case.')
+      + th('Gt.incr c̄·t★','Greatest increment: pick the largest ACTUAL objective gain, c̄ⱼ · t★ⱼ  (rate × feasible step). Needs a ratio test per candidate, so it is the most expensive rule here.')
+      + th('Steep. c̄²/γ','Steepest edge: pick the largest c̄ⱼ²/γⱼ using the EXACT edge weight γⱼ = ‖B⁻¹aⱼ‖² + 1, the squared length of the move direction dⱼ = B⁻¹aⱼ, plus 1 for the entering variable own unit step. This scores ascent per unit distance actually travelled, so it is scale-invariant.')
+      + th('Devex c̄²/γ̃','Devex: same formula c̄ⱼ²/γ̃ⱼ but with a CHEAP running approximation γ̃ⱼ ≈ γⱼ. Reset to 1 at each reference frame; after a pivot (entering q, leaving row r, pivot element αᵣ = (B⁻¹a_q)ᵣ) it updates by  γ̃ⱼ ← max(γ̃ⱼ, (αᵣⱼ/αᵣ)² γ̃_q)  for each remaining nonbasic j, and the leaving variable becomes nonbasic with  γ̃ ← max(γ̃_q/αᵣ², 1).')
+      + '</tr></thead><tbody>';
+    if(optimal){ html+='<tr><td colspan="7" class="center" style="color:var(--green);font-weight:700">all c̄ ≤ 0: optimal</td></tr>'; }
+    else { var wD=chooseIdx(S.cand,'dant'),wG=chooseIdx(S.cand,'gi'),wS=chooseIdx(S.cand,'se'),wV=chooseIdx(S.cand,'dv');
+      S.cand.forEach(function(c,i){ html+='<tr><td><strong>'+NAME[c.k]+'</strong></td><td class="center">'+f(c.cbar)+'</td><td class="center">'+f(c.t)+'</td>'
+        +'<td class="center'+(i===wD?' win':'')+'">'+f(c.dant)+'</td><td class="center'+(i===wG?' win':'')+'">'+f(c.gi)+'</td>'
+        +'<td class="center'+(i===wS?' win':'')+'">'+f(c.se)+'</td><td class="center'+(i===wV?' win':'')+'">'+f(c.dv)+'</td></tr>'; });
+    }
+    html+='</tbody></table>'; $('lp3-formulas').innerHTML=html;
+
+    // ---- 3D graph ----
+    var g=[];
+    g.push('<svg viewBox="0 0 '+Wd+' '+Hd+'" width="'+Wd+'" height="'+Hd+'" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;display:block;">');
+    // axes from origin
+    var O=[0,0,0], axlen=Math.max(VERTS.reduce(function(m,p){return Math.max(m,p[0],p[1],p[2]);},0)*1.08,1);
+    var po=proj(O);
+    [[axlen,0,0,'x₁'],[0,axlen,0,'x₂'],[0,0,axlen,'x₃']].forEach(function(ax){
+      var pe=proj([ax[0],ax[1],ax[2]]);
+      g.push('<line x1="'+po.x+'" y1="'+po.y+'" x2="'+pe.x+'" y2="'+pe.y+'" stroke="'+COL.MUT+'" stroke-width="1" stroke-dasharray="2 2"/>');
+      g.push('<text x="'+pe.x+'" y="'+pe.y+'" font-size="11" fill="'+COL.MUT+'">'+ax[3]+'</text>');
+    });
+    // wireframe edges, depth-shaded
+    var deps=VERTS.map(function(p){return proj(p).depth;});
+    var dmin=Math.min.apply(null,deps), dmax=Math.max.apply(null,deps);
+    EDGES.forEach(function(e){
+      var pa=proj(VERTS[e[0]]), pb=proj(VERTS[e[1]]);
+      var dn=dmax>dmin? ((pa.depth+pb.depth)/2-dmin)/(dmax-dmin) : 0;   // 0 near … 1 far
+      var op=(0.95-0.6*dn).toFixed(2);
+      g.push('<line x1="'+pa.x+'" y1="'+pa.y+'" x2="'+pb.x+'" y2="'+pb.y+'" stroke="'+COL.WIRE+'" stroke-width="1.4" opacity="'+op+'"/>');
+    });
+    // optimum
+    var best=VERTS[0], bz=-1e18; VERTS.forEach(function(p){var z=P.c1*p[0]+P.c2*p[1]+P.c3*p[2]; if(z>bz){bz=z;best=p;}});
+    var pbest=proj(best); g.push('<text x="'+pbest.x+'" y="'+(pbest.y-6)+'" font-size="17" fill="'+COL.GRN+'" text-anchor="middle">★</text>');
+    // path
+    if(path.length>1){ g.push('<polyline points="'+path.map(function(p){var q=proj(p);return q.x+','+q.y;}).join(' ')+'" fill="none" stroke="'+COL.PATH+'" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>'); }
+    path.forEach(function(p){ var q=proj(p); g.push('<circle cx="'+q.x+'" cy="'+q.y+'" r="3.4" fill="'+COL.PATH+'"/>'); });
+    // candidate edges + badges
+    S.cand.forEach(function(c){
+      var pc=proj(S.pt), pa=proj(c.adj);
+      g.push('<line x1="'+pc.x+'" y1="'+pc.y+'" x2="'+pa.x+'" y2="'+pa.y+'" stroke="'+COL.ORG+'" stroke-width="2" stroke-dasharray="5 3"/>');
+      var bad=''; RULES.forEach(function(r){ if(pickedByRule[r]===c.k) bad+=RBADGE[r]; });
+      g.push('<text x="'+((pc.x+pa.x)/2)+'" y="'+((pc.y+pa.y)/2-4)+'" font-size="12" font-weight="700" fill="'+COL.ORG+'" text-anchor="middle">'+bad+'</text>');
+    });
+    // current vertex
+    var pcur=proj(S.pt); g.push('<circle cx="'+pcur.x+'" cy="'+pcur.y+'" r="6" fill="none" stroke="'+COL.INK+'" stroke-width="2"/>');
+    g.push('</svg>');
+    $('lp3-graph').innerHTML=g.join('');
+  }
+
+  function step(){
+    var S=state(); if(!S.cand.length) return;
+    var ci=chooseIdx(S.cand,$('lp3_rule').value); var c=S.cand[ci]; if(c.lp<0) return;
+    hist.push({basis:basis.slice(), gw:copyGw(gw), path:path.map(function(p){return p.slice();}), etas:copyEtas(etas)});  // snapshot for Back
+    var r=c.lp, q=c.k, L=basis[r];
+    var dq=mv(S.Bi,col(q)), dr=dq[r], gq=gw[q]||1;
+    var E=eye(3); for(var ei=0;ei<3;ei++) E[ei][r]=(ei===r? 1/dr : -dq[ei]/dr);  // product-form eta for this pivot
+    etas.push(E);
+    for(var k=0;k<6;k++){ if(k!==q && basis.indexOf(k)<0){ var rho=mv(S.Bi,col(k))[r]; gw[k]=Math.max(gw[k]||1,(rho/dr)*(rho/dr)*gq); } }
+    gw[L]=Math.max(gq/(dr*dr),1); delete gw[q];
+    basis[r]=q; path.push(c.adj.slice()); render();
+  }
+  function back(){ if(!hist.length) return; var h=hist.pop(); basis=h.basis; gw=h.gw; path=h.path; etas=h.etas; render(); }
+  function resetWalk(){ basis=[3,4,5]; path=[[0,0,0]]; gw={0:1,1:1,2:1,3:1,4:1,5:1}; hist=[]; etas=[]; render(); }
+  function readP(){ P={c1:+$('lp3_c1').value,c2:+$('lp3_c2').value,c3:+$('lp3_c3').value};
+    ['c1','c2','c3'].forEach(function(k){ $('lp3_'+k+'_v').textContent=$('lp3_'+k).value; });
+    function n(v){ return '<b style="color:'+COL.ACC+'">'+v+'</b>'; }
+    var g='';
+    g+='<span class="eqkw">maximize</span><span>z =</span><span>'+n(P.c1)+'·x₁</span><span>+</span><span>'+n(P.c2)+'·x₂</span><span>+</span><span>'+n(P.c3)+'·x₃</span><span></span>';
+    g+='<span class="eqkw">s.t.</span><span></span><span>2·x₁</span><span>+</span><span>3·x₂</span><span>+</span><span>1·x₃</span><span class="rel">≤ 5</span>';
+    g+='<span class="eqkw"></span><span></span><span>4·x₁</span><span>+</span><span>1·x₂</span><span>+</span><span>2·x₃</span><span class="rel">≤ 11</span>';
+    g+='<span class="eqkw"></span><span></span><span>3·x₁</span><span>+</span><span>4·x₂</span><span>+</span><span>2·x₃</span><span class="rel">≤ 8</span>';
+    g+='<span class="eqkw"></span><span></span><span style="grid-column:span 6">x₁, x₂, x₃ ≥ 0</span>';
+    $('lp3-eq-lines').innerHTML=g;
+    $('lp3-eq-A').innerHTML='<span class="matlabel">A =</span>'+matBox(A); }
+
+  $('lp3_step').addEventListener('click', step);
+  $('lp3_back').addEventListener('click', back);
+  $('lp3_resetpath').addEventListener('click', resetWalk);
+  $('lp3_rule').addEventListener('change', render);
+  $('lp3_c1').addEventListener('input', function(){readP();resetWalk();});
+  $('lp3_c2').addEventListener('input', function(){readP();resetWalk();});
+  $('lp3_c3').addEventListener('input', function(){readP();resetWalk();});
+  $('lp3_az').addEventListener('input', function(){ az=+$('lp3_az').value; render(); });
+  $('lp3_el').addEventListener('input', function(){ el=+$('lp3_el').value; render(); });
+  // drag to rotate
+  (function(){ var dragging=false,lx=0,ly=0;
+    var gd=$('lp3-graph');
+    gd.addEventListener('pointerdown', function(e){ dragging=true; lx=e.clientX; ly=e.clientY; gd.setPointerCapture&&gd.setPointerCapture(e.pointerId); });
+    gd.addEventListener('pointermove', function(e){ if(!dragging) return;
+      az+=(e.clientX-lx)*0.01; el=Math.max(-0.2,Math.min(1.4, el+(e.clientY-ly)*0.01)); lx=e.clientX; ly=e.clientY;
+      $('lp3_az').value=Math.max(-3.14,Math.min(3.14,az)); $('lp3_el').value=el; render(); });
+    gd.addEventListener('pointerup', function(){ dragging=false; });
+    gd.addEventListener('pointerleave', function(){ dragging=false; });
+  })();
+
+  buildGeom(); readP(); resetWalk();
+})();
+</script>
+
+<!-- ============================================ -->
+<h2 class="section">Appendix: Revised simplex in pseudocode</h2>
+<pre><span class="cm"># max cᵀx  s.t.  Ax = b, x ≥ 0    (A is m×n, full row rank)</span>
+<span class="kw">given</span> a feasible basis B (index set), with basis matrix A[:,B]
+<span class="kw">loop</span>:
+    <span class="cm"># --- Step 1: BTRAN (dual multipliers) ---</span>
+    y = solve(Bᵀ, c[B])                 <span class="cm"># yᵀB = c_Bᵀ</span>
+
+    <span class="cm"># --- Step 2: PRICING (choose entering column q) ---</span>
+    <span class="kw">for</span> each nonbasic j:  cbar[j] = c[j] - yᵀ·A[:,j]
+    <span class="kw">if</span> cbar[j] ≤ 0 for all j:  <span class="kw">return</span> OPTIMAL
+    q = <span class="fn">select_entering</span>(cbar, weights)   <span class="cm"># ← Dantzig / greatest incr. / Bland / Devex / steepest edge</span>
+
+    <span class="cm"># --- Step 3: FTRAN (search direction) ---</span>
+    d = solve(B, A[:,q])                <span class="cm"># d = B⁻¹ a_q</span>
+
+    <span class="cm"># --- Step 4: RATIO TEST (choose leaving row p) ---</span>
+    <span class="kw">if</span> d ≤ 0 everywhere:  <span class="kw">return</span> UNBOUNDED
+    p = argmin over {i : d[i] > 0} of  x_B[i] / d[i]
+
+    <span class="cm"># --- Step 5: UPDATE ---</span>
+    B = (B \ {p}) ∪ {q}                 <span class="cm"># swap; update B⁻¹ or refactorize</span>
+    <span class="fn">update_weights</span>(...)               <span class="cm"># Devex / steepest-edge recurrence</span>
+</pre>
+<p class="footnote">For four of the five rules the only line that changes is <code>select_entering</code> (and, for the norm-based rules, <code>update_weights</code>); everything else (BTRAN, FTRAN, the ratio test, the basis update) is identical. Greatest increment is the exception: it runs an FTRAN + ratio test <em>inside</em> <code>select_entering</code> for each candidate, which is why it's so much costlier. That near-total modularity is precisely why pivot-rule research can be studied in isolation from the rest of the solver.</p>
+
+<!-- ============================================ -->
+<h2 class="section" id="takeaways">11. Nine things to remember</h2>
+<div class="panel">
+<ol>
+<li><strong>Revised simplex = simplex reorganized around \(B^{-1}\).</strong> Same vertices visited, but quantities computed on demand via BTRAN/FTRAN instead of storing a full tableau.</li>
+<li><strong>Factorize, never invert.</strong> BTRAN/FTRAN only <em>solve</em> systems with \(B\), so the solver stores an LU factorization of \(B\) and solves by substitution: sparser, faster, and more numerically stable than an explicit \(B^{-1}\).</li>
+<li><strong>Update, never refactorize from scratch.</strong> Consecutive bases differ by exactly one column (a rank-one change), so each pivot just appends an eta vector built from the FTRAN direction \(d\) you already have. Periodically reinvert to reset accumulated cost and error.</li>
+<li><strong>The pivot rule is just the entering-variable policy</strong> (Step 2). Everything else in the iteration is fixed linear algebra.</li>
+<li><strong>Dantzig</strong> = greediest per-unit rate, cheap but scale-sensitive and exponential in the worst case.</li>
+<li><strong>Greatest increment and steepest edge</strong> are easy to confuse, but different: greatest increment maximizes the <em>actual</em> gain \(\bar c_j\cdot t^\star_j\) (rate × feasibility-limited step), steepest edge maximizes the gain <em>per unit distance</em> \(\bar c_j^2/\|d\|^2\) (slope). Greatest increment is the priciest (a ratio test per candidate) and has no cheap approximation, only a Dantzig pre-screen.</li>
+<li><strong>Bland</strong> = smallest index; the only one with a hard anti-cycling guarantee, used as a fallback, not a default.</li>
+<li><strong>Devex and steepest edge share one formula</strong> \(\bar c_j^2/\gamma_j\); they differ only in whether the edge weight \(\gamma_j\) is approximated cheaply (Devex) or computed exactly via a recurrence (steepest edge). These two dominate modern solvers.</li>
+<li><strong>Dual simplex is primal in mirror order</strong>: it holds optimality (dual feasibility) fixed and chases primal feasibility, picking the <em>leaving</em> variable first (most-infeasible \(x_B\)) then the <em>entering</em> one (a ratio test across the pivot row). Its warm-start ability after adding a constraint makes it the default inside MILP solvers.</li>
+</ol>
+</div>
+
+<hr>
+<p class="footnote">Math is rendered with MathJax. Key references: Dantzig (1947); Bland, <em>Math. of OR</em> (1977); Harris, <em>Math. Programming</em> (1973, Devex); Goldfarb &amp; Reid, <em>Math. Programming</em> (1977, steepest edge); Lemke (1954, dual simplex); Maros, <em>Computational Techniques of the Simplex Method</em> (2003, bound-flipping / long-step dual); Jeroslow (1973, greatest-increment worst case); Klee &amp; Minty (1972, Dantzig worst case).</p>
+
+</main>
+</div>
+<script>
+// a TOC link pointing at a collapsed dual mirror should open it
+(function(){
+  function openTarget(){
+    var h = location.hash.slice(1); if(!h) return;
+    var el = document.getElementById(h);
+    if(el && el.tagName === 'DETAILS' && !el.open){ el.open = true; el.scrollIntoView({block:'start'}); }
+  }
+  window.addEventListener('hashchange', openTarget);
+  openTarget();
+})();
+</script>
+</body>
+</html>

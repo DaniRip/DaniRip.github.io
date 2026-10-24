@@ -59,6 +59,19 @@ permalink: /teaching/
     </div>
 </div>
 
+<div class="card teaching-material">
+    <a href="{{ "/tutorials/revised-simplex/" | relative_url }}" target="_blank">
+        <img src="{{ "/assets/revised-simplex-tutorial.jpg" | relative_url }}" alt="Opening page of the revised simplex tutorial" loading="lazy">
+    </a>
+    <div>
+        <h3>The Revised Simplex Method and Its Pivot Rules</h3>
+        <p>A self-paced, interactive tutorial (2026) on how the simplex method runs inside a real LP solver. It covers BTRAN, FTRAN, LU factorization and the one-column basis update, treats dual simplex as the mirror image of primal, and compares five pivot rules: Dantzig, greatest increment, Bland, Devex and steepest edge. Worked examples and step-through demos in 2D and 3D show exactly where the rules part ways.</p>
+        <div class="material-links">
+            <a href="{{ "/tutorials/revised-simplex/" | relative_url }}" target="_blank" class="pub-link-btn"><i class="fas fa-book-open"></i> Open the tutorial</a>
+        </div>
+    </div>
+</div>
+
 ### Mentorship <i class="fas fa-seedling"></i>
 
 <p class="mentorship-intro">During my time at the University of Waterloo, I had the privilege of mentoring undergraduate researchers on various optimization and healthcare projects.</p>
