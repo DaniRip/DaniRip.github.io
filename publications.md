@@ -36,6 +36,11 @@ permalink: /publications/
                 <i class="fas fa-external-link-alt"></i> Link
             </a>
         {% endif %}
+        {% if pub.arxiv %}
+            <a href="{{ pub.arxiv }}" target="_blank" class="pub-link-btn">
+                <i class="fas fa-file-alt"></i> arXiv
+            </a>
+        {% endif %}
         </div>
 </div>
 {% endfor %}

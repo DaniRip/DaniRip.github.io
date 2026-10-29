@@ -11,7 +11,8 @@ image: /assets/profile.jpg
 <div class="job-market-note">
   <strong>I'm on the 2026–27 faculty job market.</strong>
   <a href="{{ "/assets/D_Ripsman_CV.pdf" | relative_url }}" target="_blank">CV (PDF)</a> &middot;
-  <a href="https://doi.org/10.1287/ijoc.2022.1167" target="_blank">Job market paper</a>
+  <span style="white-space: nowrap;"><a href="https://doi.org/10.1287/ijoc.2022.1167" target="_blank">Job market paper</a>
+  (<a href="https://arxiv.org/abs/2111.04847" target="_blank">arXiv</a>)</span>
 </div>
 
 My research is at the intersection of **large-scale optimization** and **healthcare engineering**. At Johns Hopkins, I work with <a href="https://systems.jhu.edu/kimia/" target="_blank">Dr. Kimia Ghobadi</a>. I earned my Ph.D. (2024) and M.A.Sc. (2018) at the <a href="https://uwaterloo.ca/">University of Waterloo</a> in <a href="https://uwaterloo.ca/management-sciences/" target="_blank">Management Sciences and Engineering</a> under <a href="https://uwaterloo.ca/management-science-engineering/profile/h6mahmou" target="_blank">Dr. Houra Mahmoudzadeh</a>. I hold a B.A.Sc. (2016) from the <a href="https://www.utoronto.ca/" target="_blank">University of Toronto (UofT)</a> in <a href="https://www.mie.utoronto.ca/" target="_blank">Industrial Engineering</a>, where I was also introduced to research in <a href="https://morlab.netlify.app/" target="_blank">morLAB</a>. I was previously a Postdoctoral Fellow at the <a href="https://www.rotman.utoronto.ca/" target="_blank">Rotman School of Management</a> at UofT, working with <a href="https://discover.research.utoronto.ca/16076-andre-augusto-cire" target="_blank">Dr. Andre Cire</a> and <a href="https://schulich.yorku.ca/faculty/adam-diamant/" target="_blank">Dr. Adam Diamant</a>.
