@@ -705,6 +705,15 @@ details[open] .toggle-chevron {
     justify-content: space-between;
 }
 
+/* Homepage "on the job market" line: same teal as the header gradient */
+.job-market-note {
+    border-left: 5px solid var(--primary-gradient-end);
+    background-color: #f2f8f9;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 0 0 20px 0;
+}
+
 .award-card.card {
     border-left: 5px solid #b8860b; /* A soft gold/bronze border */
     background-color: #fffdf5;     /* Very faint gold tint */
