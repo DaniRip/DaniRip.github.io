@@ -1,4 +1,10 @@
 conference:
+  - title: "The Impact of AI Scribe Usage on Primary Care Workload"
+    authors: "D. A. Ripsman, R. Chiplunkar and K. Ghobadi"
+    event: "INFORMS Annual Meeting"
+    location: "San Francisco, CA"
+    date: "November 2026"
+
   - title: "The Impact of AI Scribe on Primary Care Workload: A Multi-Site DiD Cohort Study"
     authors: "D. A. Ripsman, R. Chiplunkar and K. Ghobadi"
     event: "INFORMS Healthcare"
