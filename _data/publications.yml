@@ -35,7 +35,7 @@
   status: "under_review"
   authors: "F. Parker*, D. A. Ripsman*, E. Springer, K. Ghobadi"
   note: "Under review at the International Conference on Learning Representations (ICLR) 2027. *Co-first authors."
-  link: "https://arxiv.org/abs/2610.20892"
+  arxiv: "https://arxiv.org/abs/2610.20892"
 
 - title: "Superior light Pareto robust optimization with application to radiation therapy"
   status: "working"
